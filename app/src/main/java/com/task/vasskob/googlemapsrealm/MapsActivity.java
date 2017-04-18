@@ -21,7 +21,6 @@ import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.karumi.dexter.Dexter;
 import com.task.vasskob.googlemapsrealm.app.Prefs;
 import com.task.vasskob.googlemapsrealm.model.Marker;
 import com.task.vasskob.googlemapsrealm.realm.RealmController;
@@ -118,6 +117,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             Log.d("onMapReady", "Permission deny");
             // Show rationale and request permission.
         }
+        mMap.getUiSettings().setZoomControlsEnabled(true);
 
 
         if (!Prefs.with(this).getPreLoad()) {
