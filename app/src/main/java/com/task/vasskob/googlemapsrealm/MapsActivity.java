@@ -1,14 +1,19 @@
 package com.task.vasskob.googlemapsrealm;
 
 import android.Manifest;
+import android.content.DialogInterface;
 import android.content.pm.PackageManager;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.Toast;
 
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -16,23 +21,48 @@ import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.task.vasskob.googlemapsrealm.app.Prefs;
 import com.task.vasskob.googlemapsrealm.model.Marker;
 import com.task.vasskob.googlemapsrealm.realm.RealmController;
 
 import java.util.ArrayList;
+import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 import io.realm.Realm;
 import io.realm.RealmResults;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
+    private static final String TAG = MapsActivity.class.getSimpleName();
     private Realm realm;
+    private String mTitle;
+    private GoogleMap mMap;
+
+
+    int ICON_1 = 1;
+    int ICON_2 = 2;
+    int ICON_3 = 3;
+    int ICON_4 = 4;
+    int DEFAULT_ICON = 5;
+
+    @Bind({R.id.icon1, R.id.icon2, R.id.icon3, R.id.icon4})
+    List<ImageButton> mIcons;
+    static final ButterKnife.Setter<View, Boolean> SELECT = new ButterKnife.Setter<View, Boolean>() {
+        @Override
+        public void set(View view, Boolean value, int index) {
+            view.setSelected(value);
+        }
+    };
+    private int mCurrentPosition;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
@@ -40,33 +70,68 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         realm = RealmController.with(this).getRealm();
     }
 
+    @OnClick({R.id.icon1, R.id.icon2, R.id.icon3, R.id.icon4})
+    public void onIconClick(View view) {
+        Log.d(TAG, "onTabClick: id: " + view.getId());
+        selectTab(getTabPosition(view.getId()));
+        mCurrentPosition=view.getId();
+    }
 
-    /**
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
-     */
+    private void selectTab(int position) {
+        ButterKnife.apply(mIcons, SELECT, false);
+        mIcons.get(position - 1).setSelected(true);
+
+        Log.d(TAG, "selectTab: Tab selected  =  " + position);
+    }
+
+    private int getTabPosition(int tabID) {
+        switch (tabID) {
+            case R.id.icon1:
+                return ICON_1;
+            case R.id.icon2:
+                return ICON_2;
+            case R.id.icon3:
+                return ICON_3;
+            case R.id.icon4:
+                return ICON_4;
+            default:
+                return DEFAULT_ICON;
+        }
+    }
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        googleMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
-        googleMap.getUiSettings().setMyLocationButtonEnabled(true);
+        mMap = googleMap;
+        mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+        mMap.getUiSettings().setMyLocationButtonEnabled(true);
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
-            googleMap.setMyLocationEnabled(true);
+            mMap.setMyLocationEnabled(true);
         } else {
-            Log.d("onMapReady","Permission deny");
+            Log.d("onMapReady", "Permission deny");
             // Show rationale and request permission.
         }
 
-        // Add dummy markers to db
-        setRealmData();
+
+        if (!Prefs.with(this).getPreLoad()) {
+            // Add dummy markers to db
+            setRealmData();
+        }
+
         RealmController.with(this).refresh();
 
+        showMarkersOnMap(googleMap);
+
+        googleMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
+            @Override
+            public void onMapLongClick(LatLng latLng) {
+                showAddMarkerDialog(latLng);
+            }
+        });
+    }
+
+    private void showMarkersOnMap(GoogleMap googleMap) {
         LatLng markerLatLng;
         String markerTitle;
         BitmapDescriptor markerIcon;
@@ -77,19 +142,53 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             markerTitle = marker.getLabel();
             markerIcon = BitmapDescriptorFactory.fromResource(manageMarkerIcon(marker.getIcon()));
             googleMap.addMarker(new MarkerOptions().position(markerLatLng).title(markerTitle).icon(markerIcon));
-            googleMap.moveCamera(CameraUpdateFactory.newLatLng(markerLatLng));
+
+            //googleMap.moveCamera(CameraUpdateFactory.newLatLng(markerLatLng));
         }
-
-
-        // Add a marker in Sydney and move the camera
-
-
-//        LatLng sydney = new LatLng(-34, 151);
-//        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-//
-
-        //mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
     }
+
+    private void showAddMarkerDialog(final LatLng latLng) {
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = this.getLayoutInflater();
+        final View dialogView = inflater.inflate(R.layout.custom_dialog, null);
+        dialogBuilder.setView(dialogView);
+
+        final EditText edt = (EditText) dialogView.findViewById(R.id.edit1);
+
+        dialogBuilder.setTitle(getResources().getString(R.string.add_marker));
+        dialogBuilder.setPositiveButton("Done", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                mTitle = edt.getText().toString();
+                Marker marker = new Marker();
+                marker.setId(RealmController.getInstance().getMarkers().size() + System.currentTimeMillis());
+                marker.setLabel(mTitle);
+                marker.setLatitude(latLng.latitude);
+                marker.setLongitude(latLng.longitude);
+                marker.setIcon("icon3");
+
+                if (edt.getText().toString().equals("")) {
+                    Toast.makeText(MapsActivity.this, "Entry not saved, missing title", Toast.LENGTH_LONG).show();
+                } else {
+                    mMap.addMarker(new MarkerOptions().position(latLng).title(mTitle));
+                    writeToRealm(marker);
+                }
+            }
+        });
+        dialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                dialog.dismiss();
+            }
+        });
+        AlertDialog b = dialogBuilder.create();
+        b.show();
+    }
+
+    private void writeToRealm(Marker marker) {
+        realm.beginTransaction();
+        realm.copyToRealm(marker);
+        realm.commitTransaction();
+    }
+
 
     private void setRealmData() {
 
@@ -137,12 +236,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         for (Marker m : markers) {
             // Persist your data easily
-            realm.beginTransaction();
-            realm.copyToRealm(m);
-            realm.commitTransaction();
+            writeToRealm(m);
         }
 
-        //    Prefs.with(this).setPreLoad(true);
+        Prefs.with(this).setPreLoad(true);
 
     }
 
@@ -157,7 +254,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             case "icon4":
                 return R.drawable.icon4;
             default:
-                return R.drawable.icon_default;
+                return R.drawable.icon5;
         }
     }
 

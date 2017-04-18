@@ -42,4 +42,5 @@ dependencies {
 
     // Realm
     compile 'io.realm:realm-android:0.83.1'
+    compile 'com.jakewharton:butterknife:7.0.1'
 }

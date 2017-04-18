@@ -1,4 +1,4 @@
-package com.task.vasskob.googlemapsrealm;
+package com.task.vasskob.googlemapsrealm.app;
 
 import android.app.Application;
 

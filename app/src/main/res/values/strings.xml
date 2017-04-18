@@ -1,4 +1,9 @@
 <resources>
     <string name="app_name">GoogleMaps&amp;Realm</string>
     <string name="title_activity_maps">Map</string>
+    <string name="hint_title">Marker title</string>
+    <string name="choose_icon">Choose marker icon</string>
+    <string name="dismiss">Dissmis</string>
+    <string name="submit">Submit</string>
+    <string name="add_marker">Add marker</string>
 </resources>
