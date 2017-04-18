@@ -23,12 +23,10 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:layout_marginBottom="20dp"
         android:orientation="horizontal"
-        android:weightSum="4"
-
-        >
+        android:weightSum="4">
 
         <ImageButton
             android:id="@+id/icon1"
