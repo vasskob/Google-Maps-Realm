@@ -34,6 +34,8 @@ import butterknife.OnClick;
 import io.realm.Realm;
 import io.realm.RealmResults;
 
+import static com.task.vasskob.googlemapsrealm.R.id.map;
+
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private static final String TAG = MapsActivity.class.getSimpleName();
@@ -65,7 +67,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         setContentView(R.layout.activity_maps);
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
+                .findFragmentById(map);
         mapFragment.getMapAsync(this);
 
         realm = RealmController.with(this).getRealm();
@@ -109,6 +111,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap = googleMap;
         mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
         mMap.getUiSettings().setMyLocationButtonEnabled(true);
+        mMap.getUiSettings().setZoomControlsEnabled(true);
+        mMap.setPadding(0, 50, 0, 100);
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
@@ -117,8 +121,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             Log.d("onMapReady", "Permission deny");
             // Show rationale and request permission.
         }
-        mMap.getUiSettings().setZoomControlsEnabled(true);
-
 
         if (!Prefs.with(this).getPreLoad()) {
             // Add dummy markers to db
