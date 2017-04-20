@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
@@ -11,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
@@ -21,6 +23,12 @@ import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.PermissionToken;
+import com.karumi.dexter.listener.PermissionDeniedResponse;
+import com.karumi.dexter.listener.PermissionGrantedResponse;
+import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.single.PermissionListener;
 import com.task.vasskob.googlemapsrealm.app.Prefs;
 import com.task.vasskob.googlemapsrealm.model.Marker;
 import com.task.vasskob.googlemapsrealm.realm.RealmController;
@@ -60,13 +68,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     };
     private int selectedImageBtn;
+    private SupportMapFragment mapFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
 
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+
+        if (checkPermission()){
+            requestPermission();
+        }
+        mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(map);
         mapFragment.getMapAsync(this);
 
@@ -279,5 +292,36 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             default:
                 return "icon5";
         }
+    }
+
+    private void requestPermission() {
+       // FrameLayout frameLayout = (FrameLayout) findViewById(R.id.intent_data);
+        PermissionListener pml = new PermissionListener() {
+            @Override
+            public void onPermissionGranted(PermissionGrantedResponse response) {
+                Snackbar.make(mapFragment.getView(), R.string.permission_granted, Snackbar.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onPermissionDenied(PermissionDeniedResponse response) {
+                Snackbar.make(mapFragment.getView(), R.string.permission_denied, Snackbar.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onPermissionRationaleShouldBeShown(PermissionRequest permission, PermissionToken token) {
+
+            }
+        };
+
+        Dexter.withActivity(this)
+                .withPermission(Manifest.permission.ACCESS_COARSE_LOCATION)
+                .withListener(pml)
+                .check();
+    }
+
+    private boolean checkPermission() {
+        int resultCoarse = ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_COARSE_LOCATION);
+        int resultFine = ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_COARSE_LOCATION);
+        return resultFine != PackageManager.PERMISSION_GRANTED &&  resultCoarse != PackageManager.PERMISSION_GRANTED;
     }
 }

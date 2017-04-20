@@ -6,4 +6,7 @@
     <string name="dismiss">Dissmis</string>
     <string name="submit">Submit</string>
     <string name="add_marker">Add marker</string>
+
+    <string name="permission_granted">Permission Granted</string>
+    <string name="permission_denied">Permission Denied. App will work with limited functionality</string>
 </resources>
