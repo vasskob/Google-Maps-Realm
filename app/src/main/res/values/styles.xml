@@ -8,11 +8,7 @@
 
         <item name="android:windowTranslucentStatus">true</item>
         <item name="android:windowTranslucentNavigation">true</item>
-
-
     </style>
-
-
 
     <style name="MarkerIcons" parent="Theme.AppCompat.Light">
         <item name="android:background">@drawable/btn_selector</item>
@@ -24,5 +20,12 @@
         <item name="android:gravity">center_vertical</item>
         <item name="android:contentDescription">@string/app_name</item>
     </style>
+
+    <style name="InfoTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
 
 </resources>

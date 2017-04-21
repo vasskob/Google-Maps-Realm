@@ -1,6 +1,7 @@
 package com.task.vasskob.googlemapsrealm;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.os.Bundle;
@@ -17,6 +18,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -56,6 +58,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private static final String TAG = MapsActivity.class.getSimpleName();
     public static final String MISSING_TITLE_WARN = "Entry not saved, missing title";
+    public static final String MARKER_ID = "id";
     private Realm realm;
     private String mTitle;
     private GoogleMap mMap;
@@ -151,6 +154,18 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 showAddMarkerDialog(latLng);
             }
         });
+        mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+            @Override
+            public void onInfoWindowClick(com.google.android.gms.maps.model.Marker marker) {
+                Intent intent = new Intent(MapsActivity.this, MarkerInfo.class);
+                intent.putExtra(MARKER_ID, String.valueOf(marker.getTag()));
+
+                Log.d(TAG, "onInfoWindowClick " + marker.getTag());
+                startActivity(intent);
+            }
+        });
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(41.54d, 12.27d),8));
+
     }
 
     public void setCurrentLocation() {
@@ -173,11 +188,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             markerLatLng = new LatLng(marker.getLatitude(), marker.getLongitude());
             markerTitle = marker.getLabel();
             markerIcon = BitmapDescriptorFactory.fromResource(manageMarkerIcon(marker.getIcon()));
-            mMap.addMarker(new MarkerOptions().position(markerLatLng).title(markerTitle).icon(markerIcon));
+            mMap.addMarker(new MarkerOptions().position(markerLatLng).title(markerTitle).icon(markerIcon)).setTag(marker.getId());
 
         }
 
-        //googleMap.moveCamera(CameraUpdateFactory.newLatLng(mylatLng));
+
     }
 
     private void showAddMarkerDialog(final LatLng latLng) {
@@ -204,7 +219,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     Toast.makeText(MapsActivity.this, MISSING_TITLE_WARN, Toast.LENGTH_LONG).show();
                 } else {
                     BitmapDescriptor markerIcon1 = BitmapDescriptorFactory.fromResource(manageMarkerIcon(manageReverseMarkerIcon(selectedImageBtn)));
-                    mMap.addMarker(new MarkerOptions().position(latLng).title(mTitle).icon(markerIcon1));
+                    mMap.addMarker(new MarkerOptions().position(latLng).title(mTitle).icon(markerIcon1)).setTag(marker.getId());
                     writeToRealm(marker);
                 }
             }
@@ -397,5 +412,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         } catch (Resources.NotFoundException e) {
             Log.e(TAG, "Can't find style. Error: ", e);
         }
+   }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        RealmController.with(this).refresh();
+        mMap.clear();
+        showMarkersOnMap();
+
     }
 }

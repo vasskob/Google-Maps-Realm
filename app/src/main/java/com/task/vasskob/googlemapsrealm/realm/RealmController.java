@@ -50,7 +50,7 @@ public class RealmController {
         realm.refresh();
     }
 
-    //clear all objects from Book.class
+    //clear all objects from Marker.class
     public void clearAll() {
 
         realm.beginTransaction();
@@ -58,19 +58,19 @@ public class RealmController {
         realm.commitTransaction();
     }
 
-    //find all objects in the Book.class
+    //find all objects in the Marker.class
     public RealmResults<Marker> getMarkers() {
 
         return realm.where(Marker.class).findAll();
     }
 
     //query a single item with the given id
-    public Marker getMarker(String id) {
+    public Marker getMarker(long id) {
 
         return realm.where(Marker.class).equalTo("id", id).findFirst();
     }
 
-    //check if Book.class is empty
+    //check if Marker.class is empty
     public boolean hasMarkers() {
 
         return !realm.allObjects(Marker.class).isEmpty();

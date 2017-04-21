@@ -23,4 +23,9 @@
     <string name="aubergine_style">Aubergine</string>
     <string name="dark_style">Dark</string>
     <string name="silver_style">Silver</string>
+    <string name="marker_label">marker label</string>
+    <string name="marker_coordinates">marker coordinates</string>
+    <string name="delete_marker">Delete</string>
+    <string name="save_marker">Save</string>
+
 </resources>
