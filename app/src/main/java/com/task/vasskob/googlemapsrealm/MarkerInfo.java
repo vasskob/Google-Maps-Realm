@@ -1,10 +1,13 @@
 package com.task.vasskob.googlemapsrealm;
 
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -20,8 +23,11 @@ import io.realm.Realm;
 import static com.task.vasskob.googlemapsrealm.MapsActivity.MARKER_ID;
 
 
-public class MarkerInfo extends AppCompatActivity {
+public class MarkerInfo extends AppCompatActivity implements View.OnClickListener {
 
+
+    private static final String TAG = MarkerInfo.class.getSimpleName();
+    private int selectedImageBtn;
 
     @Bind(R.id.marker_label)
     EditText etLabel;
@@ -33,10 +39,15 @@ public class MarkerInfo extends AppCompatActivity {
     ImageButton ibIcon;
     private Marker marker;
     private Realm realm;
+    private Dialog dialog;
+
+    @OnClick(R.id.marker_icon)
+    void onIconClick() {
+        showIconChooserDialog();
+    }
 
     @OnClick(R.id.btn_save_marker)
     void onSaveClick() {
-        marker.setLabel(etLabel.getText().toString());
         updateMarkerInRealm(marker);
     }
 
@@ -80,24 +91,60 @@ public class MarkerInfo extends AppCompatActivity {
         }
     }
 
-    private void updateMarkerInRealm(final Marker object) {
-        realm.executeTransaction(new Realm.Transaction() {
-            @Override
-            public void execute(Realm realm) {
-                realm.copyToRealmOrUpdate(object);
-            }
-        });
+    private String manageReverseMarkerIcon(int id) {
+        switch (id) {
+            case R.id.icon1:
+                return "icon1";
+            case R.id.icon2:
+                return "icon2";
+            case R.id.icon3:
+                return "icon3";
+            case R.id.icon4:
+                return "icon4";
+            default:
+                return "icon5";
+        }
+    }
 
+    private void updateMarkerInRealm(final Marker object) {
+        realm.beginTransaction();
+        object.setLabel(etLabel.getText().toString());
+        object.setIcon(manageReverseMarkerIcon(selectedImageBtn));
+        realm.commitTransaction();
+        finish();
     }
 
     private void deleteMarkerInRealm(final Marker object) {
-        realm.executeTransaction(new Realm.Transaction() {
-            @Override
-            public void execute(Realm realm) {
-                Marker result = realm.where(Marker.class).equalTo("id", object.getId()).findFirst();
-                result.removeFromRealm();
-            }
-        });
+        realm.beginTransaction();
+        object.removeFromRealm();
+        realm.commitTransaction();
         finish();
+    }
+
+    private void showIconChooserDialog() {
+
+        dialog = new Dialog(this, android.R.style.Theme_DeviceDefault_Dialog);
+        dialog.setContentView(R.layout.icon_choser);
+
+        ImageButton icon1 = (ImageButton) dialog.findViewById(R.id.icon1);
+        icon1.setOnClickListener(this);
+        ImageButton icon2 = (ImageButton) dialog.findViewById(R.id.icon2);
+        icon2.setOnClickListener(this);
+        ImageButton icon3 = (ImageButton) dialog.findViewById(R.id.icon3);
+        icon3.setOnClickListener(this);
+        ImageButton icon4 = (ImageButton) dialog.findViewById(R.id.icon4);
+        icon4.setOnClickListener(this);
+        dialog.setTitle(R.string.choose_icon);
+
+        dialog.show();
+
+    }
+
+
+    @Override
+    public void onClick(View v) {
+        selectedImageBtn = v.getId();
+        dialog.dismiss();
+        ibIcon.setImageResource(manageMarkerIcon(manageReverseMarkerIcon(selectedImageBtn)));
     }
 }

@@ -200,6 +200,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         LayoutInflater inflater = this.getLayoutInflater();
         final View dialogView = inflater.inflate(R.layout.custom_dialog, null);
         ButterKnife.bind(this, dialogView);
+
         dialogBuilder.setView(dialogView);
 
         final EditText edt = (EditText) dialogView.findViewById(R.id.edit1);
