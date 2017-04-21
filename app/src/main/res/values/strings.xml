@@ -3,10 +3,24 @@
     <string name="title_activity_maps">Map</string>
     <string name="hint_title">Marker title</string>
     <string name="choose_icon">Choose marker icon</string>
-    <string name="dismiss">Dissmis</string>
+    <string name="dismiss">Dismiss</string>
     <string name="submit">Submit</string>
     <string name="add_marker">Add marker</string>
 
     <string name="permission_granted">Permission Granted</string>
     <string name="permission_denied">Permission Denied. App will work with limited functionality</string>
+    <string name="permission_message">App will work with limited functionality. This permission need to get current user location.
+        Please go to settings and check permission or restart application to do this. </string>
+    <string name="permission_title">Warning.</string>
+    <string name="map_style">Map Style</string>
+    <string name="normal_type">Normal</string>
+    <string name="satellite_type">Satellite</string>
+    <string name="hybrid_type">Hybrid</string>
+    <string name="terrain_type">Terrain</string>
+    <string name="night_style">Night</string>
+    <string name="retro_style">Retro</string>
+    <string name="standard_style">Standard</string>
+    <string name="aubergine_style">Aubergine</string>
+    <string name="dark_style">Dark</string>
+    <string name="silver_style">Silver</string>
 </resources>

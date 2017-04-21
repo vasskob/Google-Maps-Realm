@@ -1,18 +1,19 @@
 package com.task.vasskob.googlemapsrealm;
 
-import android.Manifest;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
@@ -22,14 +23,15 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.karumi.dexter.Dexter;
-import com.karumi.dexter.PermissionToken;
-import com.karumi.dexter.listener.PermissionDeniedResponse;
-import com.karumi.dexter.listener.PermissionGrantedResponse;
-import com.karumi.dexter.listener.PermissionRequest;
-import com.karumi.dexter.listener.single.PermissionListener;
+import com.karumi.dexter.listener.multi.CompositeMultiplePermissionsListener;
+import com.karumi.dexter.listener.multi.DialogOnAnyDeniedMultiplePermissionsListener;
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.task.vasskob.googlemapsrealm.app.Prefs;
+import com.task.vasskob.googlemapsrealm.listener.ErrorListener;
+import com.task.vasskob.googlemapsrealm.listener.MultiplePermissionListener;
 import com.task.vasskob.googlemapsrealm.model.Marker;
 import com.task.vasskob.googlemapsrealm.realm.RealmController;
 
@@ -42,9 +44,15 @@ import butterknife.OnClick;
 import io.realm.Realm;
 import io.realm.RealmResults;
 
+import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
+import static android.Manifest.permission.ACCESS_FINE_LOCATION;
+import static com.google.android.gms.maps.GoogleMap.MAP_TYPE_HYBRID;
+import static com.google.android.gms.maps.GoogleMap.MAP_TYPE_NORMAL;
+import static com.google.android.gms.maps.GoogleMap.MAP_TYPE_SATELLITE;
+import static com.google.android.gms.maps.GoogleMap.MAP_TYPE_TERRAIN;
 import static com.task.vasskob.googlemapsrealm.R.id.map;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
+public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private static final String TAG = MapsActivity.class.getSimpleName();
     public static final String MISSING_TITLE_WARN = "Entry not saved, missing title";
@@ -68,25 +76,25 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     };
     private int selectedImageBtn;
-    private SupportMapFragment mapFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
 
+        ActionBar actionBar = getSupportActionBar();
+        assert actionBar != null;
+        actionBar.setDisplayShowTitleEnabled(false);
 
-        if (checkPermission()){
-            requestPermission();
+        if (!checkPermissions()) {
+            createPermissionListeners();
         }
-        mapFragment = (SupportMapFragment) getSupportFragmentManager()
+
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(map);
         mapFragment.getMapAsync(this);
 
         realm = RealmController.with(this).getRealm();
-
-
-        //Log.d(TAG, "onCreate:  icon1 id= " + R.drawable.icon1+"/n icon2 id= "+ R.drawable.icon2+  "/n icon3 id= "+ R.drawable.icon3 +"/n icon4 id= "+ R.drawable.icon4);
 
     }
 
@@ -122,18 +130,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+        mMap.setMapType(MAP_TYPE_HYBRID);
+
+        setCurrentLocation();
         mMap.getUiSettings().setMyLocationButtonEnabled(true);
         mMap.getUiSettings().setZoomControlsEnabled(true);
-        mMap.setPadding(0, 50, 0, 100);
-
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED) {
-            mMap.setMyLocationEnabled(true);
-        } else {
-            Log.d("onMapReady", "Permission deny");
-            // Show rationale and request permission.
-        }
+        mMap.setPadding(0, 200, 0, 100);
 
         if (!Prefs.with(this).getPreLoad()) {
             // Add dummy markers to db
@@ -141,7 +143,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
 
         RealmController.with(this).refresh();
-        showMarkersOnMap(googleMap);
+        showMarkersOnMap();
 
         googleMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
             @Override
@@ -151,7 +153,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         });
     }
 
-    private void showMarkersOnMap(GoogleMap googleMap) {
+    public void setCurrentLocation() {
+
+        if (ContextCompat.checkSelfPermission(this, ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+            mMap.setMyLocationEnabled(true);
+        } else {
+            Log.d(TAG, " setCurrentLocation Permission deny!");
+        }
+    }
+
+    private void showMarkersOnMap() {
         LatLng markerLatLng;
         String markerTitle;
         BitmapDescriptor markerIcon;
@@ -161,9 +173,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             markerLatLng = new LatLng(marker.getLatitude(), marker.getLongitude());
             markerTitle = marker.getLabel();
             markerIcon = BitmapDescriptorFactory.fromResource(manageMarkerIcon(marker.getIcon()));
-            googleMap.addMarker(new MarkerOptions().position(markerLatLng).title(markerTitle).icon(markerIcon));
-            //googleMap.moveCamera(CameraUpdateFactory.newLatLng(markerLatLng));
+            mMap.addMarker(new MarkerOptions().position(markerLatLng).title(markerTitle).icon(markerIcon));
+
         }
+
+        //googleMap.moveCamera(CameraUpdateFactory.newLatLng(mylatLng));
     }
 
     private void showAddMarkerDialog(final LatLng latLng) {
@@ -294,34 +308,94 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
-    private void requestPermission() {
-       // FrameLayout frameLayout = (FrameLayout) findViewById(R.id.intent_data);
-        PermissionListener pml = new PermissionListener() {
-            @Override
-            public void onPermissionGranted(PermissionGrantedResponse response) {
-                Snackbar.make(mapFragment.getView(), R.string.permission_granted, Snackbar.LENGTH_LONG).show();
-            }
+    private void createPermissionListeners() {
 
-            @Override
-            public void onPermissionDenied(PermissionDeniedResponse response) {
-                Snackbar.make(mapFragment.getView(), R.string.permission_denied, Snackbar.LENGTH_LONG).show();
-            }
+        ErrorListener errorListener = new ErrorListener();
+        MultiplePermissionsListener mpl = new MultiplePermissionListener(this);
 
-            @Override
-            public void onPermissionRationaleShouldBeShown(PermissionRequest permission, PermissionToken token) {
-
-            }
-        };
+        MultiplePermissionsListener cmpl = new CompositeMultiplePermissionsListener(mpl,
+                DialogOnAnyDeniedMultiplePermissionsListener.Builder.withContext(MapsActivity.this)
+                        .withMessage(R.string.permission_message)
+                        .withButtonText(android.R.string.ok)
+                        .withTitle(R.string.permission_title)
+                        .build());
 
         Dexter.withActivity(this)
-                .withPermission(Manifest.permission.ACCESS_COARSE_LOCATION)
-                .withListener(pml)
+                .withPermissions(
+                        ACCESS_COARSE_LOCATION,
+                        ACCESS_FINE_LOCATION)
+                .withListener(cmpl)
+                .withErrorListener(errorListener)
                 .check();
     }
 
-    private boolean checkPermission() {
-        int resultCoarse = ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_COARSE_LOCATION);
-        int resultFine = ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_COARSE_LOCATION);
-        return resultFine != PackageManager.PERMISSION_GRANTED &&  resultCoarse != PackageManager.PERMISSION_GRANTED;
+    private boolean checkPermissions() {
+        int resultCoarse = ContextCompat.checkSelfPermission(getApplicationContext(), ACCESS_COARSE_LOCATION);
+        int resultFine = ContextCompat.checkSelfPermission(getApplicationContext(), ACCESS_FINE_LOCATION);
+        return resultFine == PackageManager.PERMISSION_GRANTED && resultCoarse == PackageManager.PERMISSION_GRANTED;
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int itemId = item.getItemId();
+        switch (itemId) {
+            case R.id.normal_type:
+                mMap.setMapType(MAP_TYPE_NORMAL);
+                setStyle(R.raw.normal_style);
+                break;
+            case R.id.night_style:
+                mMap.setMapType(MAP_TYPE_NORMAL);
+                setStyle(R.raw.night_style);
+                break;
+            case R.id.retro_style:
+                mMap.setMapType(MAP_TYPE_NORMAL);
+                setStyle(R.raw.retro_style);
+                break;
+            case R.id.silver_style:
+                mMap.setMapType(MAP_TYPE_NORMAL);
+                setStyle(R.raw.silver_style);
+                break;
+            case R.id.dark_style:
+                mMap.setMapType(MAP_TYPE_NORMAL);
+                setStyle(R.raw.dark_style);
+                break;
+            case R.id.aubergine_style:
+                mMap.setMapType(MAP_TYPE_NORMAL);
+                setStyle(R.raw.aubergine_style);
+                break;
+            case R.id.satellite_type:
+                mMap.setMapType(MAP_TYPE_SATELLITE);
+                break;
+            case R.id.hybrid_type:
+                mMap.setMapType(MAP_TYPE_HYBRID);
+                break;
+            case R.id.terrain_type:
+                mMap.setMapType(MAP_TYPE_TERRAIN);
+                break;
+            default:
+                return false;
+        }
+        return true;
+    }
+
+    private void setStyle(int style) {
+        try {
+            boolean success = mMap.setMapStyle(
+                    MapStyleOptions.loadRawResourceStyle(
+                            this, style));
+
+            if (!success) {
+                Log.e(TAG, "Style parsing failed.");
+            }
+        } catch (Resources.NotFoundException e) {
+            Log.e(TAG, "Can't find style. Error: ", e);
+        }
     }
 }

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/map_style"
+        android:enabled="true"
+        android:title="@string/map_style"
+        android:titleCondensed="Areas"
+        android:visible="true">
+        <menu>
+            <item
+                android:title="@string/normal_type">
+                <menu>
+                    <item
+                        android:id="@+id/normal_type"
+                        android:title="@string/standard_style"/>
+                    <item
+                        android:id="@+id/night_style"
+                        android:title="@string/night_style"/>
+                    <item
+                        android:id="@+id/silver_style"
+                        android:title="@string/silver_style"/>
+                    <item
+                        android:id="@+id/dark_style"
+                        android:title="@string/dark_style"/>
+                    <item
+                        android:id="@+id/aubergine_style"
+                        android:title="@string/aubergine_style"/>
+
+                    <item
+                        android:id="@+id/retro_style"
+                        android:title="@string/retro_style"/>
+                </menu>
+            </item>
+            <item
+                android:id="@+id/satellite_type"
+                android:title="@string/satellite_type"/>
+            <item
+                android:id="@+id/hybrid_type"
+                android:title="@string/hybrid_type"/>
+            <item
+                android:id="@+id/terrain_type"
+                android:title="@string/terrain_type"/>
+
+        </menu>
+    </item>
+</menu>
