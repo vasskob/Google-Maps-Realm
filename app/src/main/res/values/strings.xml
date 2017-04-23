@@ -27,5 +27,7 @@
     <string name="marker_coordinates">marker coordinates</string>
     <string name="delete_marker">Delete</string>
     <string name="save_marker">Save</string>
+    <string name="done">Done</string>
+    <string name="cancel">Cancel</string>
 
 </resources>

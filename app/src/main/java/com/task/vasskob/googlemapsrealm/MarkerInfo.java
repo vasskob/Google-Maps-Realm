@@ -12,14 +12,18 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.task.vasskob.googlemapsrealm.model.Marker;
+import com.task.vasskob.googlemapsrealm.realm.DbOperations;
 import com.task.vasskob.googlemapsrealm.realm.RealmController;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import io.realm.Realm;
 
 import static com.task.vasskob.googlemapsrealm.MapsActivity.MARKER_ID;
+import static com.task.vasskob.googlemapsrealm.realm.DbOperations.deleteMarkerInRealm;
+import static com.task.vasskob.googlemapsrealm.realm.DbOperations.updateMarkerInRealm;
+import static com.task.vasskob.googlemapsrealm.util.ManageMarkerIcon.manageMarkerIcon;
+import static com.task.vasskob.googlemapsrealm.util.ManageMarkerIcon.manageReverseMarkerIcon;
 
 
 public class MarkerInfo extends AppCompatActivity implements View.OnClickListener {
@@ -37,7 +41,6 @@ public class MarkerInfo extends AppCompatActivity implements View.OnClickListene
     @Bind(R.id.marker_icon)
     ImageButton ibIcon;
     private Marker marker;
-    private Realm realm;
     private Dialog dialog;
 
     @OnClick(R.id.marker_icon)
@@ -47,12 +50,14 @@ public class MarkerInfo extends AppCompatActivity implements View.OnClickListene
 
     @OnClick(R.id.btn_save_marker)
     void onSaveClick() {
-        updateMarkerInRealm(marker);
+        updateMarkerInRealm(marker, etLabel.getText().toString(), selectedImageBtn);
+        finish();
     }
 
     @OnClick(R.id.btm_delete_marker)
     void onDeleteClick() {
         deleteMarkerInRealm(marker);
+        finish();
     }
 
     @Override
@@ -60,7 +65,8 @@ public class MarkerInfo extends AppCompatActivity implements View.OnClickListene
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_marker_info);
         ButterKnife.bind(this);
-        realm = RealmController.with(this).getRealm();
+
+        new DbOperations(getApplication());
 
         Intent intent = getIntent();
         final String markerId = intent.getStringExtra(MARKER_ID);
@@ -72,54 +78,6 @@ public class MarkerInfo extends AppCompatActivity implements View.OnClickListene
         String mIcon = marker.getIcon();
         ibIcon.setImageResource(manageMarkerIcon(mIcon));
         Log.d("MarkerInfo", "onCreate" + markerId);
-
-    }
-
-    private int manageMarkerIcon(String markerIcon) {
-        switch (markerIcon) {
-            case "ic_icon1":
-                return R.drawable.ic_icon1;
-            case "ic_icon2":
-                return R.drawable.ic_icon2;
-            case "ic_icon3":
-                return R.drawable.ic_icon3;
-            case "ic_icon4":
-                return R.drawable.ic_icon4;
-            default:
-                return R.drawable.ic_default_marker;
-        }
-    }
-
-    private String manageReverseMarkerIcon(int id) {
-        switch (id) {
-            case R.id.icon1:
-                return "ic_icon1";
-            case R.id.icon2:
-                return "ic_icon2";
-            case R.id.icon3:
-                return "ic_icon3";
-            case R.id.icon4:
-                return "ic_icon4";
-            default:
-                return "ic_default_marker";
-        }
-    }
-
-    private void updateMarkerInRealm(final Marker object) {
-        realm.beginTransaction();
-        object.setLabel(etLabel.getText().toString());
-        if (selectedImageBtn != 0) {
-            object.setIcon(manageReverseMarkerIcon(selectedImageBtn));
-        }
-        realm.commitTransaction();
-        finish();
-    }
-
-    private void deleteMarkerInRealm(final Marker object) {
-        realm.beginTransaction();
-        object.removeFromRealm();
-        realm.commitTransaction();
-        finish();
     }
 
     private void showIconChooserDialog() {
@@ -138,9 +96,7 @@ public class MarkerInfo extends AppCompatActivity implements View.OnClickListene
         dialog.setTitle(R.string.choose_icon);
 
         dialog.show();
-
     }
-
 
     @Override
     public void onClick(View v) {
