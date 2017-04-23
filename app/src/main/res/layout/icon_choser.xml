@@ -10,25 +10,25 @@
     <ImageButton
         android:id="@+id/icon1"
         style="@style/MarkerIcons"
-        android:src="@drawable/icon1"
+        android:src="@drawable/ic_icon1"
         />
 
     <ImageButton
         android:id="@+id/icon2"
         style="@style/MarkerIcons"
-        android:src="@drawable/icon2"
+        android:src="@drawable/ic_icon2"
 
         />
 
     <ImageButton
         android:id="@+id/icon3"
         style="@style/MarkerIcons"
-        android:src="@drawable/icon3"
+        android:src="@drawable/ic_icon3"
         />
 
     <ImageButton
         android:id="@+id/icon4"
         style="@style/MarkerIcons"
-        android:src="@drawable/icon4"
+        android:src="@drawable/ic_icon4"
         />
 </LinearLayout>

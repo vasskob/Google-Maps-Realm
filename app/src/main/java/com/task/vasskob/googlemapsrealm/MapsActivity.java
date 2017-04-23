@@ -248,7 +248,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         Marker marker = new Marker();
         marker.setId(1 + System.currentTimeMillis());
         marker.setLabel("Barcelona");
-        marker.setIcon("icon1");
+        marker.setIcon("ic_icon1");
         marker.setLatitude(41.23d);
         marker.setLongitude(2.09d);
         markers.add(marker);
@@ -256,7 +256,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         marker = new Marker();
         marker.setId(2 + System.currentTimeMillis());
         marker.setLabel("Paris");
-        marker.setIcon("icon2");
+        marker.setIcon("ic_icon2");
         marker.setLatitude(48.48d);
         marker.setLongitude(2.20d);
         markers.add(marker);
@@ -264,7 +264,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         marker = new Marker();
         marker.setId(3 + System.currentTimeMillis());
         marker.setLabel("Rome");
-        marker.setIcon("icon3");
+        marker.setIcon("ic_icon3");
         marker.setLatitude(41.54d);
         marker.setLongitude(12.27d);
         markers.add(marker);
@@ -272,7 +272,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         marker = new Marker();
         marker.setId(4 + System.currentTimeMillis());
         marker.setLabel("Tokyo");
-        marker.setIcon("icon4");
+        marker.setIcon("ic_icon4");
         marker.setLatitude(35.40d);
         marker.setLongitude(139.45d);
         markers.add(marker);
@@ -280,7 +280,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         marker = new Marker();
         marker.setId(5 + System.currentTimeMillis());
         marker.setLabel("Sydney");
-        marker.setIcon("icon1");
+        marker.setIcon("ic_icon1");
         marker.setLatitude(-34d);
         marker.setLongitude(151d);
         markers.add(marker);
@@ -296,31 +296,31 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private int manageMarkerIcon(String markerIcon) {
         switch (markerIcon) {
-            case "icon1":
-                return R.drawable.icon1;
-            case "icon2":
-                return R.drawable.icon2;
-            case "icon3":
-                return R.drawable.icon3;
-            case "icon4":
-                return R.drawable.icon4;
+            case "ic_icon1":
+                return R.drawable.ic_icon1;
+            case "ic_icon2":
+                return R.drawable.ic_icon2;
+            case "ic_icon3":
+                return R.drawable.ic_icon3;
+            case "ic_icon4":
+                return R.drawable.ic_icon4;
             default:
-                return R.drawable.icon5;
+                return R.drawable.ic_default_marker;
         }
     }
 
     private String manageReverseMarkerIcon(int id) {
         switch (id) {
             case R.id.icon1:
-                return "icon1";
+                return "ic_icon1";
             case R.id.icon2:
-                return "icon2";
+                return "ic_icon2";
             case R.id.icon3:
-                return "icon3";
+                return "ic_icon3";
             case R.id.icon4:
-                return "icon4";
+                return "ic_icon4";
             default:
-                return "icon5";
+                return "ic_default_marker";
         }
     }
 

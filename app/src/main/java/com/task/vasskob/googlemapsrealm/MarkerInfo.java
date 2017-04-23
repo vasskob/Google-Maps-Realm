@@ -1,7 +1,6 @@
 package com.task.vasskob.googlemapsrealm;
 
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -27,7 +26,7 @@ public class MarkerInfo extends AppCompatActivity implements View.OnClickListene
 
 
     private static final String TAG = MarkerInfo.class.getSimpleName();
-    private int selectedImageBtn;
+    private int selectedImageBtn = 0;
 
     @Bind(R.id.marker_label)
     EditText etLabel;
@@ -78,38 +77,40 @@ public class MarkerInfo extends AppCompatActivity implements View.OnClickListene
 
     private int manageMarkerIcon(String markerIcon) {
         switch (markerIcon) {
-            case "icon1":
-                return R.drawable.icon1;
-            case "icon2":
-                return R.drawable.icon2;
-            case "icon3":
-                return R.drawable.icon3;
-            case "icon4":
-                return R.drawable.icon4;
+            case "ic_icon1":
+                return R.drawable.ic_icon1;
+            case "ic_icon2":
+                return R.drawable.ic_icon2;
+            case "ic_icon3":
+                return R.drawable.ic_icon3;
+            case "ic_icon4":
+                return R.drawable.ic_icon4;
             default:
-                return R.drawable.icon5;
+                return R.drawable.ic_default_marker;
         }
     }
 
     private String manageReverseMarkerIcon(int id) {
         switch (id) {
             case R.id.icon1:
-                return "icon1";
+                return "ic_icon1";
             case R.id.icon2:
-                return "icon2";
+                return "ic_icon2";
             case R.id.icon3:
-                return "icon3";
+                return "ic_icon3";
             case R.id.icon4:
-                return "icon4";
+                return "ic_icon4";
             default:
-                return "icon5";
+                return "ic_default_marker";
         }
     }
 
     private void updateMarkerInRealm(final Marker object) {
         realm.beginTransaction();
         object.setLabel(etLabel.getText().toString());
-        object.setIcon(manageReverseMarkerIcon(selectedImageBtn));
+        if (selectedImageBtn != 0) {
+            object.setIcon(manageReverseMarkerIcon(selectedImageBtn));
+        }
         realm.commitTransaction();
         finish();
     }
