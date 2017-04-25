@@ -5,6 +5,7 @@ android {
         config {
             keyAlias 'MapsRealm'
             keyPassword '17801780'
+            //todo don't use absolute path
             storeFile file('/home/vasskob/Workspace/MyTasks/GoogleMaps&Realm/MapsRealm.jks')
             storePassword '17801780'
         }
@@ -27,6 +28,7 @@ android {
             signingConfig signingConfigs.config
         }
     }
+//    favors???
     productFlavors {
     }
 }

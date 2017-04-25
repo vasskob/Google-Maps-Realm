@@ -4,6 +4,7 @@ package com.task.vasskob.googlemapsrealm.util;
 import com.task.vasskob.googlemapsrealm.R;
 
 public class ManageMarkerIcon {
+    // TODO: 25/04/17 is better to create
 
     public static int manageMarkerIcon(String markerIcon) {
         switch (markerIcon) {

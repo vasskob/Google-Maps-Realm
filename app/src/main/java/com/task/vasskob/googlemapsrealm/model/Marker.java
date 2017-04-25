@@ -8,6 +8,7 @@ public class Marker extends RealmObject {
     @PrimaryKey
     private long id;
     private String label;
+    // TODO: 25/04/17 use MarkerIcon title here
     private String icon;
     private Double latitude;
     private Double longitude;

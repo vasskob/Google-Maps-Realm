@@ -166,7 +166,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 startActivity(intent);
             }
         });
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(41.54d, 12.27d), 8));
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(41.54d, 12.27d)//WTF hardcoded?
+                , 8));
 
     }
 
@@ -183,9 +184,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         LatLng markerLatLng;
         String markerTitle;
         BitmapDescriptor markerIcon;
+        // TODO: 25/04/17 why on ui thread?
         RealmResults<Marker> markers = RealmController.with(this).getMarkers();
 
         for (Marker marker : markers) {
+            // TODO: 25/04/17 create mapper for Marker-MarkerOptions relation to convert data
             markerLatLng = new LatLng(marker.getLatitude(), marker.getLongitude());
             markerTitle = marker.getLabel();
             markerIcon = BitmapDescriptorFactory.fromResource(manageMarkerIcon(marker.getIcon()));
@@ -194,6 +197,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     private void showAddMarkerDialog(final LatLng latLng) {
+        // TODO: 25/04/17 create separated CreateMarkerDialog with custom listener and other stuff
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
         final View dialogView = inflate(this, R.layout.custom_dialog, null);
         ButterKnife.bind(this, dialogView);
@@ -230,6 +234,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     //////////////////// Write Dummy Data to DB Section ///////////////////////////
     private void setRealmData() {
+        // TODO: 25/04/17 if you use some data generator create separated package/class for these needs
         ArrayList<Marker> markers = new ArrayList<>();
 
         Marker marker = new Marker();

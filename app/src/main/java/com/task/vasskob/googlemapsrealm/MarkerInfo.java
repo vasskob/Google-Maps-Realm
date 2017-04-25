@@ -26,6 +26,7 @@ import static com.task.vasskob.googlemapsrealm.util.ManageMarkerIcon.manageMarke
 import static com.task.vasskob.googlemapsrealm.util.ManageMarkerIcon.manageReverseMarkerIcon;
 
 
+// TODO: 25/04/17 why don't MarkerInfoActivity
 public class MarkerInfo extends AppCompatActivity implements View.OnClickListener {
 
 
