@@ -1,9 +1,9 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:orientation="vertical"
-              android:padding="10dp"
-    >
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="10dp">
 
     <EditText
         android:id="@+id/edit1"
@@ -11,8 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"
         android:hint="@string/hint_title"
-        android:inputType="text"
-        />
+        android:inputType="text"/>
 
     <TextView
         android:layout_width="match_parent"
@@ -21,9 +20,15 @@
         android:text="@string/choose_icon"/>
 
 
-    <include
+    <!--<include-->
+    <!--layout="@layout/icon_chooser"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"/>-->
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rvIcons"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        layout="@layout/icon_choser"/>
+        android:layout_height="wrap_content">
+    </android.support.v7.widget.RecyclerView>
 
 </LinearLayout>

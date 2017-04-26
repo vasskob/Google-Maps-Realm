@@ -36,5 +36,20 @@ public class ManageMarkerIcon {
         }
     }
 
+    public static int getMarkerIcon(int id) {
+        switch (id) {
+            case R.id.icon1:
+                return R.drawable.ic_icon1;
+            case R.id.icon2:
+                return R.drawable.ic_icon2;
+            case R.id.icon3:
+                return R.drawable.ic_icon3;
+            case R.id.icon4:
+                return R.drawable.ic_icon4;
+            default:
+                return R.drawable.ic_default_marker;
+        }
+    }
+
 }
 

@@ -5,8 +5,7 @@ android {
         config {
             keyAlias 'MapsRealm'
             keyPassword '17801780'
-            //todo don't use absolute path
-            storeFile file('/home/vasskob/Workspace/MyTasks/GoogleMaps&Realm/MapsRealm.jks')
+            storeFile file('MapsRealm.jks')
             storePassword '17801780'
         }
     }
@@ -43,7 +42,7 @@ dependencies {
     testCompile 'junit:junit:4.12'
 
     // Realm
-    compile 'io.realm:realm-android:0.83.1'
+    compile 'io.realm:realm-android:0.87.5'
     compile 'com.jakewharton:butterknife:7.0.1'
     compile 'com.karumi:dexter:4.1.0'
 }

@@ -8,8 +8,9 @@ public class Marker extends RealmObject {
     @PrimaryKey
     private long id;
     private String label;
-    // TODO: 25/04/17 use MarkerIcon title here
-    private String icon;
+
+   // private String icon;
+    private MarkerIcon markerIcon;
     private Double latitude;
     private Double longitude;
 
@@ -29,12 +30,12 @@ public class Marker extends RealmObject {
         this.label = label;
     }
 
-    public String getIcon() {
-        return icon;
+    public MarkerIcon getMarkerIcon() {
+        return markerIcon;
     }
 
-    public void setIcon(String icon) {
-        this.icon = icon;
+    public void setMarkerIcon(MarkerIcon markerIcon) {
+        this.markerIcon = markerIcon;
     }
 
     public Double getLatitude() {

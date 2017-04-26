@@ -3,6 +3,7 @@ package com.task.vasskob.googlemapsrealm.realm;
 import android.app.Application;
 
 import com.task.vasskob.googlemapsrealm.model.Marker;
+import com.task.vasskob.googlemapsrealm.model.MarkerIcon;
 
 import io.realm.Realm;
 
@@ -34,8 +35,9 @@ public class DbOperations {
         realm.beginTransaction();
         marker.setLabel(label);
         if (iconId != 0) {
-            marker.setIcon(manageReverseMarkerIcon(iconId));
+            marker.setMarkerIcon(new MarkerIcon(iconId,iconId));
         }
         realm.commitTransaction();
     }
+
 }

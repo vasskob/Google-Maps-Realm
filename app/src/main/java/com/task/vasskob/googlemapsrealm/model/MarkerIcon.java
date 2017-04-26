@@ -1,21 +1,34 @@
 package com.task.vasskob.googlemapsrealm.model;
 
+import io.realm.RealmObject;
 
-// TODO: 25/04/17 use this initialization to store relation between icon id and title
-public class MarkerIcon {
-    private final int mResID;
-    private final int mTitle;
+public class MarkerIcon extends RealmObject {
 
-    public MarkerIcon(int resID, int title) {
-        mResID = resID;
-        mTitle = title;
+    private int id;
+    private int resId;
+
+    public MarkerIcon(int id, int resId) {
+        this.id = id;
+        this.resId = resId;
     }
 
-    public int getResID() {
-        return mResID;
+    public MarkerIcon() {
     }
 
-    public int getTitle() {
-        return mTitle;
+    public int getResId() {
+        return resId;
     }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setResId(int resId) {
+        this.resId = resId;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
 }

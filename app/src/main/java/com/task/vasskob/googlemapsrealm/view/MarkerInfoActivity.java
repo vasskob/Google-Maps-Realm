@@ -1,4 +1,4 @@
-package com.task.vasskob.googlemapsrealm;
+package com.task.vasskob.googlemapsrealm.view;
 
 import android.app.Dialog;
 import android.content.Intent;
@@ -11,7 +11,9 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.task.vasskob.googlemapsrealm.R;
 import com.task.vasskob.googlemapsrealm.model.Marker;
+import com.task.vasskob.googlemapsrealm.model.MarkerIcon;
 import com.task.vasskob.googlemapsrealm.realm.DbOperations;
 import com.task.vasskob.googlemapsrealm.realm.RealmController;
 
@@ -19,18 +21,16 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static com.task.vasskob.googlemapsrealm.MapsActivity.MARKER_ID;
 import static com.task.vasskob.googlemapsrealm.realm.DbOperations.deleteMarkerInRealm;
 import static com.task.vasskob.googlemapsrealm.realm.DbOperations.updateMarkerInRealm;
 import static com.task.vasskob.googlemapsrealm.util.ManageMarkerIcon.manageMarkerIcon;
 import static com.task.vasskob.googlemapsrealm.util.ManageMarkerIcon.manageReverseMarkerIcon;
 
 
-// TODO: 25/04/17 why don't MarkerInfoActivity
-public class MarkerInfo extends AppCompatActivity implements View.OnClickListener {
+public class MarkerInfoActivity extends AppCompatActivity implements View.OnClickListener {
 
 
-    private static final String TAG = MarkerInfo.class.getSimpleName();
+    private static final String TAG = MarkerInfoActivity.class.getSimpleName();
     private int selectedImageBtn = 0;
 
     @Bind(R.id.marker_label)
@@ -70,21 +70,21 @@ public class MarkerInfo extends AppCompatActivity implements View.OnClickListene
         new DbOperations(getApplication());
 
         Intent intent = getIntent();
-        final String markerId = intent.getStringExtra(MARKER_ID);
+        final String markerId = intent.getStringExtra(MapsActivity.MARKER_ID);
 
         marker = RealmController.with(this).getMarker(Long.parseLong(markerId));
 
         etLabel.setText(marker.getLabel());
         tvCoordinates.setText(marker.getLatitude() + " , " + marker.getLongitude());
-        String mIcon = marker.getIcon();
-        ibIcon.setImageResource(manageMarkerIcon(mIcon));
-        Log.d("MarkerInfo", "onCreate" + markerId);
+        MarkerIcon mIcon = marker.getMarkerIcon();
+        ibIcon.setImageResource(mIcon.getResId());
+        Log.d(TAG, "onCreate" + markerId);
     }
 
     private void showIconChooserDialog() {
 
         dialog = new Dialog(this, android.R.style.Theme_DeviceDefault_Dialog);
-        dialog.setContentView(R.layout.icon_choser);
+        dialog.setContentView(R.layout.icon_chooser);
 
         ImageButton icon1 = (ImageButton) dialog.findViewById(R.id.icon1);
         icon1.setOnClickListener(this);

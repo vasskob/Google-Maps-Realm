@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Application;
 
 import com.task.vasskob.googlemapsrealm.model.Marker;
+import com.task.vasskob.googlemapsrealm.model.MarkerIcon;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
@@ -61,7 +62,7 @@ public class RealmController {
     //find all objects in the Marker.class
     public RealmResults<Marker> getMarkers() {
 
-        return realm.where(Marker.class).findAll();
+        return realm.where(Marker.class).findAllAsync();
     }
 
     //query a single item with the given id
@@ -69,6 +70,7 @@ public class RealmController {
 
         return realm.where(Marker.class).equalTo("id", id).findFirst();
     }
+
 
     //check if Marker.class is empty
     public boolean hasMarkers() {
