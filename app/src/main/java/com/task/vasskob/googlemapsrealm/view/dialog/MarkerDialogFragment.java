@@ -7,11 +7,13 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 
 import com.task.vasskob.googlemapsrealm.R;
 import com.task.vasskob.googlemapsrealm.model.MarkerIcon;
-import com.task.vasskob.googlemapsrealm.view.adapter.MarkerAdapter;
+import com.task.vasskob.googlemapsrealm.view.dialog.adapter.MarkerIconAdapter;
 
 import java.util.ArrayList;
 
@@ -26,23 +28,28 @@ public class MarkerDialogFragment extends BaseDialogFragment<MarkerDialogFragmen
 
 
     private static final int COUNT_OF_COLUMN = 4;
+    public static final String TITLE = "title";
+
     @Bind(R.id.rvIcons)
     RecyclerView rvMarkerIcons;
+
+    @Bind(R.id.et_marker_title)
+    EditText etMarkerTitle;
+
     private ArrayList<MarkerIcon> markerIcons;
+    private MarkerIcon defaultMarkerIcon = new MarkerIcon(5, R.drawable.ic_default_marker);
+    private MarkerIcon clickedMarkerIcon;
+    private String mTitle;
+
 
     public interface OnDialogFragmentClickListener {
-        public void onOkClicked(MarkerDialogFragment dialog);
-
-        public void onCancelClicked(MarkerDialogFragment dialog);
-
-        public void onMarkerIconClicked(MarkerIcon markerIcon);
+        void onDoneClicked(MarkerDialogFragment dialog);
     }
 
-
-    public static MarkerDialogFragment newInstance(String title) {
+    public static MarkerDialogFragment newInstance(int title) {
 
         Bundle args = new Bundle();
-        args.putString("title", title);
+        args.putInt(TITLE, title);
 
         MarkerDialogFragment fragment = new MarkerDialogFragment();
         fragment.setArguments(args);
@@ -59,36 +66,48 @@ public class MarkerDialogFragment extends BaseDialogFragment<MarkerDialogFragmen
         rvMarkerIcons.setHasFixedSize(true);
         rvMarkerIcons.setLayoutManager(new GridLayoutManager(this.getActivity(), COUNT_OF_COLUMN));
 
-        MarkerAdapter adapter = new MarkerAdapter(markerIcons, this.getActivity());
+        MarkerIconAdapter adapter = new MarkerIconAdapter(markerIcons, this.getActivity());
+        adapter.setListener(new MarkerIconAdapter.OnMarkerIconClickListener() {
+            @Override
+            public void onIconClick(MarkerIcon markerIcon) {
+                clickedMarkerIcon = markerIcon;
+            }
+        });
         rvMarkerIcons.setAdapter(adapter);
 
-        int selectedImageBtn = 0;
         return new AlertDialog.Builder(getActivity())
 
                 .setView(dialogView)
-                .setTitle(getArguments().getString(getResources().getString(R.string.add_marker)))
+                .setTitle(getArguments().getInt(TITLE))
                 .setCancelable(false)
                 .setPositiveButton(R.string.done,
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
                                 // Positive button clicked
+                                mTitle = etMarkerTitle.getText().toString();
+                                if (clickedMarkerIcon != null)
+                                    Log.d("OnPositiveBtnClick", "Title = " + mTitle + " icon = " + clickedMarkerIcon.getId());
 
-
-                                getActivityInstance().onOkClicked(MarkerDialogFragment.this);
+                                getActivityInstance().onDoneClicked(MarkerDialogFragment.this);
                             }
                         }
                 )
                 .setNegativeButton(R.string.cancel,
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
-                                // negative button clicked
-
-
-                                getActivityInstance().onCancelClicked(MarkerDialogFragment.this);
+                                dialog.dismiss();
                             }
                         }
                 )
                 .create();
+    }
+
+    public String getMarkerLabel() {
+        return mTitle.equals("") ? getResources().getString(R.string.default_marker_label) : mTitle;
+    }
+
+    public MarkerIcon getMarkerIcon() {
+        return clickedMarkerIcon == null ? defaultMarkerIcon : clickedMarkerIcon;
     }
 
     private void initMarkers() {
@@ -96,10 +115,6 @@ public class MarkerDialogFragment extends BaseDialogFragment<MarkerDialogFragmen
         markerIcons.add(new MarkerIcon(1, R.drawable.ic_icon1));
         markerIcons.add(new MarkerIcon(2, R.drawable.ic_icon2));
         markerIcons.add(new MarkerIcon(3, R.drawable.ic_icon3));
-        markerIcons.add(new MarkerIcon(4, R.drawable.ic_icon4));
-        markerIcons.add(new MarkerIcon(4, R.drawable.ic_icon4));
-        markerIcons.add(new MarkerIcon(4, R.drawable.ic_icon4));
-        markerIcons.add(new MarkerIcon(4, R.drawable.ic_icon4));
         markerIcons.add(new MarkerIcon(4, R.drawable.ic_icon4));
     }
 }

@@ -94,7 +94,7 @@ public class MarkerInfoActivity extends AppCompatActivity implements View.OnClic
         icon3.setOnClickListener(this);
         ImageButton icon4 = (ImageButton) dialog.findViewById(R.id.icon4);
         icon4.setOnClickListener(this);
-        dialog.setTitle(R.string.choose_icon);
+        dialog.setTitle(R.string.new_marker_dialog_title);
 
         dialog.show();
     }

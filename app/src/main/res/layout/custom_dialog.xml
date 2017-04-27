@@ -6,7 +6,7 @@
     android:padding="10dp">
 
     <EditText
-        android:id="@+id/edit1"
+        android:id="@+id/et_marker_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"
@@ -17,13 +17,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
-        android:text="@string/choose_icon"/>
-
-
-    <!--<include-->
-    <!--layout="@layout/icon_chooser"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent"/>-->
+        android:text="@string/choose_marker_icon"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rvIcons"

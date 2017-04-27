@@ -7,8 +7,6 @@ import com.task.vasskob.googlemapsrealm.model.MarkerIcon;
 
 import io.realm.Realm;
 
-import static com.task.vasskob.googlemapsrealm.util.ManageMarkerIcon.manageReverseMarkerIcon;
-
 
 public class DbOperations {
 

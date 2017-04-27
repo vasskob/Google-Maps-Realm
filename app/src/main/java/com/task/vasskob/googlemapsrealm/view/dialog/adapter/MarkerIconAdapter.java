@@ -1,8 +1,7 @@
-package com.task.vasskob.googlemapsrealm.view.adapter;
+package com.task.vasskob.googlemapsrealm.view.dialog.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,13 +15,19 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class MarkerAdapter extends RecyclerView.Adapter<MarkerAdapter.MarkerListHolder> {
+public class MarkerIconAdapter extends RecyclerView.Adapter<MarkerIconAdapter.MarkerListHolder> {
     private final LayoutInflater mLayoutInflater;
     private final List<MarkerIcon> markerIconList;
+    private OnMarkerIconClickListener mListener;
+    private int mCurrentPosition = -1;
 
-    public MarkerAdapter(List<MarkerIcon> markerIconList, Context context) {
+    public MarkerIconAdapter(List<MarkerIcon> markerIconList, Context context) {
         this.markerIconList = markerIconList;
         mLayoutInflater = LayoutInflater.from(context);
+    }
+
+    public void setListener(OnMarkerIconClickListener listener) {
+        mListener = listener;
     }
 
     @Override
@@ -32,21 +37,26 @@ public class MarkerAdapter extends RecyclerView.Adapter<MarkerAdapter.MarkerList
     }
 
     @Override
-    public void onBindViewHolder(MarkerListHolder holder, int position) {
+    public void onBindViewHolder(final MarkerListHolder holder, int position) {
         holder.imageButton.setImageResource(markerIconList.get(position).getResId());
+        holder.imageButton.setSelected(position == mCurrentPosition);
         holder.imageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                v.setSelected(!v.isSelected());
-
+                mCurrentPosition = holder.getAdapterPosition();
+                mListener.onIconClick(markerIconList.get(mCurrentPosition));
+                notifyDataSetChanged();
             }
         });
-        Log.d("onBindViewHolder", " markerIcon =" + markerIconList.get(position).getResId());
     }
 
     @Override
     public int getItemCount() {
-        return markerIconList.size();
+        if (markerIconList != null) {
+            return markerIconList.size();
+        } else {
+            return 0;
+        }
     }
 
     static class MarkerListHolder extends RecyclerView.ViewHolder {
@@ -58,6 +68,10 @@ public class MarkerAdapter extends RecyclerView.Adapter<MarkerAdapter.MarkerList
             super(view);
             ButterKnife.bind(this, view);
         }
+    }
+
+    public interface OnMarkerIconClickListener {
+        void onIconClick(MarkerIcon markerIcon);
     }
 
 }

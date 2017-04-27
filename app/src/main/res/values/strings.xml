@@ -2,16 +2,20 @@
     <string name="app_name">GoogleMaps&amp;Realm</string>
     <string name="title_activity_maps">Map</string>
     <string name="hint_title">Marker title</string>
-    <string name="choose_icon">Choose marker icon</string>
+    <string name="choose_marker_icon">Choose marker icon</string>
     <string name="dismiss">Dismiss</string>
     <string name="submit">Submit</string>
-    <string name="add_marker">Add marker</string>
+    <string name="new_marker_dialog_title">Add marker</string>
 
+
+//////////////  Runtime Permission  /////////////////////////
     <string name="permission_granted">Permission Granted</string>
     <string name="permission_denied">Permission Denied. App will work with limited functionality</string>
     <string name="permission_message">App will work with limited functionality. This permission need to get current user location.
         Please go to settings and check permission or restart application to do this. </string>
     <string name="permission_title">Warning.</string>
+
+/////////////   MapsActivity Menu   /////////////////////////
     <string name="map_style">Map Style</string>
     <string name="normal_type">Normal</string>
     <string name="satellite_type">Satellite</string>
@@ -23,11 +27,15 @@
     <string name="aubergine_style">Aubergine</string>
     <string name="dark_style">Dark</string>
     <string name="silver_style">Silver</string>
+
+
+
     <string name="marker_label">marker label</string>
     <string name="marker_coordinates">marker coordinates</string>
     <string name="delete_marker">Delete</string>
     <string name="save_marker">Save</string>
     <string name="done">Done</string>
     <string name="cancel">Cancel</string>
+    <string name="default_marker_label">New Marker</string>
 
 </resources>
