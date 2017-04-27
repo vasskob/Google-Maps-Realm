@@ -13,7 +13,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -31,6 +30,7 @@ import com.task.vasskob.googlemapsrealm.app.Prefs;
 import com.task.vasskob.googlemapsrealm.listener.ErrorListener;
 import com.task.vasskob.googlemapsrealm.listener.MultiplePermissionListener;
 import com.task.vasskob.googlemapsrealm.model.Marker;
+import com.task.vasskob.googlemapsrealm.model.MarkerToMarkerOptionsMapper;
 import com.task.vasskob.googlemapsrealm.realm.DbOperations;
 import com.task.vasskob.googlemapsrealm.realm.RealmController;
 import com.task.vasskob.googlemapsrealm.view.dialog.MarkerDialogFragment;
@@ -118,9 +118,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 startActivity(intent);
             }
         });
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(41.54d, 12.27d)//WTF hardcoded?
-                , 8));
-
     }
 
     public void setCurrentLocation() {
@@ -133,23 +130,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     private void showMarkersOnMap() {
-        LatLng markerLatLng;
-        String markerTitle;
-        BitmapDescriptor markerIcon;
         //   TODO: 25/04/17 why on ui thread? https://realm.io/docs/java/latest/#asynchronous-queries
         // ttps://github.com/DragonJik/BankSecurityCard
         RealmResults<Marker> markers = RealmController.with(this).getMarkers();
 
         for (Marker marker : markers) {
-            // TODO: 25/04/17 create mapper for Marker-MarkerOptions relation to convert data
-            markerLatLng = new LatLng(marker.getLatitude(), marker.getLongitude());
-            markerTitle = marker.getLabel();
-            markerIcon = BitmapDescriptorFactory.fromResource((marker.getMarkerIcon().getResId()));
-            mMap.addMarker(new MarkerOptions().position(markerLatLng).title(markerTitle).icon(markerIcon)).setTag(marker.getId());
+            mMap.addMarker(new MarkerToMarkerOptionsMapper().map(marker)).setTag(marker.getId());
         }
-
     }
-
 
     private void showAddMarkerDialog() {
         MarkerDialogFragment mdf =

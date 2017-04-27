@@ -29,11 +29,14 @@ public class DbOperations {
         realm.commitTransaction();
     }
 
-    public static void updateMarkerInRealm(Marker marker, String label, int iconId) {
+    public static void updateMarkerInRealm(Marker marker, String label, MarkerIcon markerIcon) {
         realm.beginTransaction();
         marker.setLabel(label);
-        if (iconId != 0) {
-            marker.setMarkerIcon(new MarkerIcon(iconId,iconId));
+        if (markerIcon != null) {
+            MarkerIcon mIcon = realm.createObject(MarkerIcon.class);
+            mIcon.setId(markerIcon.getId());
+            mIcon.setResId(markerIcon.getResId());
+            marker.setMarkerIcon(mIcon);
         }
         realm.commitTransaction();
     }

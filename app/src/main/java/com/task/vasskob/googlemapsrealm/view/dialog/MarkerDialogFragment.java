@@ -15,19 +15,19 @@ import com.task.vasskob.googlemapsrealm.R;
 import com.task.vasskob.googlemapsrealm.model.MarkerIcon;
 import com.task.vasskob.googlemapsrealm.view.dialog.adapter.MarkerIconAdapter;
 
-import java.util.ArrayList;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
 import static android.view.View.inflate;
+import static com.task.vasskob.googlemapsrealm.app.MyApplication.COUNT_OF_COLUMN;
+import static com.task.vasskob.googlemapsrealm.app.MyApplication.getDefaultMarkerIcons;
 
 //http://stackoverflow.com/questions/23408756/create-a-general-class-for-custom-dialog-in-java-android
 
 public class MarkerDialogFragment extends BaseDialogFragment<MarkerDialogFragment.OnDialogFragmentClickListener> {
 
 
-    private static final int COUNT_OF_COLUMN = 4;
+
     public static final String TITLE = "title";
 
     @Bind(R.id.rvIcons)
@@ -36,7 +36,6 @@ public class MarkerDialogFragment extends BaseDialogFragment<MarkerDialogFragmen
     @Bind(R.id.et_marker_title)
     EditText etMarkerTitle;
 
-    private ArrayList<MarkerIcon> markerIcons;
     private MarkerIcon defaultMarkerIcon = new MarkerIcon(5, R.drawable.ic_default_marker);
     private MarkerIcon clickedMarkerIcon;
     private String mTitle;
@@ -59,14 +58,14 @@ public class MarkerDialogFragment extends BaseDialogFragment<MarkerDialogFragmen
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        initMarkers();
+
         final View dialogView = inflate(this.getActivity(), R.layout.custom_dialog, null);
         ButterKnife.bind(this, dialogView);
 
         rvMarkerIcons.setHasFixedSize(true);
         rvMarkerIcons.setLayoutManager(new GridLayoutManager(this.getActivity(), COUNT_OF_COLUMN));
 
-        MarkerIconAdapter adapter = new MarkerIconAdapter(markerIcons, this.getActivity());
+        MarkerIconAdapter adapter = new MarkerIconAdapter(getDefaultMarkerIcons(), this.getActivity());
         adapter.setListener(new MarkerIconAdapter.OnMarkerIconClickListener() {
             @Override
             public void onIconClick(MarkerIcon markerIcon) {
@@ -110,11 +109,5 @@ public class MarkerDialogFragment extends BaseDialogFragment<MarkerDialogFragmen
         return clickedMarkerIcon == null ? defaultMarkerIcon : clickedMarkerIcon;
     }
 
-    private void initMarkers() {
-        markerIcons = new ArrayList<>();
-        markerIcons.add(new MarkerIcon(1, R.drawable.ic_icon1));
-        markerIcons.add(new MarkerIcon(2, R.drawable.ic_icon2));
-        markerIcons.add(new MarkerIcon(3, R.drawable.ic_icon3));
-        markerIcons.add(new MarkerIcon(4, R.drawable.ic_icon4));
-    }
+
 }
