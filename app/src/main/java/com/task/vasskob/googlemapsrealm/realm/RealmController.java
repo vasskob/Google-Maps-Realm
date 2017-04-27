@@ -62,8 +62,8 @@ public class RealmController {
     //find all objects in the Marker.class
     public RealmResults<Marker> getMarkers() {
 
-        return realm.where(Marker.class).findAll();
-      // return realm.where(Marker.class).findAllAsync();
+      //  return realm.where(Marker.class).findAll();
+       return realm.where(Marker.class).findAllAsync();
     }
 
     //query a single item with the given id

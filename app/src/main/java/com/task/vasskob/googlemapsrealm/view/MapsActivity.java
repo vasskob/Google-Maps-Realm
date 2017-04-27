@@ -36,6 +36,7 @@ import com.task.vasskob.googlemapsrealm.realm.RealmController;
 import com.task.vasskob.googlemapsrealm.view.dialog.MarkerDialogFragment;
 
 import butterknife.Bind;
+import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
 import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
@@ -46,6 +47,7 @@ import static com.google.android.gms.maps.GoogleMap.MAP_TYPE_SATELLITE;
 import static com.google.android.gms.maps.GoogleMap.MAP_TYPE_TERRAIN;
 import static com.task.vasskob.googlemapsrealm.DummyData.setRealmDummyMarkers;
 import static com.task.vasskob.googlemapsrealm.R.id.map;
+import static com.task.vasskob.googlemapsrealm.R.id.view_offset_helper;
 import static com.task.vasskob.googlemapsrealm.realm.DbOperations.writeMarkerToRealm;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, MarkerDialogFragment.OnDialogFragmentClickListener {
@@ -63,6 +65,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     RecyclerView rvMarkerIcons;
 
     private LatLng mLatLng;
+    private RealmResults<Marker> markers;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -131,13 +134,47 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private void showMarkersOnMap() {
         //   TODO: 25/04/17 why on ui thread? https://realm.io/docs/java/latest/#asynchronous-queries
-        // ttps://github.com/DragonJik/BankSecurityCard
-        RealmResults<Marker> markers = RealmController.with(this).getMarkers();
-
+        // https://github.com/DragonJik/BankSecurityCard
+        // https://realm.io/docs/java/latest/#asynchronous-queries
+        markers = RealmController.with(this).getMarkers();
+        markers.load();
         for (Marker marker : markers) {
             mMap.addMarker(new MarkerToMarkerOptionsMapper().map(marker)).setTag(marker.getId());
         }
+
+
     }
+//
+//    private RealmMarkerChangeListener callback = new RealmMarkerChangeListener() {
+//        @Override
+//        public void onChange() {
+//
+//        }
+//
+//        @Override
+//        public void OnChange(RealmResults<Marker> markers) {
+//            for (Marker marker : markers) {
+//                mMap.addMarker(new MarkerToMarkerOptionsMapper().map(marker)).setTag(marker.getId());
+//            }
+//        }
+//    };
+//
+//    @Override
+//    public void onStart() {
+//        super.onStart();
+//        markers.addChangeListener(callback);
+//    }
+//
+//    @Override
+//    protected void onStop() {
+//        super.onStop();
+//        markers.removeChangeListener(callback);
+//    }
+
+//    private interface RealmMarkerChangeListener extends RealmChangeListener {
+//        void OnChange(RealmResults<Marker> results);
+//    }
+
 
     private void showAddMarkerDialog() {
         MarkerDialogFragment mdf =
