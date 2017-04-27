@@ -69,7 +69,7 @@ public class RealmController {
     //query a single item with the given id
     public Marker getMarker(long id) {
 
-        return realm.where(Marker.class).equalTo("id", id).findFirst();
+        return realm.where(Marker.class).equalTo("id", id).findFirstAsync();
     }
 
 
@@ -86,7 +86,7 @@ public class RealmController {
                 .contains("mLabel", "a")
                 .or()
                 .contains("mIcon", "icon_path")
-                .findAll();
+                .findAllAsync();
 
     }
 }

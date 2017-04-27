@@ -1,24 +1,10 @@
 <resources>
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="InfoTheme">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@android:color/transparent</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
-
         <item name="android:windowTranslucentStatus">true</item>
         <item name="android:windowTranslucentNavigation">true</item>
-    </style>
-
-    <style name="MarkerIcons" parent="Theme.AppCompat.Light">
-        <item name="android:background">@drawable/btn_selector</item>
-        <item name="android:layout_weight">1</item>
-        <item name="android:clickable">true</item>
-        <item name="android:layout_height">50dp</item>
-        <item name="android:layout_width">0dp</item>
-        <item name="android:scaleType">centerInside</item>
-        <item name="android:gravity">center_vertical</item>
-        <item name="android:contentDescription">@string/app_name</item>
     </style>
 
     <style name="InfoTheme" parent="Theme.AppCompat.Light.DarkActionBar">
@@ -26,6 +12,5 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
-
 
 </resources>

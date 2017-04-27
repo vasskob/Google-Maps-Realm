@@ -1,6 +1,5 @@
 package com.task.vasskob.googlemapsrealm.presenter;
 
-import com.task.vasskob.googlemapsrealm.R;
 import com.task.vasskob.googlemapsrealm.model.MarkerIcon;
 
 public class MapsPresenterImpl implements MapsPresenter{

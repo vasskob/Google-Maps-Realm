@@ -11,6 +11,6 @@ public class MarkerToMarkerOptionsMapper implements Mapper<Marker, MarkerOptions
     public MarkerOptions map(Marker data) {
         LatLng markerLatLng = new LatLng(data.getLatitude(), data.getLongitude());
         BitmapDescriptor markerIcon = BitmapDescriptorFactory.fromResource(data.getMarkerIcon().getResId());
-        return new MarkerOptions().position(markerLatLng).title(data.getLabel()).icon(markerIcon);
+        return new MarkerOptions().position(markerLatLng).title(data.getTitle()).icon(markerIcon);
     }
 }

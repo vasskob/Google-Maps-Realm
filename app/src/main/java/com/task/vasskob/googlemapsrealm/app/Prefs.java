@@ -7,7 +7,6 @@ public class Prefs {
 
     private static final String PRE_LOAD = "preLoad";
     private static final String PREFS_NAME = "prefs";
-    private static final String ICON_LOADED = "iconLoaded";
     private static Prefs instance;
     private final SharedPreferences sharedPreferences;
 
@@ -32,20 +31,9 @@ public class Prefs {
                 .apply();
     }
 
-    public void setMarkerIconsLoad(boolean isLoaded) {
-
-        sharedPreferences
-                .edit()
-                .putBoolean(ICON_LOADED, isLoaded)
-                .apply();
-    }
-
     public boolean getPreLoad(){
         return sharedPreferences.getBoolean(PRE_LOAD, false);
     }
 
-    public boolean getMarkerIconsLoad(){
-        return sharedPreferences.getBoolean(ICON_LOADED, false);
-    }
 
 }

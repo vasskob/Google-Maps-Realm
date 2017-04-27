@@ -101,7 +101,7 @@ public class MarkerDialogFragment extends BaseDialogFragment<MarkerDialogFragmen
                 .create();
     }
 
-    public String getMarkerLabel() {
+    public String getMarkerTitle() {
         return mTitle.equals("") ? getResources().getString(R.string.default_marker_label) : mTitle;
     }
 

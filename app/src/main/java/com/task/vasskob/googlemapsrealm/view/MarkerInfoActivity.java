@@ -28,7 +28,7 @@ import static com.task.vasskob.googlemapsrealm.app.MyApplication.getDefaultMarke
 import static com.task.vasskob.googlemapsrealm.realm.DbOperations.deleteMarkerInRealm;
 import static com.task.vasskob.googlemapsrealm.realm.DbOperations.updateMarkerInRealm;
 
-public class MarkerInfoActivity extends AppCompatActivity {
+public class MarkerInfoActivity extends AppCompatActivity implements MarkerInfoView {
 
     private static final String TAG = MarkerInfoActivity.class.getSimpleName();
     private Marker marker;
@@ -74,8 +74,9 @@ public class MarkerInfoActivity extends AppCompatActivity {
         final String markerId = intent.getStringExtra(MapsActivity.MARKER_ID);
 
         marker = RealmController.with(this).getMarker(Long.parseLong(markerId));
+        marker.load();
 
-        etLabel.setText(marker.getLabel());
+        etLabel.setText(marker.getTitle());
         tvCoordinates.setText(marker.getLatitude() + " , " + marker.getLongitude());
         MarkerIcon mIcon = marker.getMarkerIcon();
         ibIcon.setImageResource(mIcon.getResId());
@@ -85,7 +86,7 @@ public class MarkerInfoActivity extends AppCompatActivity {
     private void showIconChooserDialog() {
         clickedMarkerIcon=marker.getMarkerIcon();
         dialog = new Dialog(this, android.R.style.Theme_DeviceDefault_Dialog);
-        dialog.setContentView(R.layout.rv_layout);
+        dialog.setContentView(R.layout.icon_list);
         RecyclerView rvMarkerIcons = (RecyclerView) dialog.findViewById(R.id.rvIcons);
 
         rvMarkerIcons.setHasFixedSize(true);
@@ -105,4 +106,8 @@ public class MarkerInfoActivity extends AppCompatActivity {
         dialog.show();
     }
 
+    @Override
+    public void showMarkerInfo(Marker marker) {
+
+    }
 }

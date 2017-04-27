@@ -29,9 +29,9 @@ public class DbOperations {
         realm.commitTransaction();
     }
 
-    public static void updateMarkerInRealm(Marker marker, String label, MarkerIcon markerIcon) {
+    public static void updateMarkerInRealm(Marker marker, String title, MarkerIcon markerIcon) {
         realm.beginTransaction();
-        marker.setLabel(label);
+        marker.setTitle(title);
         if (markerIcon != null) {
             MarkerIcon mIcon = realm.createObject(MarkerIcon.class);
             mIcon.setId(markerIcon.getId());
@@ -40,5 +40,4 @@ public class DbOperations {
         }
         realm.commitTransaction();
     }
-
 }

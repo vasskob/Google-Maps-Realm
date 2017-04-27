@@ -36,7 +36,6 @@ import com.task.vasskob.googlemapsrealm.realm.RealmController;
 import com.task.vasskob.googlemapsrealm.view.dialog.MarkerDialogFragment;
 
 import butterknife.Bind;
-import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
 import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
@@ -45,12 +44,11 @@ import static com.google.android.gms.maps.GoogleMap.MAP_TYPE_HYBRID;
 import static com.google.android.gms.maps.GoogleMap.MAP_TYPE_NORMAL;
 import static com.google.android.gms.maps.GoogleMap.MAP_TYPE_SATELLITE;
 import static com.google.android.gms.maps.GoogleMap.MAP_TYPE_TERRAIN;
-import static com.task.vasskob.googlemapsrealm.DummyData.setRealmDummyMarkers;
+import static com.task.vasskob.googlemapsrealm.app.DummyData.setRealmDummyMarkers;
 import static com.task.vasskob.googlemapsrealm.R.id.map;
-import static com.task.vasskob.googlemapsrealm.R.id.view_offset_helper;
 import static com.task.vasskob.googlemapsrealm.realm.DbOperations.writeMarkerToRealm;
 
-public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, MarkerDialogFragment.OnDialogFragmentClickListener {
+public class MapsActivity extends AppCompatActivity implements MapView,OnMapReadyCallback, MarkerDialogFragment.OnDialogFragmentClickListener {
 
     private static final String TAG = MapsActivity.class.getSimpleName();
     public static final String MARKER_ID = "id";
@@ -65,7 +63,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     RecyclerView rvMarkerIcons;
 
     private LatLng mLatLng;
-    private RealmResults<Marker> markers;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +77,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         if (!checkPermissions()) {
             createPermissionListeners();
+        }
+
+        if (!Prefs.with(this).getPreLoad()) {
+            setRealmDummyMarkers(this);  // Add dummy markers to db if app run for the first time
+            Log.d("Nadsf", "prefs is false");
         }
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -97,9 +99,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mMap.getUiSettings().setZoomControlsEnabled(true);
         mMap.setPadding(0, 200, 0, 100);
 
-        if (!Prefs.with(this).getPreLoad()) {
-            setRealmDummyMarkers(this);  // Add dummy markers to db if app run for the first time
-        }
+
 
         RealmController.with(this).refresh();
         showMarkersOnMap();
@@ -136,7 +136,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         //   TODO: 25/04/17 why on ui thread? https://realm.io/docs/java/latest/#asynchronous-queries
         // https://github.com/DragonJik/BankSecurityCard
         // https://realm.io/docs/java/latest/#asynchronous-queries
-        markers = RealmController.with(this).getMarkers();
+        RealmResults<Marker> markers = RealmController.with(this).getMarkers();
         markers.load();
         for (Marker marker : markers) {
             mMap.addMarker(new MarkerToMarkerOptionsMapper().map(marker)).setTag(marker.getId());
@@ -290,7 +290,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         marker.setId(RealmController.getInstance().getMarkers().size() + System.currentTimeMillis());
         marker.setLatitude(mLatLng.latitude);
         marker.setLongitude(mLatLng.longitude);
-        marker.setLabel(dialog.getMarkerLabel());
+        marker.setTitle(dialog.getMarkerTitle());
         marker.setMarkerIcon(dialog.getMarkerIcon());
 
         addMarkerOnMap(marker);
@@ -299,10 +299,19 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     private void addMarkerOnMap(Marker marker) {
-        String mTitle = marker.getLabel();
+        String mTitle = marker.getTitle();
         int mIconResId = marker.getMarkerIcon().getResId();
         BitmapDescriptor markerIcon = BitmapDescriptorFactory.fromResource(mIconResId);
         mMap.addMarker(new MarkerOptions().position(mLatLng).title(mTitle).icon(markerIcon)).setTag(marker.getId());
     }
 
+    @Override
+    public void showMarkerOnMap(Marker marker) {
+
+    }
+
+    @Override
+    public void showToast(String msg) {
+
+    }
 }

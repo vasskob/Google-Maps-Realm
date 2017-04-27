@@ -7,7 +7,7 @@ public class Marker extends RealmObject {
 
     @PrimaryKey
     private long id;
-    private String label;
+    private String title;
     private MarkerIcon markerIcon;
     private Double latitude;
     private Double longitude;
@@ -20,12 +20,12 @@ public class Marker extends RealmObject {
         this.id = id;
     }
 
-    public String getLabel() {
-        return label;
+    public String getTitle() {
+        return title;
     }
 
-    public void setLabel(String label) {
-        this.label = label;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public MarkerIcon getMarkerIcon() {
