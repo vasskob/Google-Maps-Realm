@@ -1,12 +1,11 @@
 package com.task.vasskob.googlemapsrealm.presenter;
 
 import com.task.vasskob.googlemapsrealm.model.Marker;
-import com.task.vasskob.googlemapsrealm.model.realm.RealmController;
 import com.task.vasskob.googlemapsrealm.view.MapsView;
 
 import io.realm.RealmResults;
 
-public class MapsPresenterImpl extends BasePresenter implements MapsPresenter<MapsView>, RealmController.OnTransactionCallback {
+public class MapsPresenterImpl extends BasePresenter implements MapsPresenter<MapsView> {
 
 
     private MapsView mMapsView;
@@ -25,7 +24,7 @@ public class MapsPresenterImpl extends BasePresenter implements MapsPresenter<Ma
 
     @Override
     public void addMarkerToRealm(Marker marker) {
-        realmController.addMarkerToRealmAsync(marker, this);
+        realmController.addMarkerToRealm(marker);
     }
 
     @Override
@@ -50,13 +49,4 @@ public class MapsPresenterImpl extends BasePresenter implements MapsPresenter<Ma
         mMapsView = null;
     }
 
-    @Override
-    public void onRealmSuccess() {
-        mMapsView.showToastSuccess();
-    }
-
-    @Override
-    public void onRealmError(Exception e) {
-        mMapsView.showToastError();
-    }
 }

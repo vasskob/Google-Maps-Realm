@@ -4,9 +4,16 @@ import com.task.vasskob.googlemapsrealm.model.Marker;
 import com.task.vasskob.googlemapsrealm.model.MarkerIcon;
 
 import io.realm.Realm;
+import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
 public class RealmController {
+
+//    private OnChangeListener listener;
+//
+//    public interface OnChangeListener {
+//        void onChange(RealmResults<Marker> results);
+//    }
 
     private static RealmController instance;
     private final Realm realm;
@@ -24,6 +31,12 @@ public class RealmController {
 
     public void refresh() {
         realm.refresh();
+    }
+
+    public void addMarkerToRealm(final Marker marker) {
+        realm.beginTransaction();
+        realm.copyToRealm(marker);
+        realm.commitTransaction();
     }
 
     public void deleteMarkerInRealm(Marker marker) {
@@ -57,33 +70,10 @@ public class RealmController {
         realm.close();
     }
 
-    public void addMarkerToRealmAsync(final Marker marker, final OnTransactionCallback callback) {
-        realm.executeTransaction(new Realm.Transaction() {
-            @Override
-            public void execute(Realm realm) {
-                realm.copyToRealm(marker);
-            }
-        }, new Realm.Transaction.Callback() {
-            @Override
-            public void onSuccess() {
-                if (callback != null) {
-                    callback.onRealmSuccess();
-                }
-            }
-            @Override
-            public void onError(Exception e) {
+//    public void setOnChangeListener(OnChangeListener listener) {
+//        this.listener = listener;
+//    }
 
-                if (callback != null) {
-                    callback.onRealmError(e);
-                }
-            }
-        });
-    }
-
-    public interface OnTransactionCallback {
-        void onRealmSuccess();
-        void onRealmError(final Exception e);
-    }
 
 //    public boolean hasMarkers() {
 //        return !realm.allObjects(Marker.class).isEmpty();
