@@ -11,6 +11,7 @@ public class MarkerInfoPresenterImpl extends BasePresenter implements MarkerInfo
     @Override
     public void showMarkerInfoById(int id) {
         Marker marker = realmController.getMarker(id);
+        marker.load();
         mInfoView.showMarkerInfo(marker);
     }
 

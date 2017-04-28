@@ -14,6 +14,7 @@ public class MapsPresenterImpl extends BasePresenter implements MapsPresenter<Ma
     @Override
     public void showMarkersOnMap() {
         RealmResults<Marker> markers = realmController.getAllMarkers();
+        markers.load();
         mMapsView.showMarkers(markers);
     }
 
@@ -24,7 +25,7 @@ public class MapsPresenterImpl extends BasePresenter implements MapsPresenter<Ma
 
     @Override
     public void addMarkerToRealm(Marker marker) {
-      realmController.addMarkerToRealmAsync(marker, this);
+        realmController.addMarkerToRealmAsync(marker, this);
     }
 
     @Override
@@ -34,7 +35,9 @@ public class MapsPresenterImpl extends BasePresenter implements MapsPresenter<Ma
 
     @Override
     public int getMarkersAmount() {
-        return realmController.getAllMarkers().size();
+        RealmResults<Marker> results = realmController.getAllMarkers();
+        results.load();
+        return results.size();
     }
 
     @Override

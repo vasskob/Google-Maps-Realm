@@ -26,9 +26,9 @@ public class RealmController {
         realm.refresh();
     }
 
-    public void deleteMarkerInRealm(Marker object) {
+    public void deleteMarkerInRealm(Marker marker) {
         realm.beginTransaction();
-        object.removeFromRealm();
+        marker.removeFromRealm();
         realm.commitTransaction();
     }
 
@@ -45,12 +45,12 @@ public class RealmController {
     }
 
     public RealmResults<Marker> getAllMarkers() {
-        return realm.allObjects(Marker.class);
-        // return realm.where(Marker.class).findAll();
+     //   return realm.allObjects(Marker.class);
+         return realm.where(Marker.class).findAllAsync();
     }
 
     public Marker getMarker(long id) {
-        return realm.where(Marker.class).equalTo("id", id).findFirst();
+        return realm.where(Marker.class).equalTo("id", id).findFirstAsync();
     }
 
     public void closeRealm() {
