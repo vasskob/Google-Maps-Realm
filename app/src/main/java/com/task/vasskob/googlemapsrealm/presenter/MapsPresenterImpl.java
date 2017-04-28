@@ -1,18 +1,53 @@
 package com.task.vasskob.googlemapsrealm.presenter;
 
-import com.task.vasskob.googlemapsrealm.model.MarkerIcon;
+import com.task.vasskob.googlemapsrealm.model.Marker;
+import com.task.vasskob.googlemapsrealm.view.MapsView;
 
-public class MapsPresenterImpl implements MapsPresenter{
-    //private MarkerIcon mIcon= R.drawable.ic_default_marker;
+import io.realm.RealmResults;
+
+public class MapsPresenterImpl extends BasePresenter implements MapsPresenter<MapsView> {
+
+
+    private MapsView mMapsView;
 
     @Override
-    public void getMarkersFromDb() {
-
+    public void showMarkersOnMap() {
+        RealmResults<Marker> markers = realmController.getMarkers();
+        mMapsView.showMarkers(markers);
     }
 
     @Override
-    public void onDialogIconChoose(MarkerIcon markerIcon) {
-     //   view.addMarkerOnMap(marker)
+    public void updateRealm() {
+        realmController.refresh();
+    }
+
+    @Override
+    public void addMarkerToRealm(Marker marker) {
+        realmController.addMarkerToRealm(marker);
+    }
+
+    @Override
+    public void closeRealm() {
+        realmController.closeRealm();
+    }
+
+    @Override
+    public int getMarkersAmount() {
+        return realmController.getMarkers().size();
+    }
+
+    @Override
+    public void setView(MapsView view) {
+        mMapsView = view;
+    }
+
+    @Override
+    public void clearView() {
+        mMapsView = null;
+    }
+
+    @Override
+    public void onMarkerClick(Marker marker) {
 
     }
 }

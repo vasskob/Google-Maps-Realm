@@ -5,19 +5,18 @@ import android.app.Activity;
 import com.task.vasskob.googlemapsrealm.R;
 import com.task.vasskob.googlemapsrealm.model.Marker;
 import com.task.vasskob.googlemapsrealm.model.MarkerIcon;
+import com.task.vasskob.googlemapsrealm.presenter.MapsPresenterImpl;
 
 import java.util.ArrayList;
-
-import static com.task.vasskob.googlemapsrealm.realm.DbOperations.writeMarkerToRealm;
 
 public class DummyData {
 
     public static void setRealmDummyMarkers(Activity activity) {
-
+        MapsPresenterImpl presenter=new MapsPresenterImpl();
         ArrayList<Marker> markers = new ArrayList<>();
 
         Marker marker = new Marker();
-        marker.setId(1 + System.currentTimeMillis());
+        marker.setId(1);
         marker.setTitle("Barcelona");
         marker.setMarkerIcon(new MarkerIcon(1, R.drawable.ic_icon1));
         marker.setLatitude(41.23d);
@@ -25,7 +24,7 @@ public class DummyData {
         markers.add(marker);
 
         marker = new Marker();
-        marker.setId(2 + System.currentTimeMillis());
+        marker.setId(2);
         marker.setTitle("Paris");
         marker.setMarkerIcon(new MarkerIcon(2, R.drawable.ic_icon2));
         marker.setLatitude(48.48d);
@@ -33,7 +32,7 @@ public class DummyData {
         markers.add(marker);
 
         marker = new Marker();
-        marker.setId(3 + System.currentTimeMillis());
+        marker.setId(3);
         marker.setTitle("Rome");
         marker.setMarkerIcon(new MarkerIcon(3, R.drawable.ic_icon3));
         marker.setLatitude(41.54d);
@@ -41,7 +40,7 @@ public class DummyData {
         markers.add(marker);
 
         marker = new Marker();
-        marker.setId(4 + System.currentTimeMillis());
+        marker.setId(4);
         marker.setTitle("Tokyo");
         marker.setMarkerIcon(new MarkerIcon(4, R.drawable.ic_icon4));
         marker.setLatitude(35.40d);
@@ -49,7 +48,7 @@ public class DummyData {
         markers.add(marker);
 
         marker = new Marker();
-        marker.setId(5 + System.currentTimeMillis());
+        marker.setId(5);
         marker.setTitle("Sydney");
         marker.setMarkerIcon(new MarkerIcon(5, R.drawable.ic_default_marker));
         marker.setLatitude(-34d);
@@ -57,9 +56,8 @@ public class DummyData {
         markers.add(marker);
 
         for (Marker m : markers) {
-            writeMarkerToRealm(m);
+            presenter.addMarkerToRealm(m);
         }
-
         Prefs.with(activity).setPreLoad(true);
     }
 

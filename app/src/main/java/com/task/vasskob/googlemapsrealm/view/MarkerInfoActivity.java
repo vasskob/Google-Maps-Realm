@@ -15,8 +15,7 @@ import android.widget.TextView;
 import com.task.vasskob.googlemapsrealm.R;
 import com.task.vasskob.googlemapsrealm.model.Marker;
 import com.task.vasskob.googlemapsrealm.model.MarkerIcon;
-import com.task.vasskob.googlemapsrealm.realm.DbOperations;
-import com.task.vasskob.googlemapsrealm.realm.RealmController;
+import com.task.vasskob.googlemapsrealm.presenter.MarkerInfoPresenterImpl;
 import com.task.vasskob.googlemapsrealm.view.dialog.adapter.MarkerIconAdapter;
 
 import butterknife.Bind;
@@ -25,8 +24,6 @@ import butterknife.OnClick;
 
 import static com.task.vasskob.googlemapsrealm.app.MyApplication.COUNT_OF_COLUMN;
 import static com.task.vasskob.googlemapsrealm.app.MyApplication.getDefaultMarkerIcons;
-import static com.task.vasskob.googlemapsrealm.realm.DbOperations.deleteMarkerInRealm;
-import static com.task.vasskob.googlemapsrealm.realm.DbOperations.updateMarkerInRealm;
 
 public class MarkerInfoActivity extends AppCompatActivity implements MarkerInfoView {
 
@@ -43,6 +40,7 @@ public class MarkerInfoActivity extends AppCompatActivity implements MarkerInfoV
     @Bind(R.id.marker_icon)
     ImageButton ibIcon;
     private MarkerIcon clickedMarkerIcon;
+    private MarkerInfoPresenterImpl presenter;
 
     @OnClick(R.id.marker_icon)
     void onIconClick() {
@@ -51,13 +49,14 @@ public class MarkerInfoActivity extends AppCompatActivity implements MarkerInfoV
 
     @OnClick(R.id.btn_save_marker)
     void onSaveClick() {
-        updateMarkerInRealm(marker, etLabel.getText().toString(), clickedMarkerIcon);
+        String newTitle = etLabel.getText().toString();
+        presenter.updateMarkerInDb(marker, newTitle, clickedMarkerIcon);
         finish();
     }
 
     @OnClick(R.id.btm_delete_marker)
     void onDeleteClick() {
-        deleteMarkerInRealm(marker);
+        presenter.deleteMarkerInDb(marker);
         finish();
     }
 
@@ -68,23 +67,15 @@ public class MarkerInfoActivity extends AppCompatActivity implements MarkerInfoV
         setContentView(R.layout.activity_marker_info);
         ButterKnife.bind(this);
 
-        new DbOperations(getApplication());
 
-        Intent intent = getIntent();
-        final String markerId = intent.getStringExtra(MapsActivity.MARKER_ID);
+        presenter = new MarkerInfoPresenterImpl();
+        presenter.setView(this);
 
-        marker = RealmController.with(this).getMarker(Long.parseLong(markerId));
-        marker.load();
 
-        etLabel.setText(marker.getTitle());
-        tvCoordinates.setText(marker.getLatitude() + " , " + marker.getLongitude());
-        MarkerIcon mIcon = marker.getMarkerIcon();
-        ibIcon.setImageResource(mIcon.getResId());
-        Log.d(TAG, "onCreate" + markerId);
     }
 
     private void showIconChooserDialog() {
-        clickedMarkerIcon=marker.getMarkerIcon();
+        clickedMarkerIcon = marker.getMarkerIcon();
         dialog = new Dialog(this, android.R.style.Theme_DeviceDefault_Dialog);
         dialog.setContentView(R.layout.icon_list);
         RecyclerView rvMarkerIcons = (RecyclerView) dialog.findViewById(R.id.rvIcons);
@@ -108,6 +99,27 @@ public class MarkerInfoActivity extends AppCompatActivity implements MarkerInfoV
 
     @Override
     public void showMarkerInfo(Marker marker) {
+        this.marker = marker;
+        etLabel.setText(marker.getTitle());
+        tvCoordinates.setText(marker.getLatitude() + " , " + marker.getLongitude());
+        MarkerIcon mIcon = marker.getMarkerIcon();
+        ibIcon.setImageResource(mIcon.getResId());
+    }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        presenter.setView(this);
+        Intent intent = getIntent();
+        final String markerId = intent.getStringExtra(MapsActivity.MARKER_ID);
+        presenter.showMarkerInfoById(Integer.parseInt(markerId));
+
+        Log.d(TAG, "onCreate" + markerId);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        presenter.clearView();
     }
 }

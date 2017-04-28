@@ -16,11 +16,8 @@ import android.widget.EditText;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptor;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.listener.multi.CompositeMultiplePermissionsListener;
 import com.karumi.dexter.listener.multi.DialogOnAnyDeniedMultiplePermissionsListener;
@@ -31,8 +28,7 @@ import com.task.vasskob.googlemapsrealm.listener.ErrorListener;
 import com.task.vasskob.googlemapsrealm.listener.MultiplePermissionListener;
 import com.task.vasskob.googlemapsrealm.model.Marker;
 import com.task.vasskob.googlemapsrealm.model.MarkerToMarkerOptionsMapper;
-import com.task.vasskob.googlemapsrealm.realm.DbOperations;
-import com.task.vasskob.googlemapsrealm.realm.RealmController;
+import com.task.vasskob.googlemapsrealm.presenter.MapsPresenterImpl;
 import com.task.vasskob.googlemapsrealm.view.dialog.MarkerDialogFragment;
 
 import butterknife.Bind;
@@ -46,9 +42,8 @@ import static com.google.android.gms.maps.GoogleMap.MAP_TYPE_SATELLITE;
 import static com.google.android.gms.maps.GoogleMap.MAP_TYPE_TERRAIN;
 import static com.task.vasskob.googlemapsrealm.app.DummyData.setRealmDummyMarkers;
 import static com.task.vasskob.googlemapsrealm.R.id.map;
-import static com.task.vasskob.googlemapsrealm.realm.DbOperations.writeMarkerToRealm;
 
-public class MapsActivity extends AppCompatActivity implements MapView,OnMapReadyCallback, MarkerDialogFragment.OnDialogFragmentClickListener {
+public class MapsActivity extends AppCompatActivity implements MapsView, OnMapReadyCallback, MarkerDialogFragment.OnDialogFragmentClickListener {
 
     private static final String TAG = MapsActivity.class.getSimpleName();
     public static final String MARKER_ID = "id";
@@ -63,17 +58,16 @@ public class MapsActivity extends AppCompatActivity implements MapView,OnMapRead
     RecyclerView rvMarkerIcons;
 
     private LatLng mLatLng;
+    private MapsPresenterImpl presenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
 
-        ActionBar actionBar = getSupportActionBar();
-        assert actionBar != null;
-        actionBar.setDisplayShowTitleEnabled(false);
+        initActionBar();
 
-        new DbOperations(getApplication());
+      //  new DbOperations();
 
         if (!checkPermissions()) {
             createPermissionListeners();
@@ -81,12 +75,20 @@ public class MapsActivity extends AppCompatActivity implements MapView,OnMapRead
 
         if (!Prefs.with(this).getPreLoad()) {
             setRealmDummyMarkers(this);  // Add dummy markers to db if app run for the first time
-            Log.d("Nadsf", "prefs is false");
         }
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(map);
         mapFragment.getMapAsync(this);
+
+        presenter = new MapsPresenterImpl();
+        presenter.setView(this);
+    }
+
+    private void initActionBar() {
+        ActionBar actionBar = getSupportActionBar();
+        assert actionBar != null;
+        actionBar.setDisplayShowTitleEnabled(false);
     }
 
     @Override
@@ -99,10 +101,9 @@ public class MapsActivity extends AppCompatActivity implements MapView,OnMapRead
         mMap.getUiSettings().setZoomControlsEnabled(true);
         mMap.setPadding(0, 200, 0, 100);
 
-
-
-        RealmController.with(this).refresh();
-        showMarkersOnMap();
+        presenter.setView(this);
+        presenter.updateRealm();
+        presenter.showMarkersOnMap();
 
         googleMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
             @Override
@@ -114,13 +115,16 @@ public class MapsActivity extends AppCompatActivity implements MapView,OnMapRead
         mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
             public void onInfoWindowClick(com.google.android.gms.maps.model.Marker marker) {
-                Intent intent = new Intent(MapsActivity.this, MarkerInfoActivity.class);
-                intent.putExtra(MARKER_ID, String.valueOf(marker.getTag()));
-
-                Log.d(TAG, "onInfoWindowClick " + marker.getTag());
-                startActivity(intent);
+                showMarkerInfoView(marker);
             }
         });
+    }
+
+    private void showMarkerInfoView(com.google.android.gms.maps.model.Marker marker) {
+        Intent intent = new Intent(MapsActivity.this, MarkerInfoActivity.class);
+        intent.putExtra(MARKER_ID, String.valueOf(marker.getTag()));
+        Log.d(TAG, "onInfoWindowClick " + marker.getTag());
+        startActivity(intent);
     }
 
     public void setCurrentLocation() {
@@ -132,48 +136,22 @@ public class MapsActivity extends AppCompatActivity implements MapView,OnMapRead
         }
     }
 
-    private void showMarkersOnMap() {
-        //   TODO: 25/04/17 why on ui thread? https://realm.io/docs/java/latest/#asynchronous-queries
-        // https://github.com/DragonJik/BankSecurityCard
-        // https://realm.io/docs/java/latest/#asynchronous-queries
-        RealmResults<Marker> markers = RealmController.with(this).getMarkers();
-        markers.load();
-        for (Marker marker : markers) {
-            mMap.addMarker(new MarkerToMarkerOptionsMapper().map(marker)).setTag(marker.getId());
-        }
+//        //   TODO: 25/04/17 why on ui thread? https://realm.io/docs/java/latest/#asynchronous-queries
 
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        presenter.setView(this);
+        //   markers.addChangeListener(callback);
     }
-//
-//    private RealmMarkerChangeListener callback = new RealmMarkerChangeListener() {
-//        @Override
-//        public void onChange() {
-//
-//        }
-//
-//        @Override
-//        public void OnChange(RealmResults<Marker> markers) {
-//            for (Marker marker : markers) {
-//                mMap.addMarker(new MarkerToMarkerOptionsMapper().map(marker)).setTag(marker.getId());
-//            }
-//        }
-//    };
-//
-//    @Override
-//    public void onStart() {
-//        super.onStart();
-//        markers.addChangeListener(callback);
-//    }
-//
-//    @Override
-//    protected void onStop() {
-//        super.onStop();
-//        markers.removeChangeListener(callback);
-//    }
 
-//    private interface RealmMarkerChangeListener extends RealmChangeListener {
-//        void OnChange(RealmResults<Marker> results);
-//    }
+    @Override
+    protected void onStop() {
+        super.onStop();
+        presenter.clearView();
+        //  markers.removeChangeListener(callback);
+    }
 
 
     private void showAddMarkerDialog() {
@@ -278,40 +256,44 @@ public class MapsActivity extends AppCompatActivity implements MapView,OnMapRead
     @Override
     protected void onRestart() {
         super.onRestart();
-        RealmController.with(this).refresh();
+        presenter.setView(this);
+        presenter.updateRealm();
         mMap.clear();
-        showMarkersOnMap();
+        presenter.showMarkersOnMap();
     }
 
     @Override
     public void onDoneClicked(MarkerDialogFragment dialog) {
 
+        int markersAmount = presenter.getMarkersAmount();
+        Log.d(TAG, "db size = "+ markersAmount);
         Marker marker = new Marker();
-        marker.setId(RealmController.getInstance().getMarkers().size() + System.currentTimeMillis());
+        marker.setId(markersAmount+1);
         marker.setLatitude(mLatLng.latitude);
         marker.setLongitude(mLatLng.longitude);
         marker.setTitle(dialog.getMarkerTitle());
         marker.setMarkerIcon(dialog.getMarkerIcon());
 
         addMarkerOnMap(marker);
-        writeMarkerToRealm(marker);
+        presenter.addMarkerToRealm(marker);
 
     }
 
     private void addMarkerOnMap(Marker marker) {
-        String mTitle = marker.getTitle();
-        int mIconResId = marker.getMarkerIcon().getResId();
-        BitmapDescriptor markerIcon = BitmapDescriptorFactory.fromResource(mIconResId);
-        mMap.addMarker(new MarkerOptions().position(mLatLng).title(mTitle).icon(markerIcon)).setTag(marker.getId());
+        mMap.addMarker(new MarkerToMarkerOptionsMapper().map(marker)).setTag(marker.getId());
     }
 
-    @Override
-    public void showMarkerOnMap(Marker marker) {
 
+    @Override
+    public void showMarkers(RealmResults<Marker> markers) {
+        for (Marker marker : markers) {
+            addMarkerOnMap(marker);
+        }
     }
 
     @Override
     public void showToast(String msg) {
 
     }
+
 }

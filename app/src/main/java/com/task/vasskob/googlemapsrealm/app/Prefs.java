@@ -10,9 +10,9 @@ public class Prefs {
     private static Prefs instance;
     private final SharedPreferences sharedPreferences;
 
-    public Prefs(Context context) {
+    private Prefs(Context context) {
 
-        sharedPreferences = context.getApplicationContext().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        sharedPreferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
     }
 
     public static Prefs with(Context context) {
@@ -23,7 +23,7 @@ public class Prefs {
         return instance;
     }
 
-    public void setPreLoad(boolean isLoaded) {
+    void setPreLoad(boolean isLoaded) {
 
         sharedPreferences
                 .edit()
@@ -34,6 +34,4 @@ public class Prefs {
     public boolean getPreLoad(){
         return sharedPreferences.getBoolean(PRE_LOAD, false);
     }
-
-
 }
