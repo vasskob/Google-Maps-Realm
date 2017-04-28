@@ -10,8 +10,11 @@
         Please go to settings and check permission or restart application to do this. </string>
     <string name="permission_title">Warning.</string>
 
-    ///////////// MapsActivity Menu /////////////////////////
+    ///////////// MapsActivity  /////////////////////////
+    <string name="marker_add_success">Marker successfully added</string>
+    <string name="marker_add_error">Marker not added</string>
 
+    ///////////// MapsActivity Menu /////////////////////////
     <string name="normal_type">Normal</string>
     <string name="satellite_type">Satellite</string>
     <string name="hybrid_type">Hybrid</string>
@@ -39,5 +42,9 @@
 
     <string name="save_marker">Save</string>
     <string name="delete_marker">Delete</string>
+    <string name="marker_update_error">Marker Updating error</string>
+    <string name="marker_delete_success">Marker was deleted</string>
+    <string name="marker_update_success">Marker updated</string>
+
 
 </resources>

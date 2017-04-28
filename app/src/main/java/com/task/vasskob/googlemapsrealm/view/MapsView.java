@@ -6,8 +6,9 @@ import io.realm.RealmResults;
 
 public interface MapsView {
 
-    void showToast(String msg);
+  void showMarkers(final RealmResults<Marker> markers);
 
-    void showMarkers(final RealmResults<Marker> markers);
+  void showToastSuccess();
 
+  void showToastError();
 }

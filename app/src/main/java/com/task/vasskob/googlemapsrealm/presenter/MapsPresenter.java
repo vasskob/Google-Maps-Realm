@@ -5,10 +5,9 @@ import com.task.vasskob.googlemapsrealm.model.Marker;
 interface MapsPresenter<T> {
    void setView(T view);
    void clearView();
-   void closeRealm();
-   void onMarkerClick(Marker marker);
+   void addMarkerToRealm(Marker marker);
    void showMarkersOnMap();
    void updateRealm();
-   void addMarkerToRealm(Marker marker);
+   void closeRealm();
    int getMarkersAmount();
 }

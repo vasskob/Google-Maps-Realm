@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -67,8 +68,6 @@ public class MapsActivity extends AppCompatActivity implements MapsView, OnMapRe
 
         initActionBar();
 
-      //  new DbOperations();
-
         if (!checkPermissions()) {
             createPermissionListeners();
         }
@@ -94,14 +93,10 @@ public class MapsActivity extends AppCompatActivity implements MapsView, OnMapRe
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        mMap.setMapType(MAP_TYPE_HYBRID);
 
+        configureMap();
         setCurrentLocation();
-        mMap.getUiSettings().setMyLocationButtonEnabled(true);
-        mMap.getUiSettings().setZoomControlsEnabled(true);
-        mMap.setPadding(0, 200, 0, 100);
 
-        presenter.setView(this);
         presenter.updateRealm();
         presenter.showMarkersOnMap();
 
@@ -120,11 +115,11 @@ public class MapsActivity extends AppCompatActivity implements MapsView, OnMapRe
         });
     }
 
-    private void showMarkerInfoView(com.google.android.gms.maps.model.Marker marker) {
-        Intent intent = new Intent(MapsActivity.this, MarkerInfoActivity.class);
-        intent.putExtra(MARKER_ID, String.valueOf(marker.getTag()));
-        Log.d(TAG, "onInfoWindowClick " + marker.getTag());
-        startActivity(intent);
+    private void configureMap() {
+        mMap.setMapType(MAP_TYPE_HYBRID);
+        mMap.getUiSettings().setMyLocationButtonEnabled(true);
+        mMap.getUiSettings().setZoomControlsEnabled(true);
+        mMap.setPadding(0, 200, 0, 100);
     }
 
     public void setCurrentLocation() {
@@ -136,30 +131,76 @@ public class MapsActivity extends AppCompatActivity implements MapsView, OnMapRe
         }
     }
 
-//        //   TODO: 25/04/17 why on ui thread? https://realm.io/docs/java/latest/#asynchronous-queries
-
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        presenter.setView(this);
-        //   markers.addChangeListener(callback);
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        presenter.clearView();
-        //  markers.removeChangeListener(callback);
-    }
-
-
     private void showAddMarkerDialog() {
         MarkerDialogFragment mdf =
                 MarkerDialogFragment.newInstance(R.string.new_marker_dialog_title);
         mdf.show(getSupportFragmentManager(), DIALOG_FRAGMENT_TAG);
     }
 
+    private void showMarkerInfoView(com.google.android.gms.maps.model.Marker marker) {
+        Intent intent = new Intent(MapsActivity.this, MarkerInfoActivity.class);
+        intent.putExtra(MARKER_ID, String.valueOf(marker.getTag()));
+        Log.d(TAG, "onInfoWindowClick " + marker.getTag());
+        startActivity(intent);
+    }
+
+    @Override
+    public void showMarkers(RealmResults<Marker> markers) {
+        for (Marker marker : markers) {
+            addMarkerOnMap(marker);
+        }
+    }
+
+    @Override
+    public void showToastSuccess() {
+        Toast.makeText(this, R.string.marker_add_success, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void showToastError() {
+        Toast.makeText(this, R.string.marker_add_error, Toast.LENGTH_SHORT).show();
+    }
+
+    private void addMarkerOnMap(Marker marker) {
+        mMap.addMarker(new MarkerToMarkerOptionsMapper().map(marker)).setTag(marker.getId());
+    }
+
+    @Override
+    public void onAddClicked(MarkerDialogFragment dialog) {
+
+        int markersAmount = presenter.getMarkersAmount();
+        Log.d(TAG, "db size = " + markersAmount);
+        Marker marker = new Marker();
+        marker.setId(markersAmount + 1);
+        marker.setLatitude(mLatLng.latitude);
+        marker.setLongitude(mLatLng.longitude);
+        marker.setTitle(dialog.getMarkerTitle());
+        marker.setMarkerIcon(dialog.getMarkerIcon());
+
+        addMarkerOnMap(marker);
+        presenter.addMarkerToRealm(marker);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        presenter.clearView();
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        presenter.setView(this);
+        presenter.updateRealm();
+        mMap.clear();
+        presenter.showMarkersOnMap();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        presenter.closeRealm();
+    }
 
 //////////////////  Real Time Permission Section ///////////////////////////////
 
@@ -251,49 +292,6 @@ public class MapsActivity extends AppCompatActivity implements MapsView, OnMapRe
         } catch (Resources.NotFoundException e) {
             Log.e(TAG, "Can't find style. Error: ", e);
         }
-    }
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        presenter.setView(this);
-        presenter.updateRealm();
-        mMap.clear();
-        presenter.showMarkersOnMap();
-    }
-
-    @Override
-    public void onDoneClicked(MarkerDialogFragment dialog) {
-
-        int markersAmount = presenter.getMarkersAmount();
-        Log.d(TAG, "db size = "+ markersAmount);
-        Marker marker = new Marker();
-        marker.setId(markersAmount+1);
-        marker.setLatitude(mLatLng.latitude);
-        marker.setLongitude(mLatLng.longitude);
-        marker.setTitle(dialog.getMarkerTitle());
-        marker.setMarkerIcon(dialog.getMarkerIcon());
-
-        addMarkerOnMap(marker);
-        presenter.addMarkerToRealm(marker);
-
-    }
-
-    private void addMarkerOnMap(Marker marker) {
-        mMap.addMarker(new MarkerToMarkerOptionsMapper().map(marker)).setTag(marker.getId());
-    }
-
-
-    @Override
-    public void showMarkers(RealmResults<Marker> markers) {
-        for (Marker marker : markers) {
-            addMarkerOnMap(marker);
-        }
-    }
-
-    @Override
-    public void showToast(String msg) {
-
     }
 
 }

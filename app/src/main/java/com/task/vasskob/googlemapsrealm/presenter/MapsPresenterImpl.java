@@ -1,18 +1,19 @@
 package com.task.vasskob.googlemapsrealm.presenter;
 
 import com.task.vasskob.googlemapsrealm.model.Marker;
+import com.task.vasskob.googlemapsrealm.model.realm.RealmController;
 import com.task.vasskob.googlemapsrealm.view.MapsView;
 
 import io.realm.RealmResults;
 
-public class MapsPresenterImpl extends BasePresenter implements MapsPresenter<MapsView> {
+public class MapsPresenterImpl extends BasePresenter implements MapsPresenter<MapsView>, RealmController.OnTransactionCallback {
 
 
     private MapsView mMapsView;
 
     @Override
     public void showMarkersOnMap() {
-        RealmResults<Marker> markers = realmController.getMarkers();
+        RealmResults<Marker> markers = realmController.getAllMarkers();
         mMapsView.showMarkers(markers);
     }
 
@@ -23,7 +24,7 @@ public class MapsPresenterImpl extends BasePresenter implements MapsPresenter<Ma
 
     @Override
     public void addMarkerToRealm(Marker marker) {
-        realmController.addMarkerToRealm(marker);
+      realmController.addMarkerToRealmAsync(marker, this);
     }
 
     @Override
@@ -33,7 +34,7 @@ public class MapsPresenterImpl extends BasePresenter implements MapsPresenter<Ma
 
     @Override
     public int getMarkersAmount() {
-        return realmController.getMarkers().size();
+        return realmController.getAllMarkers().size();
     }
 
     @Override
@@ -47,7 +48,12 @@ public class MapsPresenterImpl extends BasePresenter implements MapsPresenter<Ma
     }
 
     @Override
-    public void onMarkerClick(Marker marker) {
+    public void onRealmSuccess() {
+        mMapsView.showToastSuccess();
+    }
 
+    @Override
+    public void onRealmError(Exception e) {
+        mMapsView.showToastError();
     }
 }

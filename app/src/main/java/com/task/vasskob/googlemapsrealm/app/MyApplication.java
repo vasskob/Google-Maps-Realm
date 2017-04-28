@@ -34,5 +34,4 @@ public class MyApplication extends Application {
         markerIcons.add(new MarkerIcon(4, R.drawable.ic_icon4));
         return markerIcons;
     }
-
 }

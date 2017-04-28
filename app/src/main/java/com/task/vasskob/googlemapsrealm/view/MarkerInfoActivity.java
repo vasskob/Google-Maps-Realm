@@ -11,6 +11,7 @@ import android.util.Log;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.task.vasskob.googlemapsrealm.R;
 import com.task.vasskob.googlemapsrealm.model.Marker;
@@ -38,7 +39,7 @@ public class MarkerInfoActivity extends AppCompatActivity implements MarkerInfoV
     TextView tvCoordinates;
 
     @Bind(R.id.marker_icon)
-    ImageButton ibIcon;
+    ImageButton ibMarkerIcon;
     private MarkerIcon clickedMarkerIcon;
     private MarkerInfoPresenterImpl presenter;
 
@@ -66,12 +67,7 @@ public class MarkerInfoActivity extends AppCompatActivity implements MarkerInfoV
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_marker_info);
         ButterKnife.bind(this);
-
-
         presenter = new MarkerInfoPresenterImpl();
-        presenter.setView(this);
-
-
     }
 
     private void showIconChooserDialog() {
@@ -88,7 +84,7 @@ public class MarkerInfoActivity extends AppCompatActivity implements MarkerInfoV
             @Override
             public void onIconClick(MarkerIcon markerIcon) {
                 clickedMarkerIcon = markerIcon;
-                ibIcon.setImageResource(markerIcon.getResId());
+                ibMarkerIcon.setImageResource(markerIcon.getResId());
                 dialog.dismiss();
             }
         });
@@ -98,22 +94,12 @@ public class MarkerInfoActivity extends AppCompatActivity implements MarkerInfoV
     }
 
     @Override
-    public void showMarkerInfo(Marker marker) {
-        this.marker = marker;
-        etLabel.setText(marker.getTitle());
-        tvCoordinates.setText(marker.getLatitude() + " , " + marker.getLongitude());
-        MarkerIcon mIcon = marker.getMarkerIcon();
-        ibIcon.setImageResource(mIcon.getResId());
-    }
-
-    @Override
     protected void onStart() {
         super.onStart();
         presenter.setView(this);
         Intent intent = getIntent();
         final String markerId = intent.getStringExtra(MapsActivity.MARKER_ID);
         presenter.showMarkerInfoById(Integer.parseInt(markerId));
-
         Log.d(TAG, "onCreate" + markerId);
     }
 
@@ -121,5 +107,29 @@ public class MarkerInfoActivity extends AppCompatActivity implements MarkerInfoV
     protected void onStop() {
         super.onStop();
         presenter.clearView();
+    }
+
+    @Override
+    public void showMarkerInfo(Marker marker) {
+        this.marker = marker;
+        etLabel.setText(marker.getTitle());
+        tvCoordinates.setText(marker.getLatitude() + " , " + marker.getLongitude());
+        MarkerIcon mIcon = marker.getMarkerIcon();
+        ibMarkerIcon.setImageResource(mIcon.getResId());
+    }
+
+    @Override
+    public void showErrorToast() {
+        Toast.makeText(this, R.string.marker_update_error, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void showDeleteToast() {
+        Toast.makeText(this, R.string.marker_delete_success, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void showUpdateToast() {
+        Toast.makeText(this, R.string.marker_update_success, Toast.LENGTH_SHORT).show();
     }
 }

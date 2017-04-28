@@ -26,12 +26,6 @@ public class RealmController {
         realm.refresh();
     }
 
-    public void addMarkerToRealm(Marker marker) {
-        realm.beginTransaction();
-        realm.copyToRealm(marker);
-        realm.commitTransaction();
-    }
-
     public void deleteMarkerInRealm(Marker object) {
         realm.beginTransaction();
         object.removeFromRealm();
@@ -50,14 +44,9 @@ public class RealmController {
         realm.commitTransaction();
     }
 
-    public void clearAll() {
-        realm.beginTransaction();
-        realm.clear(Marker.class);
-        realm.commitTransaction();
-    }
-
-    public RealmResults<Marker> getMarkers() {
-        return realm.where(Marker.class).findAll();
+    public RealmResults<Marker> getAllMarkers() {
+        return realm.allObjects(Marker.class);
+        // return realm.where(Marker.class).findAll();
     }
 
     public Marker getMarker(long id) {
@@ -68,17 +57,51 @@ public class RealmController {
         realm.close();
     }
 
-    public boolean hasMarkers() {
-        return !realm.allObjects(Marker.class).isEmpty();
+    public void addMarkerToRealmAsync(final Marker marker, final OnTransactionCallback callback) {
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                realm.copyToRealm(marker);
+            }
+        }, new Realm.Transaction.Callback() {
+            @Override
+            public void onSuccess() {
+                if (callback != null) {
+                    callback.onRealmSuccess();
+                }
+            }
+            @Override
+            public void onError(Exception e) {
+
+                if (callback != null) {
+                    callback.onRealmError(e);
+                }
+            }
+        });
     }
 
-    //query example
-    public RealmResults<Marker> queryedMarkers() {
-        return realm.where(Marker.class)
-                .contains("mLabel", "a")
-                .or()
-                .contains("mIcon", "icon_path")
-                .findAllAsync();
-
+    public interface OnTransactionCallback {
+        void onRealmSuccess();
+        void onRealmError(final Exception e);
     }
+
+//    public boolean hasMarkers() {
+//        return !realm.allObjects(Marker.class).isEmpty();
+//    }
+//
+//    //query example
+//    public RealmResults<Marker> queryedMarkers() {
+//        return realm.where(Marker.class)
+//                .contains("mLabel", "a")
+//                .or()
+//                .contains("mIcon", "icon_path")
+//                .findAllAsync();
+//
+//    }
+//
+//    public void clearAll() {
+//        realm.beginTransaction();
+//        realm.clear(Marker.class);
+//        realm.commitTransaction();
+//    }
 }

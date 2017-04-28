@@ -26,8 +26,6 @@ import static com.task.vasskob.googlemapsrealm.app.MyApplication.getDefaultMarke
 
 public class MarkerDialogFragment extends BaseDialogFragment<MarkerDialogFragment.OnDialogFragmentClickListener> {
 
-
-
     public static final String TITLE = "title";
 
     @Bind(R.id.rvIcons)
@@ -42,7 +40,7 @@ public class MarkerDialogFragment extends BaseDialogFragment<MarkerDialogFragmen
 
 
     public interface OnDialogFragmentClickListener {
-        void onDoneClicked(MarkerDialogFragment dialog);
+        void onAddClicked(MarkerDialogFragment dialog);
     }
 
     public static MarkerDialogFragment newInstance(int title) {
@@ -87,7 +85,7 @@ public class MarkerDialogFragment extends BaseDialogFragment<MarkerDialogFragmen
                                 if (clickedMarkerIcon != null)
                                     Log.d("OnPositiveBtnClick", "Title = " + mTitle + " icon = " + clickedMarkerIcon.getId());
 
-                                getActivityInstance().onDoneClicked(MarkerDialogFragment.this);
+                                getActivityInstance().onAddClicked(MarkerDialogFragment.this);
                             }
                         }
                 )
@@ -108,6 +106,5 @@ public class MarkerDialogFragment extends BaseDialogFragment<MarkerDialogFragmen
     public MarkerIcon getMarkerIcon() {
         return clickedMarkerIcon == null ? defaultMarkerIcon : clickedMarkerIcon;
     }
-
 
 }
