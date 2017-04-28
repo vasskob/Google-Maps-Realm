@@ -4,14 +4,13 @@ import com.task.vasskob.googlemapsrealm.model.Marker;
 import com.task.vasskob.googlemapsrealm.model.MarkerIcon;
 
 import io.realm.Realm;
-import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
 public class RealmController {
 
 //    private OnChangeListener listener;
 //
-//    public interface OnChangeListener {
+//    public interface OnChangeListener extends RealmChangeListener {
 //        void onChange(RealmResults<Marker> results);
 //    }
 
@@ -58,8 +57,9 @@ public class RealmController {
     }
 
     public RealmResults<Marker> getAllMarkers() {
-     //   return realm.allObjects(Marker.class);
-         return realm.where(Marker.class).findAllAsync();
+        //   return realm.allObjects(Marker.class);
+      //   results.addChangeListener(listener);
+        return realm.where(Marker.class).findAllAsync();
     }
 
     public Marker getMarker(long id) {
