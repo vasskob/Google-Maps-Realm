@@ -5,7 +5,7 @@ import io.realm.annotations.PrimaryKey;
 
 public class Marker extends RealmObject {
 
-    @PrimaryKey
+//    @PrimaryKey
     private int id;
     private String title;
     private MarkerIcon markerIcon;

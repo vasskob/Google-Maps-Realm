@@ -35,7 +35,7 @@ public class MapsPresenterImpl extends BasePresenter implements MapsPresenter<Ma
     @Override
     public int getMarkersAmount() {
         RealmResults<Marker> results = realmController.getAllMarkers();
-        results.load();
+//        results.load();
         return results.size();
     }
 

@@ -3,7 +3,10 @@ package com.task.vasskob.googlemapsrealm.model.realm;
 import com.task.vasskob.googlemapsrealm.model.Marker;
 import com.task.vasskob.googlemapsrealm.model.MarkerIcon;
 
+import io.realm.OrderedCollectionChangeSet;
+import io.realm.OrderedRealmCollectionChangeListener;
 import io.realm.Realm;
+import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
 public class RealmController {
@@ -13,6 +16,13 @@ public class RealmController {
 //    public interface OnChangeListener extends RealmChangeListener {
 //        void onChange(RealmResults<Marker> results);
 //    }
+
+    private OrderedRealmCollectionChangeListener<RealmResults<Marker>> callback = new OrderedRealmCollectionChangeListener<RealmResults<Marker>>() {
+        @Override
+        public void onChange(RealmResults<Marker> collection, OrderedCollectionChangeSet changeSet) {
+
+        }
+    };
 
     private static RealmController instance;
     private final Realm realm;
@@ -29,7 +39,7 @@ public class RealmController {
     }
 
     public void refresh() {
-        realm.refresh();
+//        realm.refresh();
     }
 
     public void addMarkerToRealm(final Marker marker) {
@@ -40,7 +50,7 @@ public class RealmController {
 
     public void deleteMarkerInRealm(Marker marker) {
         realm.beginTransaction();
-        marker.removeFromRealm();
+//        marker.removeFromRealm();
         realm.commitTransaction();
     }
 
@@ -59,8 +69,10 @@ public class RealmController {
     public RealmResults<Marker> getAllMarkers() {
         //   return realm.allObjects(Marker.class);
       //   results.addChangeListener(listener);
+
+        callback.onChange(null, null);
         return realm.where(Marker.class).findAllAsync();
-    }
+    };
 
     public Marker getMarker(long id) {
         return realm.where(Marker.class).equalTo("id", id).findFirstAsync();
