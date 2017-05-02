@@ -9,10 +9,13 @@ import io.realm.RealmResults;
 
 public class RealmController {
 
-    private OrderedRealmCollectionChangeListener<RealmResults<Marker>> listener;
+    private OrderedRealmCollectionChangeListener<RealmResults<Marker>> allMarkersListener;
+    private OrderedRealmCollectionChangeListener<RealmResults<Marker>> markerListener;
 
     private static RealmController instance;
     private final Realm realm;
+    private RealmResults<Marker> resultsForAll;
+    private RealmResults<Marker> realmResults;
 
     private RealmController() {
         realm = Realm.getDefaultInstance();
@@ -25,13 +28,6 @@ public class RealmController {
         return instance;
     }
 
-    public void refresh() {
-//   realm.refresh();
-//   realm.setAutoRefresh(true);
-
-        //  realm.waitForChange();
-    }
-
     public void addMarkerToRealm(final Marker marker) {
         realm.executeTransactionAsync(new Realm.Transaction() {
             @Override
@@ -42,45 +38,67 @@ public class RealmController {
     }
 
     public void deleteMarkerInRealm(final Marker marker) {
-        realm.executeTransactionAsync(new Realm.Transaction() {
-            @Override
-            public void execute(Realm realm) {
-                marker.deleteFromRealm();
-            }
-        });
+//        realm.executeTransactionAsync(new Realm.Transaction() {
+//            @Override
+//            public void execute(Realm realm) {
+//                marker.deleteFromRealm();
+//            }
+//        });
+        realm.beginTransaction();
+        marker.deleteFromRealm();
+        realm.commitTransaction();
     }
 
     public void updateMarkerInRealm(final Marker marker, final String title, final MarkerIcon markerIcon) {
-        realm.executeTransactionAsync(new Realm.Transaction() {
-            @Override
-            public void execute(Realm realm) {
-                marker.setTitle(title);
-                if (markerIcon != null) {
-                    MarkerIcon mIcon = realm.createObject(MarkerIcon.class);
-                    mIcon.setId(markerIcon.getId());
-                    mIcon.setResId(markerIcon.getResId());
-                    marker.setMarkerIcon(mIcon);
-                }
-            }
-        });
+//        realm.executeTransactionAsync(new Realm.Transaction() {
+//            @Override
+//            public void execute(Realm realm) {
+//                marker.setTitle(title);
+//                if (markerIcon != null) {
+//                    MarkerIcon mIcon = realm.createObject(MarkerIcon.class);
+//                    mIcon.setId(markerIcon.getId());
+//                    mIcon.setResId(markerIcon.getResId());
+//                    marker.setMarkerIcon(mIcon);
+//                }
+//            }
+//        });
+        realm.beginTransaction();
+        marker.setTitle(title);
+        if (markerIcon != null) {
+            MarkerIcon mIcon = realm.createObject(MarkerIcon.class);
+            mIcon.setId(markerIcon.getId());
+            mIcon.setResId(markerIcon.getResId());
+            marker.setMarkerIcon(mIcon);
+        }
+        realm.commitTransaction();
     }
 
-    public void getAllMarkers() {
-        RealmResults<Marker> results = realm.where(Marker.class).findAllAsync();
-        results.addChangeListener(listener);
+    public void showAllMarkers() {
+        resultsForAll = realm.where(Marker.class).findAllAsync();
+        resultsForAll.addChangeListener(allMarkersListener);
     }
 
-    public void getMarker(String id) {
-        RealmResults<Marker> realmResults = realm.where(Marker.class).equalTo("id", id).findAllAsync();
-        realmResults.addChangeListener(listener);
+    public void showMarker(String id) {
+        realmResults = realm.where(Marker.class).equalTo("id", id).findAllAsync();
+        realmResults.addChangeListener(markerListener);
     }
 
     public void closeRealm() {
-        // realm.close();
+        //  realm.close();
     }
 
-    public void setListener(OrderedRealmCollectionChangeListener<RealmResults<Marker>> listener) {
-        this.listener = listener;
+    public void setAllMarkersListener(OrderedRealmCollectionChangeListener<RealmResults<Marker>> listener) {
+        this.allMarkersListener = listener;
     }
 
+    public void setMarkerListener(OrderedRealmCollectionChangeListener<RealmResults<Marker>> listener) {
+        this.markerListener = listener;
+    }
+
+    public void removeListener() {
+        if (realmResults != null && resultsForAll != null) {
+            resultsForAll.removeAllChangeListeners();
+            realmResults.removeAllChangeListeners();
+        }
+    }
 }

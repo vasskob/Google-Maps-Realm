@@ -13,11 +13,18 @@ import io.realm.RealmResults;
 public class MarkerInfoPresenterImpl extends BasePresenter implements MarkerInfoPresenter<MarkerInfoView> {
 
     private MarkerInfoView mInfoView;
+    private OrderedRealmCollectionChangeListener<RealmResults<Marker>> callback = new OrderedRealmCollectionChangeListener<RealmResults<Marker>>() {
+        @Override
+        public void onChange(RealmResults<Marker> collection, OrderedCollectionChangeSet changeSet) {
+            Log.d(" OnChange" ," marker.icon ="+ collection.first().getMarkerIcon() );
+            mInfoView.showMarkerInfo(collection.get(0));
+        }
+    };
 
     @Override
     public void showMarkerInfoById(String id) {
-        realmController.setListener(callback);
-        realmController.getMarker(id);
+        realmController.setMarkerListener(callback);
+        realmController.showMarker(id);
     }
 
     @Override
@@ -39,14 +46,5 @@ public class MarkerInfoPresenterImpl extends BasePresenter implements MarkerInfo
     public void clearView() {
         mInfoView = null;
     }
-
-    private OrderedRealmCollectionChangeListener<RealmResults<Marker>> callback = new OrderedRealmCollectionChangeListener<RealmResults<Marker>>() {
-        @Override
-        public void onChange(RealmResults<Marker> collection, OrderedCollectionChangeSet changeSet) {
-            Log.d(" OnChange" ," marker.icon ="+ collection.first().getMarkerIcon() );
-            mInfoView.showMarkerInfo(collection.get(0));
-        }
-    };
-
 
 }

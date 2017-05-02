@@ -44,6 +44,7 @@
 
         <activity
             android:name=".view.MarkerInfoActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/InfoTheme"/>
     </application>
 

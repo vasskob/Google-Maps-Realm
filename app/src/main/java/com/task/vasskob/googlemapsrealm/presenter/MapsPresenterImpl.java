@@ -11,23 +11,20 @@ public class MapsPresenterImpl extends BasePresenter implements MapsPresenter<Ma
 
 
     private MapsView mMapsView;
+    private OrderedRealmCollectionChangeListener<RealmResults<Marker>> callback = new OrderedRealmCollectionChangeListener<RealmResults<Marker>>() {
+        @Override
+        public void onChange(RealmResults<Marker> collection, OrderedCollectionChangeSet changeSet) {
+            mMapsView.showMarkers(collection);
+        }
+    };
 
     @Override
     public void showMarkersOnMap() {
-        //RealmResults<Marker> markers =
-        //    realmController.setOnChangeListener(this);
-        realmController.setListener(callback);
-        realmController.getAllMarkers();
-        //   markers.load();
-        // mMapsView.showMarkers(markers);
+        realmController.setAllMarkersListener(callback);
+        realmController.showAllMarkers();
     }
 
-    @Override
-    public void updateRealm() {
-        realmController.refresh();
-    }
-
-    @Override
+   @Override
     public void addMarkerToRealm(Marker marker) {
         realmController.addMarkerToRealm(marker);
     }
@@ -35,6 +32,11 @@ public class MapsPresenterImpl extends BasePresenter implements MapsPresenter<Ma
     @Override
     public void closeRealm() {
         realmController.closeRealm();
+    }
+
+    @Override
+    public void removeListener() {
+        realmController.removeListener();
     }
 
     @Override
@@ -46,14 +48,4 @@ public class MapsPresenterImpl extends BasePresenter implements MapsPresenter<Ma
     public void clearView() {
         mMapsView = null;
     }
-
-
-    private OrderedRealmCollectionChangeListener<RealmResults<Marker>> callback = new OrderedRealmCollectionChangeListener<RealmResults<Marker>>() {
-        @Override
-        public void onChange(RealmResults<Marker> collection, OrderedCollectionChangeSet changeSet) {
-            mMapsView.showMarkers(collection);
-        }
-    };
-
-
 }

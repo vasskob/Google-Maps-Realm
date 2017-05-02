@@ -99,7 +99,6 @@ public class MapsActivity extends AppCompatActivity implements MapsView, OnMapRe
         configureMap();
         setCurrentLocation();
 
-        presenter.updateRealm();
         presenter.showMarkersOnMap();
 
         googleMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
@@ -185,13 +184,13 @@ public class MapsActivity extends AppCompatActivity implements MapsView, OnMapRe
     protected void onStop() {
         super.onStop();
         presenter.clearView();
+        presenter.removeListener();
     }
 
     @Override
     protected void onRestart() {
         super.onRestart();
         presenter.setView(this);
-        presenter.updateRealm();
         mMap.clear();
         presenter.showMarkersOnMap();
     }
