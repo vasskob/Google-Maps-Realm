@@ -99,7 +99,7 @@ public class MarkerInfoActivity extends AppCompatActivity implements MarkerInfoV
         presenter.setView(this);
         Intent intent = getIntent();
         final String markerId = intent.getStringExtra(MapsActivity.MARKER_ID);
-        presenter.showMarkerInfoById(Integer.parseInt(markerId));
+        presenter.showMarkerInfoById(markerId);
         Log.d(TAG, "onCreate" + markerId);
     }
 

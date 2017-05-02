@@ -38,16 +38,6 @@ public class MapsPresenterImpl extends BasePresenter implements MapsPresenter<Ma
     }
 
     @Override
-    public int getMarkersAmount() {
-        //  RealmResults<Marker> results =
-        realmController.setListener(callback);
-        realmController.getAllMarkers();
-
-        return 40;
-        //results.size();
-    }
-
-    @Override
     public void setView(MapsView view) {
         mMapsView = view;
     }
@@ -58,13 +48,12 @@ public class MapsPresenterImpl extends BasePresenter implements MapsPresenter<Ma
     }
 
 
-private OrderedRealmCollectionChangeListener<RealmResults<Marker>> callback = new OrderedRealmCollectionChangeListener<RealmResults<Marker>>() {
-    @Override
-    public void onChange(RealmResults<Marker> collection, OrderedCollectionChangeSet changeSet) {
-             mMapsView.showMarkers(collection);
-    }
-};
-
+    private OrderedRealmCollectionChangeListener<RealmResults<Marker>> callback = new OrderedRealmCollectionChangeListener<RealmResults<Marker>>() {
+        @Override
+        public void onChange(RealmResults<Marker> collection, OrderedCollectionChangeSet changeSet) {
+            mMapsView.showMarkers(collection);
+        }
+    };
 
 
 }

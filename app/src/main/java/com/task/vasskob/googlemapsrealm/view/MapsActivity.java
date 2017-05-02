@@ -170,8 +170,6 @@ public class MapsActivity extends AppCompatActivity implements MapsView, OnMapRe
     @Override
     public void onAddClicked(MarkerDialogFragment dialog) {
 
-        int markersAmount = presenter.getMarkersAmount();
-        Log.d(TAG, "db size = " + markersAmount);
         Marker marker = new Marker();
         marker.setId(UUID.randomUUID().toString());
         marker.setLatitude(mLatLng.latitude);

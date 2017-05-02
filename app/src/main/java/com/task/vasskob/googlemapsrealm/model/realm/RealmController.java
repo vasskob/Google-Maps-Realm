@@ -11,12 +11,6 @@ public class RealmController {
 
     private OrderedRealmCollectionChangeListener<RealmResults<Marker>> listener;
 
-//    public interface OnChangeListener {
-//        void onChangeM(RealmResults<Marker> results);
-//    }
-//
-//
-
     private static RealmController instance;
     private final Realm realm;
 
@@ -35,7 +29,7 @@ public class RealmController {
 //   realm.refresh();
 //   realm.setAutoRefresh(true);
 
-   //  realm.waitForChange();
+        //  realm.waitForChange();
     }
 
     public void addMarkerToRealm(final Marker marker) {
@@ -72,22 +66,21 @@ public class RealmController {
     }
 
     public void getAllMarkers() {
-        //   return realm.allObjects(Marker.class);
-        //   results.addChangeListener(listener);
-        RealmResults<Marker> results=realm.where(Marker.class).findAllAsync();
+        RealmResults<Marker> results = realm.where(Marker.class).findAllAsync();
         results.addChangeListener(listener);
     }
 
-    public Marker getMarker(long id) {
-        return realm.where(Marker.class).equalTo("id", id).findFirstAsync();
+    public void getMarker(String id) {
+        RealmResults<Marker> realmResults = realm.where(Marker.class).equalTo("id", id).findAllAsync();
+        realmResults.addChangeListener(listener);
     }
 
     public void closeRealm() {
-       // realm.close();
+        // realm.close();
     }
 
-   public void setListener(OrderedRealmCollectionChangeListener<RealmResults<Marker>> listener){
-       this.listener=listener;
-   }
+    public void setListener(OrderedRealmCollectionChangeListener<RealmResults<Marker>> listener) {
+        this.listener = listener;
+    }
 
 }
