@@ -29,10 +29,6 @@ public class MapsPresenterImpl extends BasePresenter implements MapsPresenter<Ma
         realmController.addMarkerToRealm(marker);
     }
 
-    @Override
-    public void closeRealm() {
-        realmController.closeRealm();
-    }
 
     @Override
     public void removeListener() {

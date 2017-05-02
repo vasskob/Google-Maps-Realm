@@ -195,13 +195,7 @@ public class MapsActivity extends AppCompatActivity implements MapsView, OnMapRe
         presenter.showMarkersOnMap();
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        presenter.closeRealm();
-    }
-
-//////////////////  Real Time Permission Section ///////////////////////////////
+    //////////////////  Real Time Permission Section ///////////////////////////////
 
     private void createPermissionListeners() {
 

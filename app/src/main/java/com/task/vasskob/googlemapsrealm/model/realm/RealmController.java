@@ -38,30 +38,12 @@ public class RealmController {
     }
 
     public void deleteMarkerInRealm(final Marker marker) {
-//        realm.executeTransactionAsync(new Realm.Transaction() {
-//            @Override
-//            public void execute(Realm realm) {
-//                marker.deleteFromRealm();
-//            }
-//        });
         realm.beginTransaction();
         marker.deleteFromRealm();
         realm.commitTransaction();
     }
 
     public void updateMarkerInRealm(final Marker marker, final String title, final MarkerIcon markerIcon) {
-//        realm.executeTransactionAsync(new Realm.Transaction() {
-//            @Override
-//            public void execute(Realm realm) {
-//                marker.setTitle(title);
-//                if (markerIcon != null) {
-//                    MarkerIcon mIcon = realm.createObject(MarkerIcon.class);
-//                    mIcon.setId(markerIcon.getId());
-//                    mIcon.setResId(markerIcon.getResId());
-//                    marker.setMarkerIcon(mIcon);
-//                }
-//            }
-//        });
         realm.beginTransaction();
         marker.setTitle(title);
         if (markerIcon != null) {
@@ -81,10 +63,6 @@ public class RealmController {
     public void showMarker(String id) {
         realmResults = realm.where(Marker.class).equalTo("id", id).findAllAsync();
         realmResults.addChangeListener(markerListener);
-    }
-
-    public void closeRealm() {
-        //  realm.close();
     }
 
     public void setAllMarkersListener(OrderedRealmCollectionChangeListener<RealmResults<Marker>> listener) {

@@ -11,7 +11,5 @@ interface MapsPresenter<T> {
 
     void showMarkersOnMap();
 
-    void closeRealm();
-
     void removeListener();
 }
