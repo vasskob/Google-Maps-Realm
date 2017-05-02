@@ -3,6 +3,10 @@ package com.task.vasskob.googlemapsrealm.presenter;
 import com.task.vasskob.googlemapsrealm.model.Marker;
 import com.task.vasskob.googlemapsrealm.view.MapsView;
 
+import io.realm.OrderedCollectionChangeSet;
+import io.realm.OrderedRealmCollectionChangeListener;
+import io.realm.RealmResults;
+
 public class MapsPresenterImpl extends BasePresenter implements MapsPresenter<MapsView> {
 
 
@@ -12,6 +16,7 @@ public class MapsPresenterImpl extends BasePresenter implements MapsPresenter<Ma
     public void showMarkersOnMap() {
         //RealmResults<Marker> markers =
         //    realmController.setOnChangeListener(this);
+        realmController.setListener(callback);
         realmController.getAllMarkers();
         //   markers.load();
         // mMapsView.showMarkers(markers);
@@ -35,9 +40,9 @@ public class MapsPresenterImpl extends BasePresenter implements MapsPresenter<Ma
     @Override
     public int getMarkersAmount() {
         //  RealmResults<Marker> results =
-        //  realmController.setOnChangeListener(callback);
+        realmController.setListener(callback);
         realmController.getAllMarkers();
-//        results.load();
+
         return 40;
         //results.size();
     }
@@ -53,11 +58,13 @@ public class MapsPresenterImpl extends BasePresenter implements MapsPresenter<Ma
     }
 
 
-//    @Override
-//    public void onChangeM(RealmResults<Marker> results) {
-//        mMapsView.showMarkers(results);
-//        //mMapsView.
-//    }
+private OrderedRealmCollectionChangeListener<RealmResults<Marker>> callback = new OrderedRealmCollectionChangeListener<RealmResults<Marker>>() {
+    @Override
+    public void onChange(RealmResults<Marker> collection, OrderedCollectionChangeSet changeSet) {
+             mMapsView.showMarkers(collection);
+    }
+};
+
 
 
 }
