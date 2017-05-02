@@ -5,18 +5,18 @@ import io.realm.annotations.PrimaryKey;
 
 public class Marker extends RealmObject {
 
-//    @PrimaryKey
-    private int id;
+    @PrimaryKey
+    private String id;
     private String title;
     private MarkerIcon markerIcon;
     private Double latitude;
     private Double longitude;
 
-    public int getId() {
+    public String  getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String  id) {
         this.id = id;
     }
 

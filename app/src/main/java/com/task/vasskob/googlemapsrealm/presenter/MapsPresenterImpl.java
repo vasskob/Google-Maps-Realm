@@ -3,8 +3,6 @@ package com.task.vasskob.googlemapsrealm.presenter;
 import com.task.vasskob.googlemapsrealm.model.Marker;
 import com.task.vasskob.googlemapsrealm.view.MapsView;
 
-import io.realm.RealmResults;
-
 public class MapsPresenterImpl extends BasePresenter implements MapsPresenter<MapsView> {
 
 
@@ -12,9 +10,11 @@ public class MapsPresenterImpl extends BasePresenter implements MapsPresenter<Ma
 
     @Override
     public void showMarkersOnMap() {
-        RealmResults<Marker> markers = realmController.getAllMarkers();
-        markers.load();
-        mMapsView.showMarkers(markers);
+        //RealmResults<Marker> markers =
+        //    realmController.setOnChangeListener(this);
+        realmController.getAllMarkers();
+        //   markers.load();
+        // mMapsView.showMarkers(markers);
     }
 
     @Override
@@ -34,9 +34,12 @@ public class MapsPresenterImpl extends BasePresenter implements MapsPresenter<Ma
 
     @Override
     public int getMarkersAmount() {
-        RealmResults<Marker> results = realmController.getAllMarkers();
+        //  RealmResults<Marker> results =
+        //  realmController.setOnChangeListener(callback);
+        realmController.getAllMarkers();
 //        results.load();
-        return results.size();
+        return 40;
+        //results.size();
     }
 
     @Override
@@ -48,5 +51,13 @@ public class MapsPresenterImpl extends BasePresenter implements MapsPresenter<Ma
     public void clearView() {
         mMapsView = null;
     }
+
+
+//    @Override
+//    public void onChangeM(RealmResults<Marker> results) {
+//        mMapsView.showMarkers(results);
+//        //mMapsView.
+//    }
+
 
 }

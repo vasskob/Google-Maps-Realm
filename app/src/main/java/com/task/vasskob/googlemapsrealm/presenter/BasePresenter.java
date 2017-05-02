@@ -7,6 +7,8 @@ class BasePresenter {
     final RealmController realmController;
 
     BasePresenter() {
+
         realmController = RealmController.getInstance();
+
     }
 }

@@ -6,23 +6,17 @@ import com.task.vasskob.googlemapsrealm.model.MarkerIcon;
 import io.realm.OrderedCollectionChangeSet;
 import io.realm.OrderedRealmCollectionChangeListener;
 import io.realm.Realm;
-import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
 public class RealmController {
 
-//    private OnChangeListener listener;
+    private OnChangeListener listener;
+
+    public interface OnChangeListener {
+        void onChangeM(RealmResults<Marker> results);
+    }
 //
-//    public interface OnChangeListener extends RealmChangeListener {
-//        void onChange(RealmResults<Marker> results);
-//    }
-
-    private OrderedRealmCollectionChangeListener<RealmResults<Marker>> callback = new OrderedRealmCollectionChangeListener<RealmResults<Marker>>() {
-        @Override
-        public void onChange(RealmResults<Marker> collection, OrderedCollectionChangeSet changeSet) {
-
-        }
-    };
+//
 
     private static RealmController instance;
     private final Realm realm;
@@ -39,71 +33,68 @@ public class RealmController {
     }
 
     public void refresh() {
-//        realm.refresh();
+//   realm.refresh();
+//   realm.setAutoRefresh(true);
+
+   //  realm.waitForChange();
     }
 
     public void addMarkerToRealm(final Marker marker) {
-        realm.beginTransaction();
-        realm.copyToRealm(marker);
-        realm.commitTransaction();
+        realm.executeTransactionAsync(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                realm.copyToRealm(marker);
+            }
+        });
     }
 
-    public void deleteMarkerInRealm(Marker marker) {
-        realm.beginTransaction();
-//        marker.removeFromRealm();
-        realm.commitTransaction();
+    public void deleteMarkerInRealm(final Marker marker) {
+        realm.executeTransactionAsync(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                marker.deleteFromRealm();
+            }
+        });
     }
 
-    public void updateMarkerInRealm(Marker marker, String title, MarkerIcon markerIcon) {
-        realm.beginTransaction();
-        marker.setTitle(title);
-        if (markerIcon != null) {
-            MarkerIcon mIcon = realm.createObject(MarkerIcon.class);
-            mIcon.setId(markerIcon.getId());
-            mIcon.setResId(markerIcon.getResId());
-            marker.setMarkerIcon(mIcon);
-        }
-        realm.commitTransaction();
+    public void updateMarkerInRealm(final Marker marker, final String title, final MarkerIcon markerIcon) {
+        realm.executeTransactionAsync(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                marker.setTitle(title);
+                if (markerIcon != null) {
+                    MarkerIcon mIcon = realm.createObject(MarkerIcon.class);
+                    mIcon.setId(markerIcon.getId());
+                    mIcon.setResId(markerIcon.getResId());
+                    marker.setMarkerIcon(mIcon);
+                }
+            }
+        });
     }
 
-    public RealmResults<Marker> getAllMarkers() {
+    public void getAllMarkers() {
         //   return realm.allObjects(Marker.class);
-      //   results.addChangeListener(listener);
+        //   results.addChangeListener(listener);
+        RealmResults results=realm.where(Marker.class).findAllAsync();
+        //  callback.onChange(null, null);
+        results.addChangeListener(callback);
 
-        callback.onChange(null, null);
-        return realm.where(Marker.class).findAllAsync();
-    };
+
+    }
 
     public Marker getMarker(long id) {
         return realm.where(Marker.class).equalTo("id", id).findFirstAsync();
     }
 
     public void closeRealm() {
-        realm.close();
+       // realm.close();
     }
 
-//    public void setOnChangeListener(OnChangeListener listener) {
-//        this.listener = listener;
-//    }
+    private OrderedRealmCollectionChangeListener<RealmResults<Marker>> callback = new OrderedRealmCollectionChangeListener<RealmResults<Marker>>() {
+        @Override
+        public void onChange(RealmResults<Marker> collection, OrderedCollectionChangeSet changeSet) {
+       //     mMapsView.showMarkers(collection);
+        }
+    };
 
-
-//    public boolean hasMarkers() {
-//        return !realm.allObjects(Marker.class).isEmpty();
-//    }
-//
-//    //query example
-//    public RealmResults<Marker> queryedMarkers() {
-//        return realm.where(Marker.class)
-//                .contains("mLabel", "a")
-//                .or()
-//                .contains("mIcon", "icon_path")
-//                .findAllAsync();
-//
-//    }
-//
-//    public void clearAll() {
-//        realm.beginTransaction();
-//        realm.clear(Marker.class);
-//        realm.commitTransaction();
-//    }
 }

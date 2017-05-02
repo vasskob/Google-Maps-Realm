@@ -32,6 +32,8 @@ import com.task.vasskob.googlemapsrealm.model.MarkerToMarkerOptionsMapper;
 import com.task.vasskob.googlemapsrealm.presenter.MapsPresenterImpl;
 import com.task.vasskob.googlemapsrealm.view.dialog.MarkerDialogFragment;
 
+import java.util.UUID;
+
 import butterknife.Bind;
 import io.realm.RealmResults;
 
@@ -41,8 +43,8 @@ import static com.google.android.gms.maps.GoogleMap.MAP_TYPE_HYBRID;
 import static com.google.android.gms.maps.GoogleMap.MAP_TYPE_NORMAL;
 import static com.google.android.gms.maps.GoogleMap.MAP_TYPE_SATELLITE;
 import static com.google.android.gms.maps.GoogleMap.MAP_TYPE_TERRAIN;
-import static com.task.vasskob.googlemapsrealm.app.DummyData.setRealmDummyMarkers;
 import static com.task.vasskob.googlemapsrealm.R.id.map;
+import static com.task.vasskob.googlemapsrealm.app.DummyData.setRealmDummyMarkers;
 
 public class MapsActivity extends AppCompatActivity implements MapsView, OnMapReadyCallback, MarkerDialogFragment.OnDialogFragmentClickListener {
 
@@ -171,7 +173,7 @@ public class MapsActivity extends AppCompatActivity implements MapsView, OnMapRe
         int markersAmount = presenter.getMarkersAmount();
         Log.d(TAG, "db size = " + markersAmount);
         Marker marker = new Marker();
-        marker.setId(markersAmount + 1);
+        marker.setId(UUID.randomUUID().toString());
         marker.setLatitude(mLatLng.latitude);
         marker.setLongitude(mLatLng.longitude);
         marker.setTitle(dialog.getMarkerTitle());
