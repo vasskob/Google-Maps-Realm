@@ -7,6 +7,7 @@ import io.realm.OrderedRealmCollectionChangeListener;
 import io.realm.Realm;
 import io.realm.RealmResults;
 
+// TODO: 03/05/17 model interface and model implementation should be declared
 public class RealmController {
 
     private OrderedRealmCollectionChangeListener<RealmResults<Marker>> allMarkersListener;

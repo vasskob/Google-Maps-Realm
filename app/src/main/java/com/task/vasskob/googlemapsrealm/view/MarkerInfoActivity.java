@@ -52,6 +52,7 @@ public class MarkerInfoActivity extends AppCompatActivity implements MarkerInfoV
     void onSaveClick() {
         String newTitle = etLabel.getText().toString();
         presenter.updateMarkerInDb(marker, newTitle, clickedMarkerIcon);
+        // TODO: 03/05/17 check for result and then finish activity. what if error?
         finish();
     }
 
@@ -70,6 +71,7 @@ public class MarkerInfoActivity extends AppCompatActivity implements MarkerInfoV
         presenter = new MarkerInfoPresenterImpl();
     }
 
+    // TODO: 03/05/17 encapsulate
     private void showIconChooserDialog() {
         clickedMarkerIcon = marker.getMarkerIcon();
         dialog = new Dialog(this, android.R.style.Theme_DeviceDefault_Dialog);
@@ -111,6 +113,7 @@ public class MarkerInfoActivity extends AppCompatActivity implements MarkerInfoV
 
     @Override
     public void showMarkerInfo(Marker marker) {
+        // TODO: 03/05/17 codestyle???
         this.marker = marker;
         etLabel.setText(marker.getTitle());
         tvCoordinates.setText(marker.getLatitude() + " , " + marker.getLongitude());

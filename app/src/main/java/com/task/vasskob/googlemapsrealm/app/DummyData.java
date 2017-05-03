@@ -11,6 +11,7 @@ import java.util.ArrayList;
 
 public class DummyData {
 
+    // TODO: 03/05/17 create random marker generator and test app work for 100, 1000, 10000 markers
     public static void setRealmDummyMarkers(Activity activity) {
         MapsPresenterImpl presenter=new MapsPresenterImpl();
         ArrayList<Marker> markers = new ArrayList<>();

@@ -39,6 +39,7 @@ public class MarkerDialogFragment extends BaseDialogFragment<MarkerDialogFragmen
     private String mTitle;
 
 
+    // TODO: 03/05/17 use meaningful names
     public interface OnDialogFragmentClickListener {
         void onAddClicked(MarkerDialogFragment dialog);
     }
@@ -85,7 +86,7 @@ public class MarkerDialogFragment extends BaseDialogFragment<MarkerDialogFragmen
                                 if (clickedMarkerIcon != null)
                                     Log.d("OnPositiveBtnClick", "Title = " + mTitle + " icon = " + clickedMarkerIcon.getId());
 
-                                getActivityInstance().onAddClicked(MarkerDialogFragment.this);
+                                getCallback().onAddClicked(MarkerDialogFragment.this);
                             }
                         }
                 )

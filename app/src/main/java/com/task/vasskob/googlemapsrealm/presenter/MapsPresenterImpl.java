@@ -20,6 +20,7 @@ public class MapsPresenterImpl extends BasePresenter implements MapsPresenter<Ma
 
     @Override
     public void showMarkersOnMap() {
+        // TODO: 03/05/17 why two methods?
         realmController.setAllMarkersListener(callback);
         realmController.showAllMarkers();
     }

@@ -46,6 +46,7 @@ import static com.google.android.gms.maps.GoogleMap.MAP_TYPE_TERRAIN;
 import static com.task.vasskob.googlemapsrealm.R.id.map;
 import static com.task.vasskob.googlemapsrealm.app.DummyData.setRealmDummyMarkers;
 
+// TODO: 03/05/17 gpoup by packages
 public class MapsActivity extends AppCompatActivity implements MapsView, OnMapReadyCallback, MarkerDialogFragment.OnDialogFragmentClickListener {
 
     private static final String TAG = MapsActivity.class.getSimpleName();
@@ -70,6 +71,7 @@ public class MapsActivity extends AppCompatActivity implements MapsView, OnMapRe
 
         initActionBar();
 
+        // TODO: 03/05/17 no need to check permissions, just call dexter
         if (!checkPermissions()) {
             createPermissionListeners();
         }
@@ -87,6 +89,7 @@ public class MapsActivity extends AppCompatActivity implements MapsView, OnMapRe
     }
 
     private void initActionBar() {
+        // TODO: 03/05/17 customize styles to remove actionar
         ActionBar actionBar = getSupportActionBar();
         assert actionBar != null;
         actionBar.setDisplayShowTitleEnabled(false);

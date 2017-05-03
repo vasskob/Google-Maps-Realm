@@ -45,6 +45,7 @@ public class MarkerIconAdapter extends RecyclerView.Adapter<MarkerIconAdapter.Ma
             public void onClick(View v) {
                 mCurrentPosition = holder.getAdapterPosition();
                 mListener.onIconClick(markerIconList.get(mCurrentPosition));
+                // TODO: 03/05/17 why need to update all items???
                 notifyDataSetChanged();
             }
         });
@@ -68,6 +69,7 @@ public class MarkerIconAdapter extends RecyclerView.Adapter<MarkerIconAdapter.Ma
             super(view);
             ButterKnife.bind(this, view);
         }
+        // TODO: 03/05/17 void bind(MarkerIcon marker)
     }
 
     public interface OnMarkerIconClickListener {

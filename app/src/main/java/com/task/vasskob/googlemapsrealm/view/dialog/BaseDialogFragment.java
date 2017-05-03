@@ -1,25 +1,26 @@
 package com.task.vasskob.googlemapsrealm.view.dialog;
 
-import android.app.Activity;
+import android.content.Context;
 import android.support.v4.app.DialogFragment;
 
 
 public abstract class BaseDialogFragment<T> extends DialogFragment {
-    private T mActivityInstance;
+    private T mCallback;
 
-    public final T getActivityInstance() {
-        return mActivityInstance;
+    public final T getCallback() {
+        return mCallback;
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        mActivityInstance = (T) activity;
-        super.onAttach(activity);
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        mCallback = (T) context;
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        mActivityInstance = null;
+        mCallback = null;
     }
 }
