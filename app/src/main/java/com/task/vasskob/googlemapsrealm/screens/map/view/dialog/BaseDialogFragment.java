@@ -14,7 +14,6 @@ public abstract class BaseDialogFragment<T> extends DialogFragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-
         mCallback = (T) context;
     }
 

@@ -27,7 +27,7 @@ public class MyApplication extends Application {
         Realm.setDefaultConfiguration(realmConfiguration);
     }
 
-    public static List<MarkerIcon> getDefaultMarkerIcons() {
+    public static List<MarkerIcon> getMarkerIconsList() {
         List<MarkerIcon> markerIcons = new ArrayList<>();
         markerIcons.add(new MarkerIcon(1, R.drawable.ic_icon1));
         markerIcons.add(new MarkerIcon(2, R.drawable.ic_icon2));

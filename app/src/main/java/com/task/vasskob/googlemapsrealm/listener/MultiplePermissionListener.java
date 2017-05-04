@@ -33,4 +33,5 @@ public class MultiplePermissionListener implements MultiplePermissionsListener {
                                                    PermissionToken token) {
 
     }
+
 }

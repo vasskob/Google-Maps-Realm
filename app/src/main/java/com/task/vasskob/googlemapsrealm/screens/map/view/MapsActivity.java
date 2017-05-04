@@ -11,7 +11,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -26,11 +25,11 @@ import com.task.vasskob.googlemapsrealm.R;
 import com.task.vasskob.googlemapsrealm.app.Prefs;
 import com.task.vasskob.googlemapsrealm.listener.ErrorListener;
 import com.task.vasskob.googlemapsrealm.listener.MultiplePermissionListener;
-import com.task.vasskob.googlemapsrealm.screens.map.model.Marker;
 import com.task.vasskob.googlemapsrealm.screens.common.model.MarkerToMarkerOptionsMapper;
+import com.task.vasskob.googlemapsrealm.screens.map.model.Marker;
 import com.task.vasskob.googlemapsrealm.screens.map.presenter.MapsPresenterImpl;
+import com.task.vasskob.googlemapsrealm.screens.map.view.dialog.AddMarkerDialogFragment;
 import com.task.vasskob.googlemapsrealm.screens.marker_details.view.MarkerInfoActivity;
-import com.task.vasskob.googlemapsrealm.screens.map.view.dialog.MarkerDialogFragment;
 
 import java.util.UUID;
 
@@ -46,7 +45,7 @@ import static com.google.android.gms.maps.GoogleMap.MAP_TYPE_TERRAIN;
 import static com.task.vasskob.googlemapsrealm.R.id.map;
 import static com.task.vasskob.googlemapsrealm.app.DummyData.setRealmDummyMarkers;
 
-public class MapsActivity extends AppCompatActivity implements MapsView, OnMapReadyCallback, MarkerDialogFragment.OnDialogClickListener {
+public class MapsActivity extends AppCompatActivity implements MapsView, OnMapReadyCallback, AddMarkerDialogFragment.OnDialogClickListener {
 
     private static final String TAG = MapsActivity.class.getSimpleName();
     public static final String MARKER_ID = "id";
@@ -126,8 +125,8 @@ public class MapsActivity extends AppCompatActivity implements MapsView, OnMapRe
     }
 
     private void showAddMarkerDialog() {
-        MarkerDialogFragment mdf =
-                MarkerDialogFragment.newInstance(R.string.new_marker_dialog_title);
+        AddMarkerDialogFragment mdf =
+                AddMarkerDialogFragment.newInstance(R.string.new_marker_dialog_title);
         mdf.show(getSupportFragmentManager(), DIALOG_FRAGMENT_TAG);
     }
 
@@ -150,7 +149,7 @@ public class MapsActivity extends AppCompatActivity implements MapsView, OnMapRe
     }
 
     @Override
-    public void onAddClicked(MarkerDialogFragment dialog) {
+    public void onAddClicked(AddMarkerDialogFragment dialog) {
 
         Marker marker = new Marker();
         marker.setId(UUID.randomUUID().toString());
