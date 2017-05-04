@@ -1,4 +1,4 @@
-package com.task.vasskob.googlemapsrealm.view.dialog.adapter;
+package com.task.vasskob.googlemapsrealm.screens.map.view.dialog.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 
 import com.task.vasskob.googlemapsrealm.R;
-import com.task.vasskob.googlemapsrealm.model.MarkerIcon;
+import com.task.vasskob.googlemapsrealm.screens.common.model.MarkerIcon;
 
 import java.util.List;
 
@@ -37,7 +37,7 @@ public class MarkerIconAdapter extends RecyclerView.Adapter<MarkerIconAdapter.Ma
     }
 
     @Override
-    public void onBindViewHolder(final MarkerListHolder holder, int position) {
+    public void onBindViewHolder(final MarkerListHolder holder, final int position) {
         holder.imageButton.setImageResource(markerIconList.get(position).getResId());
         holder.imageButton.setSelected(position == mCurrentPosition);
         holder.imageButton.setOnClickListener(new View.OnClickListener() {
@@ -46,7 +46,8 @@ public class MarkerIconAdapter extends RecyclerView.Adapter<MarkerIconAdapter.Ma
                 mCurrentPosition = holder.getAdapterPosition();
                 mListener.onIconClick(markerIconList.get(mCurrentPosition));
                 // TODO: 03/05/17 why need to update all items???
-                notifyDataSetChanged();
+                //notifyDataSetChanged();
+                notifyItemChanged(position);
             }
         });
     }

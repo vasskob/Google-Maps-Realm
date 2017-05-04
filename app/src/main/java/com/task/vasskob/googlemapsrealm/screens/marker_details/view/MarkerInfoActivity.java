@@ -1,4 +1,4 @@
-package com.task.vasskob.googlemapsrealm.view;
+package com.task.vasskob.googlemapsrealm.screens.marker_details.view;
 
 import android.app.Dialog;
 import android.content.Intent;
@@ -11,13 +11,13 @@ import android.util.Log;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.task.vasskob.googlemapsrealm.R;
-import com.task.vasskob.googlemapsrealm.model.Marker;
-import com.task.vasskob.googlemapsrealm.model.MarkerIcon;
-import com.task.vasskob.googlemapsrealm.presenter.MarkerInfoPresenterImpl;
-import com.task.vasskob.googlemapsrealm.view.dialog.adapter.MarkerIconAdapter;
+import com.task.vasskob.googlemapsrealm.screens.map.model.Marker;
+import com.task.vasskob.googlemapsrealm.screens.common.model.MarkerIcon;
+import com.task.vasskob.googlemapsrealm.screens.marker_details.presenter.MarkerInfoPresenterImpl;
+import com.task.vasskob.googlemapsrealm.screens.map.view.MapsActivity;
+import com.task.vasskob.googlemapsrealm.screens.map.view.dialog.adapter.MarkerIconAdapter;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -33,13 +33,14 @@ public class MarkerInfoActivity extends AppCompatActivity implements MarkerInfoV
     private Dialog dialog;
 
     @Bind(R.id.marker_label)
-    EditText etLabel;
+    EditText mTitleEditText;
 
     @Bind(R.id.marker_coordinates)
-    TextView tvCoordinates;
+    TextView mCoordinatesTextView;
 
     @Bind(R.id.marker_icon)
-    ImageButton ibMarkerIcon;
+    ImageButton mIconImageButton;
+
     private MarkerIcon clickedMarkerIcon;
     private MarkerInfoPresenterImpl presenter;
 
@@ -50,7 +51,7 @@ public class MarkerInfoActivity extends AppCompatActivity implements MarkerInfoV
 
     @OnClick(R.id.btn_save_marker)
     void onSaveClick() {
-        String newTitle = etLabel.getText().toString();
+        String newTitle = mTitleEditText.getText().toString();
         presenter.updateMarkerInDb(marker, newTitle, clickedMarkerIcon);
         // TODO: 03/05/17 check for result and then finish activity. what if error?
         finish();
@@ -86,7 +87,7 @@ public class MarkerInfoActivity extends AppCompatActivity implements MarkerInfoV
             @Override
             public void onIconClick(MarkerIcon markerIcon) {
                 clickedMarkerIcon = markerIcon;
-                ibMarkerIcon.setImageResource(markerIcon.getResId());
+                mIconImageButton.setImageResource(markerIcon.getResId());
                 dialog.dismiss();
             }
         });
@@ -113,26 +114,10 @@ public class MarkerInfoActivity extends AppCompatActivity implements MarkerInfoV
 
     @Override
     public void showMarkerInfo(Marker marker) {
-        // TODO: 03/05/17 codestyle???
         this.marker = marker;
-        etLabel.setText(marker.getTitle());
-        tvCoordinates.setText(marker.getLatitude() + " , " + marker.getLongitude());
+        mTitleEditText.setText(marker.getTitle());
+        mCoordinatesTextView.setText(marker.getLatitude() + " , " + marker.getLongitude());
         MarkerIcon mIcon = marker.getMarkerIcon();
-        ibMarkerIcon.setImageResource(mIcon.getResId());
-    }
-
-    @Override
-    public void showErrorToast() {
-        Toast.makeText(this, R.string.marker_update_error, Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void showDeleteToast() {
-        Toast.makeText(this, R.string.marker_delete_success, Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void showUpdateToast() {
-        Toast.makeText(this, R.string.marker_update_success, Toast.LENGTH_SHORT).show();
+        mIconImageButton.setImageResource(mIcon.getResId());
     }
 }

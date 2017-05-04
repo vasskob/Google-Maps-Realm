@@ -1,7 +1,7 @@
-package com.task.vasskob.googlemapsrealm.presenter;
+package com.task.vasskob.googlemapsrealm.screens.marker_details.presenter;
 
-import com.task.vasskob.googlemapsrealm.model.Marker;
-import com.task.vasskob.googlemapsrealm.model.MarkerIcon;
+import com.task.vasskob.googlemapsrealm.screens.map.model.Marker;
+import com.task.vasskob.googlemapsrealm.screens.common.model.MarkerIcon;
 
 interface MarkerInfoPresenter<T> {
     void showMarkerInfoById(String id);

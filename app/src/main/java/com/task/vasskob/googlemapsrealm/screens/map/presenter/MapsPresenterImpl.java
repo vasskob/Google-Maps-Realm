@@ -1,7 +1,9 @@
-package com.task.vasskob.googlemapsrealm.presenter;
+package com.task.vasskob.googlemapsrealm.screens.map.presenter;
 
-import com.task.vasskob.googlemapsrealm.model.Marker;
-import com.task.vasskob.googlemapsrealm.view.MapsView;
+import com.task.vasskob.googlemapsrealm.screens.common.presenter.BasePresenter;
+import com.task.vasskob.googlemapsrealm.screens.map.model.Marker;
+
+import com.task.vasskob.googlemapsrealm.screens.map.view.MapsView;
 
 import io.realm.OrderedCollectionChangeSet;
 import io.realm.OrderedRealmCollectionChangeListener;
@@ -14,15 +16,13 @@ public class MapsPresenterImpl extends BasePresenter implements MapsPresenter<Ma
     private OrderedRealmCollectionChangeListener<RealmResults<Marker>> callback = new OrderedRealmCollectionChangeListener<RealmResults<Marker>>() {
         @Override
         public void onChange(RealmResults<Marker> collection, OrderedCollectionChangeSet changeSet) {
-            mMapsView.showMarkers(collection);
+            mMapsView.showMarkersOnMap(collection);
         }
     };
 
     @Override
     public void showMarkersOnMap() {
-        // TODO: 03/05/17 why two methods?
-        realmController.setAllMarkersListener(callback);
-        realmController.showAllMarkers();
+        realmController.showAllMarkers(callback);
     }
 
    @Override

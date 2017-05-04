@@ -1,17 +1,13 @@
-package com.task.vasskob.googlemapsrealm.model.realm;
+package com.task.vasskob.googlemapsrealm.screens.common.model.db;
 
-import com.task.vasskob.googlemapsrealm.model.Marker;
-import com.task.vasskob.googlemapsrealm.model.MarkerIcon;
+import com.task.vasskob.googlemapsrealm.screens.common.model.MarkerIcon;
+import com.task.vasskob.googlemapsrealm.screens.map.model.Marker;
 
 import io.realm.OrderedRealmCollectionChangeListener;
 import io.realm.Realm;
 import io.realm.RealmResults;
 
-// TODO: 03/05/17 model interface and model implementation should be declared
-public class RealmController {
-
-    private OrderedRealmCollectionChangeListener<RealmResults<Marker>> allMarkersListener;
-    private OrderedRealmCollectionChangeListener<RealmResults<Marker>> markerListener;
+public class RealmController implements DbController {
 
     private static RealmController instance;
     private final Realm realm;
@@ -29,6 +25,7 @@ public class RealmController {
         return instance;
     }
 
+    @Override
     public void addMarkerToRealm(final Marker marker) {
         realm.executeTransactionAsync(new Realm.Transaction() {
             @Override
@@ -38,12 +35,14 @@ public class RealmController {
         });
     }
 
-    public void deleteMarkerInRealm(final Marker marker) {
+    @Override
+    public void deleteMarkerFromRealm(final Marker marker) {
         realm.beginTransaction();
         marker.deleteFromRealm();
         realm.commitTransaction();
     }
 
+    @Override
     public void updateMarkerInRealm(final Marker marker, final String title, final MarkerIcon markerIcon) {
         realm.beginTransaction();
         marker.setTitle(title);
@@ -56,22 +55,14 @@ public class RealmController {
         realm.commitTransaction();
     }
 
-    public void showAllMarkers() {
+    public void showAllMarkers(OrderedRealmCollectionChangeListener<RealmResults<Marker>> listener) {
         resultsForAll = realm.where(Marker.class).findAllAsync();
-        resultsForAll.addChangeListener(allMarkersListener);
+        resultsForAll.addChangeListener(listener);
     }
 
-    public void showMarker(String id) {
+    public void showMarker(String id, OrderedRealmCollectionChangeListener<RealmResults<Marker>> listener) {
         realmResults = realm.where(Marker.class).equalTo("id", id).findAllAsync();
-        realmResults.addChangeListener(markerListener);
-    }
-
-    public void setAllMarkersListener(OrderedRealmCollectionChangeListener<RealmResults<Marker>> listener) {
-        this.allMarkersListener = listener;
-    }
-
-    public void setMarkerListener(OrderedRealmCollectionChangeListener<RealmResults<Marker>> listener) {
-        this.markerListener = listener;
+        realmResults.addChangeListener(listener);
     }
 
     public void removeListener() {

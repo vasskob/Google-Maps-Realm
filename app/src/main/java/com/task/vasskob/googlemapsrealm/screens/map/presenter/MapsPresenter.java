@@ -1,6 +1,6 @@
-package com.task.vasskob.googlemapsrealm.presenter;
+package com.task.vasskob.googlemapsrealm.screens.map.presenter;
 
-import com.task.vasskob.googlemapsrealm.model.Marker;
+import com.task.vasskob.googlemapsrealm.screens.map.model.Marker;
 
 interface MapsPresenter<T> {
     void setView(T view);

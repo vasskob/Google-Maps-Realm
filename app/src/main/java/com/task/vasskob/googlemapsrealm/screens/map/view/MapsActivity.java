@@ -1,11 +1,10 @@
-package com.task.vasskob.googlemapsrealm.view;
+package com.task.vasskob.googlemapsrealm.screens.map.view;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -27,10 +26,11 @@ import com.task.vasskob.googlemapsrealm.R;
 import com.task.vasskob.googlemapsrealm.app.Prefs;
 import com.task.vasskob.googlemapsrealm.listener.ErrorListener;
 import com.task.vasskob.googlemapsrealm.listener.MultiplePermissionListener;
-import com.task.vasskob.googlemapsrealm.model.Marker;
-import com.task.vasskob.googlemapsrealm.model.MarkerToMarkerOptionsMapper;
-import com.task.vasskob.googlemapsrealm.presenter.MapsPresenterImpl;
-import com.task.vasskob.googlemapsrealm.view.dialog.MarkerDialogFragment;
+import com.task.vasskob.googlemapsrealm.screens.map.model.Marker;
+import com.task.vasskob.googlemapsrealm.screens.common.model.MarkerToMarkerOptionsMapper;
+import com.task.vasskob.googlemapsrealm.screens.map.presenter.MapsPresenterImpl;
+import com.task.vasskob.googlemapsrealm.screens.marker_details.view.MarkerInfoActivity;
+import com.task.vasskob.googlemapsrealm.screens.map.view.dialog.MarkerDialogFragment;
 
 import java.util.UUID;
 
@@ -46,8 +46,7 @@ import static com.google.android.gms.maps.GoogleMap.MAP_TYPE_TERRAIN;
 import static com.task.vasskob.googlemapsrealm.R.id.map;
 import static com.task.vasskob.googlemapsrealm.app.DummyData.setRealmDummyMarkers;
 
-// TODO: 03/05/17 gpoup by packages
-public class MapsActivity extends AppCompatActivity implements MapsView, OnMapReadyCallback, MarkerDialogFragment.OnDialogFragmentClickListener {
+public class MapsActivity extends AppCompatActivity implements MapsView, OnMapReadyCallback, MarkerDialogFragment.OnDialogClickListener {
 
     private static final String TAG = MapsActivity.class.getSimpleName();
     public static final String MARKER_ID = "id";
@@ -69,8 +68,6 @@ public class MapsActivity extends AppCompatActivity implements MapsView, OnMapRe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
 
-        initActionBar();
-
         // TODO: 03/05/17 no need to check permissions, just call dexter
         if (!checkPermissions()) {
             createPermissionListeners();
@@ -88,14 +85,7 @@ public class MapsActivity extends AppCompatActivity implements MapsView, OnMapRe
         presenter.setView(this);
     }
 
-    private void initActionBar() {
-        // TODO: 03/05/17 customize styles to remove actionar
-        ActionBar actionBar = getSupportActionBar();
-        assert actionBar != null;
-        actionBar.setDisplayShowTitleEnabled(false);
-    }
-
-    @Override
+      @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
@@ -149,20 +139,10 @@ public class MapsActivity extends AppCompatActivity implements MapsView, OnMapRe
     }
 
     @Override
-    public void showMarkers(RealmResults<Marker> markers) {
+    public void showMarkersOnMap(RealmResults<Marker> markers) {
         for (Marker marker : markers) {
             addMarkerOnMap(marker);
         }
-    }
-
-    @Override
-    public void showToastSuccess() {
-        Toast.makeText(this, R.string.marker_add_success, Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void showToastError() {
-        Toast.makeText(this, R.string.marker_add_error, Toast.LENGTH_SHORT).show();
     }
 
     private void addMarkerOnMap(Marker marker) {

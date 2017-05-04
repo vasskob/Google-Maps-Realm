@@ -1,4 +1,4 @@
-package com.task.vasskob.googlemapsrealm.view.dialog;
+package com.task.vasskob.googlemapsrealm.screens.map.view.dialog;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -12,8 +12,8 @@ import android.view.View;
 import android.widget.EditText;
 
 import com.task.vasskob.googlemapsrealm.R;
-import com.task.vasskob.googlemapsrealm.model.MarkerIcon;
-import com.task.vasskob.googlemapsrealm.view.dialog.adapter.MarkerIconAdapter;
+import com.task.vasskob.googlemapsrealm.screens.common.model.MarkerIcon;
+import com.task.vasskob.googlemapsrealm.screens.map.view.dialog.adapter.MarkerIconAdapter;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -24,7 +24,7 @@ import static com.task.vasskob.googlemapsrealm.app.MyApplication.getDefaultMarke
 
 //http://stackoverflow.com/questions/23408756/create-a-general-class-for-custom-dialog-in-java-android
 
-public class MarkerDialogFragment extends BaseDialogFragment<MarkerDialogFragment.OnDialogFragmentClickListener> {
+public class MarkerDialogFragment extends BaseDialogFragment<MarkerDialogFragment.OnDialogClickListener> {
 
     public static final String TITLE = "title";
 
@@ -39,8 +39,7 @@ public class MarkerDialogFragment extends BaseDialogFragment<MarkerDialogFragmen
     private String mTitle;
 
 
-    // TODO: 03/05/17 use meaningful names
-    public interface OnDialogFragmentClickListener {
+    public interface OnDialogClickListener {
         void onAddClicked(MarkerDialogFragment dialog);
     }
 

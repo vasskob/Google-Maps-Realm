@@ -1,4 +1,4 @@
-package com.task.vasskob.googlemapsrealm.model;
+package com.task.vasskob.googlemapsrealm.screens.common.model;
 
 import io.realm.RealmObject;
 

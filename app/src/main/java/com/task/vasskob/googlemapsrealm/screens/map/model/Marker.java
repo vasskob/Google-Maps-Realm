@@ -1,4 +1,6 @@
-package com.task.vasskob.googlemapsrealm.model;
+package com.task.vasskob.googlemapsrealm.screens.map.model;
+
+import com.task.vasskob.googlemapsrealm.screens.common.model.MarkerIcon;
 
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;

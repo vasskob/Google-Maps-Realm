@@ -3,9 +3,9 @@ package com.task.vasskob.googlemapsrealm.app;
 import android.app.Activity;
 
 import com.task.vasskob.googlemapsrealm.R;
-import com.task.vasskob.googlemapsrealm.model.Marker;
-import com.task.vasskob.googlemapsrealm.model.MarkerIcon;
-import com.task.vasskob.googlemapsrealm.presenter.MapsPresenterImpl;
+import com.task.vasskob.googlemapsrealm.screens.map.model.Marker;
+import com.task.vasskob.googlemapsrealm.screens.common.model.MarkerIcon;
+import com.task.vasskob.googlemapsrealm.screens.map.presenter.MapsPresenterImpl;
 
 import java.util.ArrayList;
 

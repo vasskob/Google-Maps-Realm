@@ -7,7 +7,7 @@ import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.PermissionGrantedResponse;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
-import com.task.vasskob.googlemapsrealm.view.MapsActivity;
+import com.task.vasskob.googlemapsrealm.screens.map.view.MapsActivity;
 import com.task.vasskob.googlemapsrealm.R;
 
 import java.util.List;

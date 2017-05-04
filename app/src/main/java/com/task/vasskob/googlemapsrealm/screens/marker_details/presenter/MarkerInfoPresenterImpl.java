@@ -1,10 +1,12 @@
-package com.task.vasskob.googlemapsrealm.presenter;
+package com.task.vasskob.googlemapsrealm.screens.marker_details.presenter;
 
 import android.util.Log;
 
-import com.task.vasskob.googlemapsrealm.model.Marker;
-import com.task.vasskob.googlemapsrealm.model.MarkerIcon;
-import com.task.vasskob.googlemapsrealm.view.MarkerInfoView;
+import com.task.vasskob.googlemapsrealm.screens.common.presenter.BasePresenter;
+import com.task.vasskob.googlemapsrealm.screens.map.model.Marker;
+import com.task.vasskob.googlemapsrealm.screens.common.model.MarkerIcon;
+
+import com.task.vasskob.googlemapsrealm.screens.marker_details.view.MarkerInfoView;
 
 import io.realm.OrderedCollectionChangeSet;
 import io.realm.OrderedRealmCollectionChangeListener;
@@ -16,15 +18,14 @@ public class MarkerInfoPresenterImpl extends BasePresenter implements MarkerInfo
     private OrderedRealmCollectionChangeListener<RealmResults<Marker>> callback = new OrderedRealmCollectionChangeListener<RealmResults<Marker>>() {
         @Override
         public void onChange(RealmResults<Marker> collection, OrderedCollectionChangeSet changeSet) {
-            Log.d(" OnChange" ," marker.icon ="+ collection.first().getMarkerIcon() );
+            Log.d(" OnChange", " marker.icon =" + collection.first().getMarkerIcon());
             mInfoView.showMarkerInfo(collection.get(0));
         }
     };
 
     @Override
     public void showMarkerInfoById(String id) {
-        realmController.setMarkerListener(callback);
-        realmController.showMarker(id);
+        realmController.showMarker(id, callback);
     }
 
     @Override
@@ -34,7 +35,7 @@ public class MarkerInfoPresenterImpl extends BasePresenter implements MarkerInfo
 
     @Override
     public void deleteMarkerInDb(Marker marker) {
-        realmController.deleteMarkerInRealm(marker);
+        realmController.deleteMarkerFromRealm(marker);
     }
 
     @Override
