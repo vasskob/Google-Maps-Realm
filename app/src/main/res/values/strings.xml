@@ -43,6 +43,7 @@
     <string name="save_marker">Save</string>
     <string name="delete_marker">Delete</string>
     <string name="marker_update_error">Marker Updating error</string>
+    <string name="marker_delete_error">Marker Updating error</string>
     <string name="marker_delete_success">Marker was deleted</string>
     <string name="marker_update_success">Marker updated</string>
 

@@ -2,6 +2,7 @@ package com.task.vasskob.googlemapsrealm.screens.marker_details.presenter;
 
 import android.util.Log;
 
+import com.task.vasskob.googlemapsrealm.screens.common.model.db.RealmController;
 import com.task.vasskob.googlemapsrealm.screens.common.presenter.BasePresenter;
 import com.task.vasskob.googlemapsrealm.screens.map.model.Marker;
 import com.task.vasskob.googlemapsrealm.screens.common.model.MarkerIcon;
@@ -12,7 +13,7 @@ import io.realm.OrderedCollectionChangeSet;
 import io.realm.OrderedRealmCollectionChangeListener;
 import io.realm.RealmResults;
 
-public class MarkerInfoPresenterImpl extends BasePresenter implements MarkerInfoPresenter<MarkerInfoView> {
+public class MarkerInfoPresenterImpl extends BasePresenter implements MarkerInfoPresenter<MarkerInfoView>, RealmController.MarkerChangeOnClickListener {
 
     private MarkerInfoView mInfoView;
     private OrderedRealmCollectionChangeListener<RealmResults<Marker>> callback = new OrderedRealmCollectionChangeListener<RealmResults<Marker>>() {
@@ -22,6 +23,10 @@ public class MarkerInfoPresenterImpl extends BasePresenter implements MarkerInfo
             mInfoView.showMarkerInfo(collection.get(0));
         }
     };
+
+    public MarkerInfoPresenterImpl() {
+        realmController.setListener(this);
+    }
 
     @Override
     public void showMarkerInfoById(String id) {
@@ -48,4 +53,13 @@ public class MarkerInfoPresenterImpl extends BasePresenter implements MarkerInfo
         mInfoView = null;
     }
 
+    @Override
+    public void onSuccess() {
+        mInfoView.closeActivity();
+    }
+
+    @Override
+    public void onError() {
+        mInfoView.showError();
+    }
 }

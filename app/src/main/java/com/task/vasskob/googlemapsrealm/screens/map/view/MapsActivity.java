@@ -23,8 +23,8 @@ import com.karumi.dexter.listener.multi.DialogOnAnyDeniedMultiplePermissionsList
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.task.vasskob.googlemapsrealm.R;
 import com.task.vasskob.googlemapsrealm.app.Prefs;
-import com.task.vasskob.googlemapsrealm.listener.ErrorListener;
-import com.task.vasskob.googlemapsrealm.listener.MultiplePermissionListener;
+import com.task.vasskob.googlemapsrealm.listener.permission.ErrorListener;
+import com.task.vasskob.googlemapsrealm.listener.permission.MultiplePermissionListener;
 import com.task.vasskob.googlemapsrealm.screens.common.model.MarkerToMarkerOptionsMapper;
 import com.task.vasskob.googlemapsrealm.screens.map.model.Marker;
 import com.task.vasskob.googlemapsrealm.screens.map.presenter.MapsPresenterImpl;
@@ -51,15 +51,9 @@ public class MapsActivity extends AppCompatActivity implements MapsView, OnMapRe
     private static final String TAG = MapsActivity.class.getSimpleName();
     public static final String MARKER_ID = "id";
     public static final String DIALOG_FRAGMENT_TAG = "dialog";
+    public static final int MAP_PADDING_TOP = 200;
+    public static final int MAP_PADDING_BOTTOM = 100;
     private GoogleMap mMap;
-
-
-    @Bind(R.id.et_marker_title)
-    EditText edt;
-
-    @Bind(R.id.rvIcons)
-    RecyclerView rvMarkerIcons;
-
     private LatLng mLatLng;
     private MapsPresenterImpl presenter;
 
@@ -86,7 +80,7 @@ public class MapsActivity extends AppCompatActivity implements MapsView, OnMapRe
         presenter.setView(this);
     }
 
-      @Override
+    @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
@@ -114,7 +108,7 @@ public class MapsActivity extends AppCompatActivity implements MapsView, OnMapRe
         mMap.setMapType(MAP_TYPE_HYBRID);
         mMap.getUiSettings().setMyLocationButtonEnabled(true);
         mMap.getUiSettings().setZoomControlsEnabled(true);
-        mMap.setPadding(0, 200, 0, 100);
+        mMap.setPadding(0, MAP_PADDING_TOP, 0, MAP_PADDING_BOTTOM);
     }
 
     public void setCurrentLocation() {

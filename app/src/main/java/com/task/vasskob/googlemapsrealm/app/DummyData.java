@@ -15,6 +15,11 @@ import java.util.UUID;
 
 public class DummyData {
 
+    private static final int AMOUNT_OF_MARKERS = 10000;
+    private static final double MIN_LAT_LNG = -180d;
+    private static final double MAX_LAT_LNG = 180d;
+    private static final String DEFAULT_MARKER_TITLE = "Marker № ";
+
     public static void setRealmDummyMarkers(Activity activity) {
         MapsPresenterImpl presenter = new MapsPresenterImpl();
         ArrayList<Marker> markers = new ArrayList<>();
@@ -69,11 +74,11 @@ public class DummyData {
         MapsPresenterImpl presenter = new MapsPresenterImpl();
         ArrayList<Marker> markers = new ArrayList<>();
         Marker marker;
-        for (int i = 0; i < 10000; i++) {
+        for (int i = 0; i < AMOUNT_OF_MARKERS; i++) {
 
             marker = new Marker();
             marker.setId(UUID.randomUUID().toString());
-            marker.setTitle("Marker № " + i);
+            marker.setTitle(DEFAULT_MARKER_TITLE + i);
             LatLng latLng = getRandomLatLng();
             marker.setLatitude(latLng.latitude);
             marker.setLongitude(latLng.longitude);
@@ -85,11 +90,9 @@ public class DummyData {
     }
 
     private static LatLng getRandomLatLng() {
-        double min = -180d;
-        double max = 180d;
         Random r = new Random();
-        double randomLat = min + (max - min) * r.nextDouble();
-        double randomLng = min + (max - min) * r.nextDouble();
+        double randomLat = MIN_LAT_LNG + (MAX_LAT_LNG - MIN_LAT_LNG) * r.nextDouble();
+        double randomLng = MIN_LAT_LNG + (MAX_LAT_LNG - MIN_LAT_LNG) * r.nextDouble();
         return new LatLng(randomLat, randomLng);
     }
 

@@ -5,4 +5,8 @@ import com.task.vasskob.googlemapsrealm.screens.map.model.Marker;
 public interface MarkerInfoView {
 
     void showMarkerInfo(Marker marker);
+
+    void closeActivity();
+
+    void showError();
 }

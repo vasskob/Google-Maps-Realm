@@ -8,6 +8,7 @@ import android.util.Log;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.task.vasskob.googlemapsrealm.R;
 import com.task.vasskob.googlemapsrealm.screens.common.model.MarkerIcon;
@@ -47,14 +48,11 @@ public class MarkerInfoActivity extends AppCompatActivity implements MarkerInfoV
     void onSaveClick() {
         String newTitle = mTitleEditText.getText().toString();
         presenter.updateMarkerInDb(marker, newTitle, clickedMarkerIcon);
-        // TODO: 03/05/17 check for result and then finish activity. what if error?
-        finish();
     }
 
     @OnClick(R.id.btm_delete_marker)
     void onDeleteClick() {
         presenter.deleteMarkerInDb(marker);
-        finish();
     }
 
     @Override
@@ -95,6 +93,16 @@ public class MarkerInfoActivity extends AppCompatActivity implements MarkerInfoV
         mCoordinatesTextView.setText(marker.getLatitude() + " , " + marker.getLongitude());
         MarkerIcon mIcon = marker.getMarkerIcon();
         mIconImageButton.setImageResource(mIcon.getResId());
+    }
+
+    @Override
+    public void closeActivity() {
+        finish();
+    }
+
+    @Override
+    public void showError() {
+        Toast.makeText(this, R.string.marker_delete_error, Toast.LENGTH_LONG).show();
     }
 
     @Override

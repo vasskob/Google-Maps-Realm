@@ -1,5 +1,7 @@
 package com.task.vasskob.googlemapsrealm.screens.common.model.db;
 
+import android.util.Log;
+
 import com.task.vasskob.googlemapsrealm.screens.common.model.MarkerIcon;
 import com.task.vasskob.googlemapsrealm.screens.map.model.Marker;
 
@@ -15,6 +17,7 @@ public class RealmController implements DbController {
     private final Realm realm;
     private RealmResults<Marker> resultsForAll;
     private RealmResults<Marker> realmResults;
+    private MarkerChangeOnClickListener listener;
 
     private RealmController() {
         realm = Realm.getDefaultInstance();
@@ -37,7 +40,7 @@ public class RealmController implements DbController {
         });
     }
 
-
+    @Override
     public void addMarkerListToRealm(final List<Marker> list) {
         realm.executeTransactionAsync(new Realm.Transaction() {
             @Override
@@ -49,25 +52,55 @@ public class RealmController implements DbController {
         });
     }
 
-    // TODO: 04.05.17 async delete & update
     @Override
-    public void deleteMarkerFromRealm(final Marker marker) {
-        realm.beginTransaction();
-        marker.deleteFromRealm();
-        realm.commitTransaction();
+    public void deleteMarkerFromRealm(Marker marker) {
+        final String markerId = marker.getId();
+        realm.executeTransactionAsync(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                realm.where(Marker.class).equalTo("id", markerId).findFirst().deleteFromRealm();
+            }
+        }, new Realm.Transaction.OnSuccess() {
+            @Override
+            public void onSuccess() {
+                listener.onSuccess();
+            }
+        }, new Realm.Transaction.OnError() {
+            @Override
+            public void onError(Throwable error) {
+                Log.e("deleteMarkerFromRealm", "onError: ", error);
+                listener.onError();
+            }
+        });
     }
 
     @Override
     public void updateMarkerInRealm(final Marker marker, final String title, final MarkerIcon markerIcon) {
-        realm.beginTransaction();
-        marker.setTitle(title);
-        if (markerIcon != null) {
-            MarkerIcon mIcon = realm.createObject(MarkerIcon.class);
-            mIcon.setId(markerIcon.getId());
-            mIcon.setResId(markerIcon.getResId());
-            marker.setMarkerIcon(mIcon);
-        }
-        realm.commitTransaction();
+        final String markerId = marker.getId();
+        realm.executeTransactionAsync(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                Marker changedMarker = realm.where(Marker.class).equalTo("id", markerId).findFirst();
+                changedMarker.setTitle(title);
+                if (markerIcon != null) {
+                    MarkerIcon mIcon = realm.createObject(MarkerIcon.class);
+                    mIcon.setId(markerIcon.getId());
+                    mIcon.setResId(markerIcon.getResId());
+                    changedMarker.setMarkerIcon(mIcon);
+                }
+            }
+        }, new Realm.Transaction.OnSuccess() {
+            @Override
+            public void onSuccess() {
+                listener.onSuccess();
+            }
+        }, new Realm.Transaction.OnError() {
+            @Override
+            public void onError(Throwable error) {
+                Log.e("updateMarkerInRealm", "onError: ", error);
+                listener.onError();
+            }
+        });
     }
 
     public void showAllMarkers(OrderedRealmCollectionChangeListener<RealmResults<Marker>> listener) {
@@ -85,5 +118,14 @@ public class RealmController implements DbController {
             resultsForAll.removeAllChangeListeners();
             realmResults.removeAllChangeListeners();
         }
+    }
+
+    public void setListener(MarkerChangeOnClickListener listener) {
+        this.listener = listener;
+    }
+
+    public interface MarkerChangeOnClickListener {
+        void onSuccess();
+        void onError();
     }
 }

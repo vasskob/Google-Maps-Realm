@@ -47,7 +47,6 @@ public class MarkerIconAdapter extends RecyclerView.Adapter<MarkerIconAdapter.Ma
                 mListener.onIconClick(markerIconList.get(mCurrentPosition));
                 // TODO: 03/05/17 why need to update all items???
                 notifyDataSetChanged();
-
             }
         });
     }
