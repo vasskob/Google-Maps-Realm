@@ -43,6 +43,7 @@ import static com.google.android.gms.maps.GoogleMap.MAP_TYPE_NORMAL;
 import static com.google.android.gms.maps.GoogleMap.MAP_TYPE_SATELLITE;
 import static com.google.android.gms.maps.GoogleMap.MAP_TYPE_TERRAIN;
 import static com.task.vasskob.googlemapsrealm.R.id.map;
+import static com.task.vasskob.googlemapsrealm.app.DummyData.setRandomMarkersToRealm;
 import static com.task.vasskob.googlemapsrealm.app.DummyData.setRealmDummyMarkers;
 
 public class MapsActivity extends AppCompatActivity implements MapsView, OnMapReadyCallback, AddMarkerDialogFragment.OnDialogClickListener {
@@ -74,6 +75,7 @@ public class MapsActivity extends AppCompatActivity implements MapsView, OnMapRe
 
         if (!Prefs.with(this).getPreLoad()) {
             setRealmDummyMarkers(this);  // Add dummy markers to db if app run for the first time
+            setRandomMarkersToRealm();
         }
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()

@@ -5,6 +5,8 @@ import com.task.vasskob.googlemapsrealm.screens.map.model.Marker;
 
 import com.task.vasskob.googlemapsrealm.screens.map.view.MapsView;
 
+import java.util.List;
+
 import io.realm.OrderedCollectionChangeSet;
 import io.realm.OrderedRealmCollectionChangeListener;
 import io.realm.RealmResults;
@@ -30,6 +32,10 @@ public class MapsPresenterImpl extends BasePresenter implements MapsPresenter<Ma
         realmController.addMarkerToRealm(marker);
     }
 
+
+    public void addMarkerListToRealm(List<Marker> markers) {
+        realmController.addMarkerListToRealm(markers);
+    }
 
     @Override
     public void removeListener() {

@@ -3,6 +3,8 @@ package com.task.vasskob.googlemapsrealm.screens.common.model.db;
 import com.task.vasskob.googlemapsrealm.screens.common.model.MarkerIcon;
 import com.task.vasskob.googlemapsrealm.screens.map.model.Marker;
 
+import java.util.List;
+
 import io.realm.OrderedRealmCollectionChangeListener;
 import io.realm.Realm;
 import io.realm.RealmResults;
@@ -35,6 +37,19 @@ public class RealmController implements DbController {
         });
     }
 
+
+    public void addMarkerListToRealm(final List<Marker> list) {
+        realm.executeTransactionAsync(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                for (int i = 0; i < list.size(); i++) {
+                    realm.copyToRealm(list.get(i));
+                }
+            }
+        });
+    }
+
+    // TODO: 04.05.17 async delete & update
     @Override
     public void deleteMarkerFromRealm(final Marker marker) {
         realm.beginTransaction();

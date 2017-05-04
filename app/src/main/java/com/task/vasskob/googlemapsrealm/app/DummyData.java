@@ -2,18 +2,21 @@ package com.task.vasskob.googlemapsrealm.app;
 
 import android.app.Activity;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.task.vasskob.googlemapsrealm.R;
 import com.task.vasskob.googlemapsrealm.screens.map.model.Marker;
 import com.task.vasskob.googlemapsrealm.screens.common.model.MarkerIcon;
 import com.task.vasskob.googlemapsrealm.screens.map.presenter.MapsPresenterImpl;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+import java.util.UUID;
 
 public class DummyData {
 
-    // TODO: 03/05/17 create random marker generator and test app work for 100, 1000, 10000 markers
     public static void setRealmDummyMarkers(Activity activity) {
-        MapsPresenterImpl presenter=new MapsPresenterImpl();
+        MapsPresenterImpl presenter = new MapsPresenterImpl();
         ArrayList<Marker> markers = new ArrayList<>();
 
         Marker marker = new Marker();
@@ -60,6 +63,41 @@ public class DummyData {
             presenter.addMarkerToRealm(m);
         }
         Prefs.with(activity).setPreLoad(true);
+    }
+
+    public static void setRandomMarkersToRealm() {
+        MapsPresenterImpl presenter = new MapsPresenterImpl();
+        ArrayList<Marker> markers = new ArrayList<>();
+        Marker marker;
+        for (int i = 0; i < 10000; i++) {
+
+            marker = new Marker();
+            marker.setId(UUID.randomUUID().toString());
+            marker.setTitle("Marker № " + i);
+            LatLng latLng = getRandomLatLng();
+            marker.setLatitude(latLng.latitude);
+            marker.setLongitude(latLng.longitude);
+            marker.setMarkerIcon(getRandomMarkerIcon());
+            markers.add(marker);
+        }
+
+        presenter.addMarkerListToRealm(markers);
+    }
+
+    private static LatLng getRandomLatLng() {
+        double min = -180d;
+        double max = 180d;
+        Random r = new Random();
+        double randomLat = min + (max - min) * r.nextDouble();
+        double randomLng = min + (max - min) * r.nextDouble();
+        return new LatLng(randomLat, randomLng);
+    }
+
+    private static MarkerIcon getRandomMarkerIcon() {
+        List<MarkerIcon> icons = MyApplication.getMarkerIconsList();
+        Random r = new Random();
+        int index = r.nextInt(icons.size());
+        return icons.get(index);
     }
 
 }
