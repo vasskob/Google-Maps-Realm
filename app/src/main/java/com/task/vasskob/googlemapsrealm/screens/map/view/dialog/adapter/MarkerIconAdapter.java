@@ -70,6 +70,9 @@ public class MarkerIconAdapter extends RecyclerView.Adapter<MarkerIconAdapter.Ma
             ButterKnife.bind(this, view);
         }
         // TODO: 03/05/17 void bind(MarkerIcon marker)
+        private void bind(MarkerIcon markerIcon){
+
+        }
     }
 
     public interface OnMarkerIconClickListener {

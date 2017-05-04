@@ -6,17 +6,17 @@ import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.EditText;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
+import com.google.maps.android.clustering.ClusterManager;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.listener.multi.CompositeMultiplePermissionsListener;
 import com.karumi.dexter.listener.multi.DialogOnAnyDeniedMultiplePermissionsListener;
@@ -33,7 +33,6 @@ import com.task.vasskob.googlemapsrealm.screens.marker_details.view.MarkerInfoAc
 
 import java.util.UUID;
 
-import butterknife.Bind;
 import io.realm.RealmResults;
 
 import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
@@ -53,6 +52,7 @@ public class MapsActivity extends AppCompatActivity implements MapsView, OnMapRe
     public static final String DIALOG_FRAGMENT_TAG = "dialog";
     public static final int MAP_PADDING_TOP = 200;
     public static final int MAP_PADDING_BOTTOM = 100;
+    private ClusterManager<Marker> mClusterManager;
     private GoogleMap mMap;
     private LatLng mLatLng;
     private MapsPresenterImpl presenter;
@@ -62,10 +62,11 @@ public class MapsActivity extends AppCompatActivity implements MapsView, OnMapRe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
 
-        // TODO: 03/05/17 no need to check permissions, just call dexter
         if (!checkPermissions()) {
             createPermissionListeners();
         }
+
+        initPermissionListener();
 
         if (!Prefs.with(this).getPreLoad()) {
             setRealmDummyMarkers(this);  // Add dummy markers to db if app run for the first time
@@ -80,6 +81,10 @@ public class MapsActivity extends AppCompatActivity implements MapsView, OnMapRe
         presenter.setView(this);
     }
 
+    private void initPermissionListener() {
+
+    }
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
@@ -88,6 +93,7 @@ public class MapsActivity extends AppCompatActivity implements MapsView, OnMapRe
         setCurrentLocation();
 
         presenter.showMarkersOnMap();
+        setUpCluster();
 
         googleMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
             @Override
@@ -133,12 +139,28 @@ public class MapsActivity extends AppCompatActivity implements MapsView, OnMapRe
         startActivity(intent);
     }
 
+    private void setUpCluster() {
+        // Position the map.
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(51.503186, -0.126446), 10));
+
+        // Initialize the manager with the context and the map.
+        // (Activity extends context, so we can pass 'this' in the constructor.)
+        mClusterManager = new ClusterManager<>(this, mMap);
+
+        // Point the map's listeners at the listeners implemented by the cluster
+        // manager.
+        mMap.setOnCameraIdleListener(mClusterManager);
+        mMap.setOnMarkerClickListener(mClusterManager);
+    }
+
     @Override
     public void showMarkersOnMap(RealmResults<Marker> markers) {
         for (Marker marker : markers) {
             addMarkerOnMap(marker);
+            mClusterManager.addItem(marker);
         }
     }
+
 
     private void addMarkerOnMap(Marker marker) {
         mMap.addMarker(new MarkerToMarkerOptionsMapper().map(marker)).setTag(marker.getId());

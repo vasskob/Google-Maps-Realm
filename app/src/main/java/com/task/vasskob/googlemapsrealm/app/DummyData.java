@@ -13,6 +13,8 @@ import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
+import static com.task.vasskob.googlemapsrealm.app.MyApplication.getMarkerIconsList;
+
 public class DummyData {
 
     private static final int AMOUNT_OF_MARKERS = 10000;
@@ -85,7 +87,6 @@ public class DummyData {
             marker.setMarkerIcon(getRandomMarkerIcon());
             markers.add(marker);
         }
-
         presenter.addMarkerListToRealm(markers);
     }
 
@@ -97,10 +98,9 @@ public class DummyData {
     }
 
     private static MarkerIcon getRandomMarkerIcon() {
-        List<MarkerIcon> icons = MyApplication.getMarkerIconsList();
         Random r = new Random();
+        List<MarkerIcon> icons = getMarkerIconsList();
         int index = r.nextInt(icons.size());
         return icons.get(index);
     }
-
 }
