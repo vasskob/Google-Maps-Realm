@@ -1,4 +1,4 @@
-package com.task.vasskob.googlemapsrealm.app;
+package com.task.vasskob.googlemapsrealm.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -23,7 +23,7 @@ public class Prefs {
         return instance;
     }
 
-    void setPreLoad(boolean isLoaded) {
+    public void setPreLoad(boolean isLoaded) {
 
         sharedPreferences
                 .edit()
@@ -31,7 +31,7 @@ public class Prefs {
                 .apply();
     }
 
-    public boolean getPreLoad(){
+    public boolean getPreLoad() {
         return sharedPreferences.getBoolean(PRE_LOAD, false);
     }
 }

@@ -12,8 +12,10 @@ import android.view.View;
 import android.widget.EditText;
 
 import com.task.vasskob.googlemapsrealm.R;
+import com.task.vasskob.googlemapsrealm.listeners.dialog.OnMarkerIconClickListener;
 import com.task.vasskob.googlemapsrealm.screens.common.model.MarkerIcon;
-import com.task.vasskob.googlemapsrealm.screens.map.view.dialog.adapter.MarkerIconAdapter;
+import com.task.vasskob.googlemapsrealm.screens.common.view.dialog.BaseDialogFragment;
+import com.task.vasskob.googlemapsrealm.screens.common.view.adapter.MarkerIconAdapter;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -29,10 +31,10 @@ public class AddMarkerDialogFragment extends BaseDialogFragment<AddMarkerDialogF
     public static final String TITLE = "title";
 
     @Bind(R.id.rvIcons)
-    RecyclerView rvMarkerIcons;
+    RecyclerView markerIconsRecyclerView;
 
     @Bind(R.id.et_marker_title)
-    EditText etMarkerTitle;
+    EditText markerTitleEditText;
 
     private MarkerIcon defaultMarkerIcon = new MarkerIcon(5, R.drawable.ic_default_marker);
     private MarkerIcon clickedMarkerIcon;
@@ -60,17 +62,17 @@ public class AddMarkerDialogFragment extends BaseDialogFragment<AddMarkerDialogF
         final View dialogView = inflate(this.getActivity(), R.layout.custom_dialog, null);
         ButterKnife.bind(this, dialogView);
 
-        rvMarkerIcons.setHasFixedSize(true);
-        rvMarkerIcons.setLayoutManager(new GridLayoutManager(this.getActivity(), COUNT_OF_COLUMN));
+        markerIconsRecyclerView.setHasFixedSize(true);
+        markerIconsRecyclerView.setLayoutManager(new GridLayoutManager(this.getActivity(), COUNT_OF_COLUMN));
 
-        MarkerIconAdapter adapter = new MarkerIconAdapter(getMarkerIconsList(), this.getActivity());
-        adapter.setListener(new MarkerIconAdapter.OnMarkerIconClickListener() {
+        MarkerIconAdapter adapter = new MarkerIconAdapter(getActivity(), getMarkerIconsList());
+        adapter.setListener(new OnMarkerIconClickListener() {
             @Override
             public void onIconClick(MarkerIcon markerIcon) {
                 clickedMarkerIcon = markerIcon;
             }
         });
-        rvMarkerIcons.setAdapter(adapter);
+        markerIconsRecyclerView.setAdapter(adapter);
 
         return new AlertDialog.Builder(getActivity())
 
@@ -81,7 +83,7 @@ public class AddMarkerDialogFragment extends BaseDialogFragment<AddMarkerDialogF
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
                                 // Positive button clicked
-                                mTitle = etMarkerTitle.getText().toString();
+                                mTitle = markerTitleEditText.getText().toString();
                                 if (clickedMarkerIcon != null)
                                     Log.d("OnPositiveBtnClick", "Title = " + mTitle + " icon = " + clickedMarkerIcon.getId());
 

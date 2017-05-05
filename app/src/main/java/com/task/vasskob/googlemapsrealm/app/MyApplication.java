@@ -2,7 +2,6 @@ package com.task.vasskob.googlemapsrealm.app;
 
 import android.app.Application;
 
-import com.karumi.dexter.Dexter;
 import com.task.vasskob.googlemapsrealm.R;
 import com.task.vasskob.googlemapsrealm.screens.common.model.MarkerIcon;
 

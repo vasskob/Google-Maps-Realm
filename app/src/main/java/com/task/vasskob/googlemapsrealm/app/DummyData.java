@@ -1,14 +1,17 @@
 package com.task.vasskob.googlemapsrealm.app;
 
 import android.app.Activity;
+import android.location.Location;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.task.vasskob.googlemapsrealm.R;
 import com.task.vasskob.googlemapsrealm.screens.map.model.Marker;
 import com.task.vasskob.googlemapsrealm.screens.common.model.MarkerIcon;
 import com.task.vasskob.googlemapsrealm.screens.map.presenter.MapsPresenterImpl;
+import com.task.vasskob.googlemapsrealm.utils.Prefs;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
@@ -17,10 +20,12 @@ import static com.task.vasskob.googlemapsrealm.app.MyApplication.getMarkerIconsL
 
 public class DummyData {
 
-    private static final int AMOUNT_OF_MARKERS = 10000;
+    private static final int AMOUNT_OF_MARKERS = 100;
     private static final double MIN_LAT_LNG = -180d;
     private static final double MAX_LAT_LNG = 180d;
-    private static final String DEFAULT_MARKER_TITLE = "Marker № ";
+    private static String randomMarkerTitle;
+    private static final int RADIUS = 1000000;
+    public final static LatLng CENTER = new LatLng(49.0139d, 31.2858d);
 
     public static void setRealmDummyMarkers(Activity activity) {
         MapsPresenterImpl presenter = new MapsPresenterImpl();
@@ -70,6 +75,7 @@ public class DummyData {
             presenter.addMarkerToRealm(m);
         }
         Prefs.with(activity).setPreLoad(true);
+        randomMarkerTitle = activity.getResources().getString(R.string.random_marker_label);
     }
 
     public static void setRandomMarkersToRealm() {
@@ -80,8 +86,9 @@ public class DummyData {
 
             marker = new Marker();
             marker.setId(UUID.randomUUID().toString());
-            marker.setTitle(DEFAULT_MARKER_TITLE + i);
-            LatLng latLng = getRandomLatLng();
+            marker.setTitle(randomMarkerTitle + i);
+            //   LatLng latLng = getRandomLatLng();
+            LatLng latLng = getRandomLatLng(CENTER, RADIUS);
             marker.setLatitude(latLng.latitude);
             marker.setLongitude(latLng.longitude);
             marker.setMarkerIcon(getRandomMarkerIcon());
@@ -90,17 +97,59 @@ public class DummyData {
         presenter.addMarkerListToRealm(markers);
     }
 
-    private static LatLng getRandomLatLng() {
-        Random r = new Random();
-        double randomLat = MIN_LAT_LNG + (MAX_LAT_LNG - MIN_LAT_LNG) * r.nextDouble();
-        double randomLng = MIN_LAT_LNG + (MAX_LAT_LNG - MIN_LAT_LNG) * r.nextDouble();
-        return new LatLng(randomLat, randomLng);
-    }
-
     private static MarkerIcon getRandomMarkerIcon() {
         Random r = new Random();
         List<MarkerIcon> icons = getMarkerIconsList();
         int index = r.nextInt(icons.size());
         return icons.get(index);
+    }
+
+    private static LatLng getRandomLatLng(LatLng point, int radius) {
+        List<LatLng> randomPoints = new ArrayList<>();
+        List<Float> randomDistances = new ArrayList<>();
+        Location myLocation = new Location("");
+        myLocation.setLatitude(point.latitude);
+        myLocation.setLongitude(point.longitude);
+
+        //This is to generate 10 random points
+        for (int i = 0; i < 10; i++) {
+            double x0 = point.latitude;
+            double y0 = point.longitude;
+
+            Random random = new Random();
+
+            // Convert radius from meters to degrees
+            double radiusInDegrees = radius / 111000f;
+
+            double u = random.nextDouble();
+            double v = random.nextDouble();
+            double w = radiusInDegrees * Math.sqrt(u);
+            double t = 2 * Math.PI * v;
+            double x = w * Math.cos(t);
+            double y = w * Math.sin(t);
+
+            // Adjust the x-coordinate for the shrinking of the east-west distances
+            double new_x = x / Math.cos(y0);
+
+            double foundLatitude = new_x + x0;
+            double foundLongitude = y + y0;
+            LatLng randomLatLng = new LatLng(foundLatitude, foundLongitude);
+            randomPoints.add(randomLatLng);
+            Location l1 = new Location("");
+            l1.setLatitude(randomLatLng.latitude);
+            l1.setLongitude(randomLatLng.longitude);
+            randomDistances.add(l1.distanceTo(myLocation));
+        }
+        //Get nearest point to the centre
+        int indexOfNearestPointToCentre = randomDistances.indexOf(Collections.min(randomDistances));
+        return randomPoints.get(indexOfNearestPointToCentre);
+    }
+
+    @SuppressWarnings("unused")
+    private static LatLng getRandomLatLng() {
+        Random r = new Random();
+        double randomLat = MIN_LAT_LNG + (MAX_LAT_LNG - MIN_LAT_LNG) * r.nextDouble();
+        double randomLng = MIN_LAT_LNG + (MAX_LAT_LNG - MIN_LAT_LNG) * r.nextDouble();
+        return new LatLng(randomLat, randomLng);
     }
 }

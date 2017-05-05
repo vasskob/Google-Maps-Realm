@@ -26,6 +26,7 @@
         android:layout_centerInParent="true"
         android:layout_margin="40dp"
         android:text="@string/marker_label"
+        android:hint="@string/marker_label"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
 
     <TextView

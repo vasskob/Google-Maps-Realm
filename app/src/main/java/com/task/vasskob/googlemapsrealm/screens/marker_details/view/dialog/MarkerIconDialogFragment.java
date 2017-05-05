@@ -10,9 +10,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.task.vasskob.googlemapsrealm.R;
+import com.task.vasskob.googlemapsrealm.listeners.dialog.OnMarkerIconClickListener;
 import com.task.vasskob.googlemapsrealm.screens.common.model.MarkerIcon;
-import com.task.vasskob.googlemapsrealm.screens.map.view.dialog.BaseDialogFragment;
-import com.task.vasskob.googlemapsrealm.screens.map.view.dialog.adapter.MarkerIconAdapter;
+import com.task.vasskob.googlemapsrealm.screens.common.view.dialog.BaseDialogFragment;
+import com.task.vasskob.googlemapsrealm.screens.common.view.adapter.MarkerIconAdapter;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -21,7 +22,7 @@ import static android.view.View.inflate;
 import static com.task.vasskob.googlemapsrealm.app.MyApplication.COUNT_OF_COLUMN;
 import static com.task.vasskob.googlemapsrealm.app.MyApplication.getMarkerIconsList;
 
-public class MarkerIconDialogFragment extends BaseDialogFragment<MarkerIconDialogFragment.OnDialogClickListener> {
+public class MarkerIconDialogFragment extends BaseDialogFragment<MarkerIconDialogFragment.OnDialogClickListener>{
 
     private static final String TITLE = "marker icon dialog title";
 
@@ -29,6 +30,7 @@ public class MarkerIconDialogFragment extends BaseDialogFragment<MarkerIconDialo
     RecyclerView rvMarkerIcons;
 
     private MarkerIcon clickedMarkerIcon;
+
 
     public interface OnDialogClickListener {
         void onIconClick(MarkerIconDialogFragment dialog);
@@ -52,8 +54,8 @@ public class MarkerIconDialogFragment extends BaseDialogFragment<MarkerIconDialo
         rvMarkerIcons.setHasFixedSize(true);
         rvMarkerIcons.setLayoutManager(new GridLayoutManager(getActivity(), COUNT_OF_COLUMN));
 
-        MarkerIconAdapter adapter = new MarkerIconAdapter(getMarkerIconsList(), getActivity());
-        adapter.setListener(new MarkerIconAdapter.OnMarkerIconClickListener() {
+        MarkerIconAdapter adapter = new MarkerIconAdapter(getActivity(), getMarkerIconsList());
+        adapter.setListener(new OnMarkerIconClickListener() {
             @Override
             public void onIconClick(MarkerIcon markerIcon) {
                 clickedMarkerIcon = markerIcon;

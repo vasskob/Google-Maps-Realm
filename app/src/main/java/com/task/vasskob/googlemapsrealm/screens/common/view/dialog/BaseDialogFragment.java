@@ -1,4 +1,4 @@
-package com.task.vasskob.googlemapsrealm.screens.map.view.dialog;
+package com.task.vasskob.googlemapsrealm.screens.common.view.dialog;
 
 import android.content.Context;
 import android.support.v4.app.DialogFragment;

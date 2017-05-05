@@ -10,10 +10,6 @@
         Please go to settings and check permission or restart application to do this. </string>
     <string name="permission_title">Warning.</string>
 
-    ///////////// MapsActivity  /////////////////////////
-    <string name="marker_add_success">Marker successfully added</string>
-    <string name="marker_add_error">Marker not added</string>
-
     ///////////// MapsActivity Menu /////////////////////////
     <string name="normal_type">Normal</string>
     <string name="satellite_type">Satellite</string>
@@ -37,15 +33,15 @@
     <string name="done">Done</string>
     <string name="cancel">Cancel</string>
     <string name="default_marker_label">New Marker</string>
+    <string name="random_marker_label">New Marker</string>
 
     /////////////////// InfoActivity /////////////////////
 
     <string name="save_marker">Save</string>
     <string name="delete_marker">Delete</string>
-    <string name="marker_update_error">Marker Updating error</string>
+
     <string name="marker_delete_error">Marker Updating error</string>
-    <string name="marker_delete_success">Marker was deleted</string>
-    <string name="marker_update_success">Marker updated</string>
+
 
 
 </resources>

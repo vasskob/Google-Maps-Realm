@@ -2,6 +2,7 @@ package com.task.vasskob.googlemapsrealm.screens.common.model.db;
 
 import android.util.Log;
 
+import com.task.vasskob.googlemapsrealm.listeners.db.OnMarkerChangeClickListener;
 import com.task.vasskob.googlemapsrealm.screens.common.model.MarkerIcon;
 import com.task.vasskob.googlemapsrealm.screens.map.model.Marker;
 
@@ -17,7 +18,7 @@ public class RealmController implements DbController {
     private final Realm realm;
     private RealmResults<Marker> resultsForAll;
     private RealmResults<Marker> realmResults;
-    private MarkerChangeOnClickListener listener;
+    private OnMarkerChangeClickListener listener;
 
     private RealmController() {
         realm = Realm.getDefaultInstance();
@@ -120,12 +121,9 @@ public class RealmController implements DbController {
         }
     }
 
-    public void setListener(MarkerChangeOnClickListener listener) {
+    public void setListener(OnMarkerChangeClickListener listener) {
         this.listener = listener;
     }
 
-    public interface MarkerChangeOnClickListener {
-        void onSuccess();
-        void onError();
-    }
+
 }

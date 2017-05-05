@@ -1,4 +1,4 @@
-package com.task.vasskob.googlemapsrealm.listener.permission;
+package com.task.vasskob.googlemapsrealm.listeners.permission;
 
 import android.util.Log;
 

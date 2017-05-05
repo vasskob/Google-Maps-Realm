@@ -2,18 +2,17 @@ package com.task.vasskob.googlemapsrealm.screens.marker_details.presenter;
 
 import android.util.Log;
 
-import com.task.vasskob.googlemapsrealm.screens.common.model.db.RealmController;
+import com.task.vasskob.googlemapsrealm.listeners.db.OnMarkerChangeClickListener;
+import com.task.vasskob.googlemapsrealm.screens.common.model.MarkerIcon;
 import com.task.vasskob.googlemapsrealm.screens.common.presenter.BasePresenter;
 import com.task.vasskob.googlemapsrealm.screens.map.model.Marker;
-import com.task.vasskob.googlemapsrealm.screens.common.model.MarkerIcon;
-
 import com.task.vasskob.googlemapsrealm.screens.marker_details.view.MarkerInfoView;
 
 import io.realm.OrderedCollectionChangeSet;
 import io.realm.OrderedRealmCollectionChangeListener;
 import io.realm.RealmResults;
 
-public class MarkerInfoPresenterImpl extends BasePresenter implements MarkerInfoPresenter<MarkerInfoView>, RealmController.MarkerChangeOnClickListener {
+public class MarkerInfoPresenterImpl extends BasePresenter implements MarkerInfoPresenter<MarkerInfoView>, OnMarkerChangeClickListener {
 
     private MarkerInfoView mInfoView;
     private OrderedRealmCollectionChangeListener<RealmResults<Marker>> callback = new OrderedRealmCollectionChangeListener<RealmResults<Marker>>() {

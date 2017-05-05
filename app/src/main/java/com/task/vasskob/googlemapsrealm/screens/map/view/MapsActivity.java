@@ -22,14 +22,16 @@ import com.karumi.dexter.listener.multi.CompositeMultiplePermissionsListener;
 import com.karumi.dexter.listener.multi.DialogOnAnyDeniedMultiplePermissionsListener;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.task.vasskob.googlemapsrealm.R;
-import com.task.vasskob.googlemapsrealm.app.Prefs;
-import com.task.vasskob.googlemapsrealm.listener.permission.ErrorListener;
-import com.task.vasskob.googlemapsrealm.listener.permission.MultiplePermissionListener;
+import com.task.vasskob.googlemapsrealm.app.DummyData;
+import com.task.vasskob.googlemapsrealm.listeners.permission.ErrorListener;
+import com.task.vasskob.googlemapsrealm.listeners.permission.MultiplePermissionListener;
+import com.task.vasskob.googlemapsrealm.screens.common.model.MarkerItem;
 import com.task.vasskob.googlemapsrealm.screens.common.model.MarkerToMarkerOptionsMapper;
 import com.task.vasskob.googlemapsrealm.screens.map.model.Marker;
 import com.task.vasskob.googlemapsrealm.screens.map.presenter.MapsPresenterImpl;
 import com.task.vasskob.googlemapsrealm.screens.map.view.dialog.AddMarkerDialogFragment;
 import com.task.vasskob.googlemapsrealm.screens.marker_details.view.MarkerInfoActivity;
+import com.task.vasskob.googlemapsrealm.utils.Prefs;
 
 import java.util.UUID;
 
@@ -52,7 +54,6 @@ public class MapsActivity extends AppCompatActivity implements MapsView, OnMapRe
     public static final String DIALOG_FRAGMENT_TAG = "dialog";
     public static final int MAP_PADDING_TOP = 200;
     public static final int MAP_PADDING_BOTTOM = 100;
-    private ClusterManager<Marker> mClusterManager;
     private GoogleMap mMap;
     private LatLng mLatLng;
     private MapsPresenterImpl presenter;
@@ -65,8 +66,6 @@ public class MapsActivity extends AppCompatActivity implements MapsView, OnMapRe
         if (!checkPermissions()) {
             createPermissionListeners();
         }
-
-        initPermissionListener();
 
         if (!Prefs.with(this).getPreLoad()) {
             setRealmDummyMarkers(this);  // Add dummy markers to db if app run for the first time
@@ -81,9 +80,6 @@ public class MapsActivity extends AppCompatActivity implements MapsView, OnMapRe
         presenter.setView(this);
     }
 
-    private void initPermissionListener() {
-
-    }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -93,7 +89,7 @@ public class MapsActivity extends AppCompatActivity implements MapsView, OnMapRe
         setCurrentLocation();
 
         presenter.showMarkersOnMap();
-        setUpCluster();
+       // setUpCluster();
 
         googleMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
             @Override
@@ -139,16 +135,11 @@ public class MapsActivity extends AppCompatActivity implements MapsView, OnMapRe
         startActivity(intent);
     }
 
+    @SuppressWarnings("unused")
     private void setUpCluster() {
-        // Position the map.
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(51.503186, -0.126446), 10));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(DummyData.CENTER, 5));
+        ClusterManager<MarkerItem> mClusterManager = new ClusterManager<>(this, mMap);
 
-        // Initialize the manager with the context and the map.
-        // (Activity extends context, so we can pass 'this' in the constructor.)
-        mClusterManager = new ClusterManager<>(this, mMap);
-
-        // Point the map's listeners at the listeners implemented by the cluster
-        // manager.
         mMap.setOnCameraIdleListener(mClusterManager);
         mMap.setOnMarkerClickListener(mClusterManager);
     }
@@ -157,13 +148,13 @@ public class MapsActivity extends AppCompatActivity implements MapsView, OnMapRe
     public void showMarkersOnMap(RealmResults<Marker> markers) {
         for (Marker marker : markers) {
             addMarkerOnMap(marker);
-            mClusterManager.addItem(marker);
+           // mClusterManager.addItem(new MarkerToClusterItemMapper().map(marker));
         }
     }
 
-
     private void addMarkerOnMap(Marker marker) {
         mMap.addMarker(new MarkerToMarkerOptionsMapper().map(marker)).setTag(marker.getId());
+
     }
 
     @Override
@@ -177,6 +168,7 @@ public class MapsActivity extends AppCompatActivity implements MapsView, OnMapRe
         marker.setMarkerIcon(dialog.getMarkerIcon());
 
         addMarkerOnMap(marker);
+       // mClusterManager.addItem(new MarkerToClusterItemMapper().map(marker));
         presenter.addMarkerToRealm(marker);
     }
 
