@@ -5,8 +5,8 @@ import android.location.Location;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.task.vasskob.googlemapsrealm.R;
-import com.task.vasskob.googlemapsrealm.screens.map.model.Marker;
 import com.task.vasskob.googlemapsrealm.screens.common.model.MarkerIcon;
+import com.task.vasskob.googlemapsrealm.screens.map.model.Marker;
 import com.task.vasskob.googlemapsrealm.screens.map.presenter.MapsPresenterImpl;
 import com.task.vasskob.googlemapsrealm.utils.Prefs;
 
@@ -99,6 +99,7 @@ public class DummyData {
 
     private static MarkerIcon getRandomMarkerIcon() {
         Random r = new Random();
+        // TODO: 06/05/17  List<MarkerIcon> created each time
         List<MarkerIcon> icons = getMarkerIconsList();
         int index = r.nextInt(icons.size());
         return icons.get(index);

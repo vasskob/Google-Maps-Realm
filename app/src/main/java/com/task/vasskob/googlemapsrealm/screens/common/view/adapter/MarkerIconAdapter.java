@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 
 import com.task.vasskob.googlemapsrealm.R;
-import com.task.vasskob.googlemapsrealm.listeners.dialog.OnMarkerIconClickListener;
 import com.task.vasskob.googlemapsrealm.screens.common.model.MarkerIcon;
 
 import java.util.List;
@@ -18,10 +17,19 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class MarkerIconAdapter extends RecyclerView.Adapter<MarkerIconAdapter.MarkerListHolder> {
+
+
+    public static final Object SELECTED_STATE_CHANGED = new Object();
+    private int mSelectedItemPosition = RecyclerView.NO_POSITION;
+
+
+    public interface OnMarkerIconClickListener {
+        void onMarkerIconClick(View view);
+    }
+
     private final LayoutInflater mLayoutInflater;
     private final List<MarkerIcon> markerIconList;
     private OnMarkerIconClickListener mListener;
-    private static int previousPosition = -1;
 
     public MarkerIconAdapter(Context context, List<MarkerIcon> markerIconList) {
         this.markerIconList = markerIconList;
@@ -39,23 +47,51 @@ public class MarkerIconAdapter extends RecyclerView.Adapter<MarkerIconAdapter.Ma
     }
 
     @Override
+    public void onBindViewHolder(MarkerListHolder holder, int position, List<Object> payloads) {
+        if (payloads.isEmpty()) {
+            // full rebind
+            onBindViewHolder(holder, position);
+        } else {
+            MarkerIcon item = markerIconList.get(position);
+            if (payloads.contains(SELECTED_STATE_CHANGED)) {
+                holder.setSelected(item.isSelected());
+            }
+        }
+    }
+
+    @Override
     public void onBindViewHolder(final MarkerListHolder holder, final int position) {
-        holder.onBind(markerIconList);
+        MarkerIcon item = markerIconList.get(position);
+        holder.onBind(item);
     }
 
     @Override
     public int getItemCount() {
-        if (markerIconList != null) {
-            return markerIconList.size();
+        return (markerIconList != null) ? markerIconList.size() : 0;
+    }
+
+    public void setSelected(int position) {
+        if (mSelectedItemPosition != RecyclerView.NO_POSITION) {
+            // deselect previous item
+            markerIconList.get(mSelectedItemPosition).setSelected(false);
+            notifyItemChanged(mSelectedItemPosition, SELECTED_STATE_CHANGED);
+        }
+        // select new item
+        mSelectedItemPosition = position;
+        markerIconList.get(mSelectedItemPosition).setSelected(true);
+        notifyItemChanged(mSelectedItemPosition, SELECTED_STATE_CHANGED);
+    }
+
+
+    public MarkerIcon getSelectedMarkerIcon() {
+        if (mSelectedItemPosition == RecyclerView.NO_POSITION) {
+            return null;
         } else {
-            return 0;
+            return markerIconList.get(mSelectedItemPosition);
         }
     }
 
     class MarkerListHolder extends RecyclerView.ViewHolder {
-
-        private MarkerIcon mMarkerIcon;
-        private List<MarkerIcon> mMarkerIconList;
         private final OnMarkerIconClickListener mListener;
 
         @Bind(R.id.ib_icon_item)
@@ -63,14 +99,10 @@ public class MarkerIconAdapter extends RecyclerView.Adapter<MarkerIconAdapter.Ma
 
         @OnClick(R.id.ib_icon_item)
         void onMarkerIconClick(View v) {
-            mMarkerIcon.setSelected(!mMarkerIcon.isSelected());
-            v.setSelected(mMarkerIcon.isSelected());
-            if (previousPosition != -1 && previousPosition != getAdapterPosition()) {
-                mMarkerIconList.get(previousPosition).setSelected(false);
-                notifyItemChanged(previousPosition);
+            MarkerIconAdapter.this.setSelected(getAdapterPosition());
+            if (mListener != null) {
+                mListener.onMarkerIconClick(itemView);
             }
-            previousPosition = getAdapterPosition();
-            mListener.onIconClick(mMarkerIcon);
         }
 
         MarkerListHolder(View view, OnMarkerIconClickListener listener) {
@@ -79,11 +111,14 @@ public class MarkerIconAdapter extends RecyclerView.Adapter<MarkerIconAdapter.Ma
             mListener = listener;
         }
 
-        private void onBind(List<MarkerIcon> markerIconList) {
-            mMarkerIconList = markerIconList;
-            mMarkerIcon = markerIconList.get(getAdapterPosition());
-            imageButton.setImageResource(mMarkerIcon.getResId());
-            imageButton.setSelected(mMarkerIcon.isSelected());
+        private void onBind(MarkerIcon markerIcon) {
+            imageButton.setImageResource(markerIcon.getResId());
+            setSelected(markerIcon.isSelected());
+        }
+
+
+        public void setSelected(boolean selected) {
+            itemView.setSelected(selected);
         }
     }
 }

@@ -10,10 +10,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.task.vasskob.googlemapsrealm.R;
-import com.task.vasskob.googlemapsrealm.listeners.dialog.OnMarkerIconClickListener;
 import com.task.vasskob.googlemapsrealm.screens.common.model.MarkerIcon;
-import com.task.vasskob.googlemapsrealm.screens.common.view.dialog.BaseDialogFragment;
 import com.task.vasskob.googlemapsrealm.screens.common.view.adapter.MarkerIconAdapter;
+import com.task.vasskob.googlemapsrealm.screens.common.view.dialog.BaseDialogFragment;
+
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -30,6 +31,16 @@ public class MarkerIconDialogFragment extends BaseDialogFragment<MarkerIconDialo
     RecyclerView rvMarkerIcons;
 
     private MarkerIcon clickedMarkerIcon;
+    private List<MarkerIcon> mMarkerIconsList;
+    private MarkerIconAdapter.OnMarkerIconClickListener mOnMarkerIconClickListener = new MarkerIconAdapter.OnMarkerIconClickListener() {
+        @Override
+        public void onMarkerIconClick(View view) {
+            int position = rvMarkerIcons.getChildAdapterPosition(view);
+            if (position != RecyclerView.NO_POSITION) {
+                clickedMarkerIcon = mMarkerIconsList.get(position);
+            }
+        }
+    };;
 
 
     public interface OnDialogClickListener {
@@ -54,13 +65,11 @@ public class MarkerIconDialogFragment extends BaseDialogFragment<MarkerIconDialo
         rvMarkerIcons.setHasFixedSize(true);
         rvMarkerIcons.setLayoutManager(new GridLayoutManager(getActivity(), COUNT_OF_COLUMN));
 
-        MarkerIconAdapter adapter = new MarkerIconAdapter(getActivity(), getMarkerIconsList());
-        adapter.setListener(new OnMarkerIconClickListener() {
-            @Override
-            public void onIconClick(MarkerIcon markerIcon) {
-                clickedMarkerIcon = markerIcon;
-            }
-        });
+        mMarkerIconsList = getMarkerIconsList();
+        MarkerIconAdapter adapter = new MarkerIconAdapter(getActivity(), mMarkerIconsList);
+
+
+        adapter.setListener(mOnMarkerIconClickListener);
         rvMarkerIcons.setAdapter(adapter);
 
         return new AlertDialog.Builder(getActivity())

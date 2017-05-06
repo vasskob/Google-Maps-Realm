@@ -25,6 +25,7 @@ import com.task.vasskob.googlemapsrealm.R;
 import com.task.vasskob.googlemapsrealm.app.DummyData;
 import com.task.vasskob.googlemapsrealm.listeners.permission.ErrorListener;
 import com.task.vasskob.googlemapsrealm.listeners.permission.MultiplePermissionListener;
+import com.task.vasskob.googlemapsrealm.screens.common.model.MarkerIcon;
 import com.task.vasskob.googlemapsrealm.screens.common.model.MarkerItem;
 import com.task.vasskob.googlemapsrealm.screens.common.model.MarkerToMarkerOptionsMapper;
 import com.task.vasskob.googlemapsrealm.screens.map.model.Marker;
@@ -158,14 +159,14 @@ public class MapsActivity extends AppCompatActivity implements MapsView, OnMapRe
     }
 
     @Override
-    public void onAddClicked(AddMarkerDialogFragment dialog) {
+    public void onAddClicked(String title, MarkerIcon markerIcon) {
 
         Marker marker = new Marker();
         marker.setId(UUID.randomUUID().toString());
         marker.setLatitude(mLatLng.latitude);
         marker.setLongitude(mLatLng.longitude);
-        marker.setTitle(dialog.getMarkerTitle());
-        marker.setMarkerIcon(dialog.getMarkerIcon());
+        marker.setTitle(title);
+        marker.setMarkerIcon(markerIcon);
 
         addMarkerOnMap(marker);
        // mClusterManager.addItem(new MarkerToClusterItemMapper().map(marker));
