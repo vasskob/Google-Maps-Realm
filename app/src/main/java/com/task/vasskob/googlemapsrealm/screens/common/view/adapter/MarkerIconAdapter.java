@@ -19,7 +19,7 @@ import butterknife.OnClick;
 public class MarkerIconAdapter extends RecyclerView.Adapter<MarkerIconAdapter.MarkerListHolder> {
 
 
-    public static final Object SELECTED_STATE_CHANGED = new Object();
+    private static final Object SELECTED_STATE_CHANGED = new Object();
     private int mSelectedItemPosition = RecyclerView.NO_POSITION;
 
 
@@ -60,7 +60,7 @@ public class MarkerIconAdapter extends RecyclerView.Adapter<MarkerIconAdapter.Ma
     }
 
     @Override
-    public void onBindViewHolder(final MarkerListHolder holder, final int position) {
+    public void onBindViewHolder(MarkerListHolder holder, int position) {
         MarkerIcon item = markerIconList.get(position);
         holder.onBind(item);
     }
@@ -98,7 +98,7 @@ public class MarkerIconAdapter extends RecyclerView.Adapter<MarkerIconAdapter.Ma
         ImageButton imageButton;
 
         @OnClick(R.id.ib_icon_item)
-        void onMarkerIconClick(View v) {
+        void onMarkerIconClick() {
             MarkerIconAdapter.this.setSelected(getAdapterPosition());
             if (mListener != null) {
                 mListener.onMarkerIconClick(itemView);
@@ -117,7 +117,7 @@ public class MarkerIconAdapter extends RecyclerView.Adapter<MarkerIconAdapter.Ma
         }
 
 
-        public void setSelected(boolean selected) {
+        private void setSelected(boolean selected) {
             itemView.setSelected(selected);
         }
     }

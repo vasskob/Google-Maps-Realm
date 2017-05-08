@@ -106,9 +106,10 @@ public class MarkerInfoActivity extends AppCompatActivity implements MarkerInfoV
     }
 
     @Override
-    public void onIconClick(MarkerIconDialogFragment dialog) {
-        clickedMarkerIcon = dialog.getSelectedMarkerIcon();
-        if (clickedMarkerIcon != null) {
+    public void onIconClick(MarkerIcon markerIcon) {
+
+        if (markerIcon != null) {
+            clickedMarkerIcon = markerIcon;
             mIconImageButton.setImageResource(clickedMarkerIcon.getResId());
         }
     }

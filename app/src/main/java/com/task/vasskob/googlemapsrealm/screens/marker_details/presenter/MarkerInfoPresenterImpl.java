@@ -34,12 +34,12 @@ public class MarkerInfoPresenterImpl extends BasePresenter implements MarkerInfo
 
     @Override
     public void updateMarkerInDb(Marker marker, String title, MarkerIcon markerIcon) {
-        realmController.updateMarkerInRealm(marker, title, markerIcon);
+        realmController.updateMarkerInDb(marker, title, markerIcon);
     }
 
     @Override
     public void deleteMarkerInDb(Marker marker) {
-        realmController.deleteMarkerFromRealm(marker);
+        realmController.deleteMarkerInDb(marker);
     }
 
     @Override

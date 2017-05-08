@@ -82,6 +82,7 @@ public class DummyData {
         MapsPresenterImpl presenter = new MapsPresenterImpl();
         ArrayList<Marker> markers = new ArrayList<>();
         Marker marker;
+        List<MarkerIcon> icons = getMarkerIconsList();
         for (int i = 0; i < AMOUNT_OF_MARKERS; i++) {
 
             marker = new Marker();
@@ -91,16 +92,14 @@ public class DummyData {
             LatLng latLng = getRandomLatLng(CENTER, RADIUS);
             marker.setLatitude(latLng.latitude);
             marker.setLongitude(latLng.longitude);
-            marker.setMarkerIcon(getRandomMarkerIcon());
+            marker.setMarkerIcon(getRandomMarkerIconFromList(icons));
             markers.add(marker);
         }
         presenter.addMarkerListToRealm(markers);
     }
 
-    private static MarkerIcon getRandomMarkerIcon() {
+    private static MarkerIcon getRandomMarkerIconFromList(List<MarkerIcon> icons) {
         Random r = new Random();
-        // TODO: 06/05/17  List<MarkerIcon> created each time
-        List<MarkerIcon> icons = getMarkerIconsList();
         int index = r.nextInt(icons.size());
         return icons.get(index);
     }

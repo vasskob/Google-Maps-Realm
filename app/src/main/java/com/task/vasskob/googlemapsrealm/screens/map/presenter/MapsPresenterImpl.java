@@ -29,12 +29,12 @@ public class MapsPresenterImpl extends BasePresenter implements MapsPresenter<Ma
 
    @Override
     public void addMarkerToRealm(Marker marker) {
-        realmController.addMarkerToRealm(marker);
+        realmController.addMarkerToDb(marker);
     }
 
 
     public void addMarkerListToRealm(List<Marker> markers) {
-        realmController.addMarkerListToRealm(markers);
+        realmController.addMarkerListToDb(markers);
     }
 
     @Override

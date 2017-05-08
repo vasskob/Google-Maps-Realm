@@ -32,7 +32,7 @@ public class RealmController implements DbController {
     }
 
     @Override
-    public void addMarkerToRealm(final Marker marker) {
+    public void addMarkerToDb(final Marker marker) {
         realm.executeTransactionAsync(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
@@ -42,7 +42,7 @@ public class RealmController implements DbController {
     }
 
     @Override
-    public void addMarkerListToRealm(final List<Marker> list) {
+    public void addMarkerListToDb(final List<Marker> list) {
         realm.executeTransactionAsync(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
@@ -54,7 +54,7 @@ public class RealmController implements DbController {
     }
 
     @Override
-    public void deleteMarkerFromRealm(Marker marker) {
+    public void deleteMarkerInDb(Marker marker) {
         final String markerId = marker.getId();
         realm.executeTransactionAsync(new Realm.Transaction() {
             @Override
@@ -69,14 +69,14 @@ public class RealmController implements DbController {
         }, new Realm.Transaction.OnError() {
             @Override
             public void onError(Throwable error) {
-                Log.e("deleteMarkerFromRealm", "onError: ", error);
+                Log.e("deleteMarkerInDb", "onError: ", error);
                 listener.onError();
             }
         });
     }
 
     @Override
-    public void updateMarkerInRealm(final Marker marker, final String title, final MarkerIcon markerIcon) {
+    public void updateMarkerInDb(final Marker marker, final String title, final MarkerIcon markerIcon) {
         final String markerId = marker.getId();
         realm.executeTransactionAsync(new Realm.Transaction() {
             @Override
@@ -98,7 +98,7 @@ public class RealmController implements DbController {
         }, new Realm.Transaction.OnError() {
             @Override
             public void onError(Throwable error) {
-                Log.e("updateMarkerInRealm", "onError: ", error);
+                Log.e("updateMarkerInDb", "onError: ", error);
                 listener.onError();
             }
         });

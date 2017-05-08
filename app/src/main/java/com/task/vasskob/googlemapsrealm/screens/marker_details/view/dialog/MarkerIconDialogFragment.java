@@ -23,7 +23,7 @@ import static android.view.View.inflate;
 import static com.task.vasskob.googlemapsrealm.app.MyApplication.COUNT_OF_COLUMN;
 import static com.task.vasskob.googlemapsrealm.app.MyApplication.getMarkerIconsList;
 
-public class MarkerIconDialogFragment extends BaseDialogFragment<MarkerIconDialogFragment.OnDialogClickListener>{
+public class MarkerIconDialogFragment extends BaseDialogFragment<MarkerIconDialogFragment.OnDialogClickListener> {
 
     private static final String TITLE = "marker icon dialog title";
 
@@ -40,11 +40,12 @@ public class MarkerIconDialogFragment extends BaseDialogFragment<MarkerIconDialo
                 clickedMarkerIcon = mMarkerIconsList.get(position);
             }
         }
-    };;
+    };
+    ;
 
 
     public interface OnDialogClickListener {
-        void onIconClick(MarkerIconDialogFragment dialog);
+        void onIconClick(MarkerIcon markerIcon);
     }
 
     public static MarkerIconDialogFragment newInstance(int title) {
@@ -79,14 +80,10 @@ public class MarkerIconDialogFragment extends BaseDialogFragment<MarkerIconDialo
                 .setPositiveButton(R.string.done,
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
-                              getCallback().onIconClick(MarkerIconDialogFragment.this);
+                                getCallback().onIconClick(clickedMarkerIcon);
                             }
                         }
                 )
                 .create();
-    }
-
-    public MarkerIcon getSelectedMarkerIcon() {
-        return clickedMarkerIcon;
     }
 }
