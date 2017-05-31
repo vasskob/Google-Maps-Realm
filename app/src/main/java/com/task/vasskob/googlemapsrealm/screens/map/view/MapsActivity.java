@@ -25,9 +25,11 @@ import com.task.vasskob.googlemapsrealm.R;
 import com.task.vasskob.googlemapsrealm.app.DummyData;
 import com.task.vasskob.googlemapsrealm.listeners.permission.ErrorListener;
 import com.task.vasskob.googlemapsrealm.listeners.permission.MultiplePermissionListener;
-import com.task.vasskob.googlemapsrealm.screens.common.model.MarkerIcon;
-import com.task.vasskob.googlemapsrealm.screens.common.model.MarkerItem;
-import com.task.vasskob.googlemapsrealm.screens.common.model.MarkerToMarkerOptionsMapper;
+import com.task.vasskob.googlemapsrealm.screens.common.model.entity.MarkerIcon;
+import com.task.vasskob.googlemapsrealm.screens.common.model.entity.MarkerItem;
+import com.task.vasskob.googlemapsrealm.screens.common.model.entity.MarkerRealm;
+import com.task.vasskob.googlemapsrealm.screens.common.model.mapper.MarkerRealmToMarkerMapper;
+import com.task.vasskob.googlemapsrealm.screens.common.model.mapper.MarkerToMarkerOptionsMapper;
 import com.task.vasskob.googlemapsrealm.screens.map.model.Marker;
 import com.task.vasskob.googlemapsrealm.screens.map.presenter.MapsPresenterImpl;
 import com.task.vasskob.googlemapsrealm.screens.map.view.dialog.AddMarkerDialogFragment;
@@ -90,7 +92,7 @@ public class MapsActivity extends AppCompatActivity implements MapsView, OnMapRe
         setCurrentLocation();
 
         presenter.showMarkersOnMap();
-       // setUpCluster();
+        // setUpCluster();
 
         googleMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
             @Override
@@ -146,11 +148,13 @@ public class MapsActivity extends AppCompatActivity implements MapsView, OnMapRe
     }
 
     @Override
-    public void showMarkersOnMap(RealmResults<Marker> markers) {
-        for (Marker marker : markers) {
-            addMarkerOnMap(marker);
-           // mClusterManager.addItem(new MarkerToClusterItemMapper().map(marker));
+    public void showMarkersOnMap(RealmResults<MarkerRealm> markers) {
+
+        for (MarkerRealm marker : markers) {
+            addMarkerOnMap(new MarkerRealmToMarkerMapper().map(marker));
         }
+        // mClusterManager.addItem(new MarkerToClusterItemMapper().map(marker));
+
     }
 
     private void addMarkerOnMap(Marker marker) {
@@ -169,7 +173,7 @@ public class MapsActivity extends AppCompatActivity implements MapsView, OnMapRe
         marker.setMarkerIcon(markerIcon);
 
         addMarkerOnMap(marker);
-       // mClusterManager.addItem(new MarkerToClusterItemMapper().map(marker));
+        // mClusterManager.addItem(new MarkerToClusterItemMapper().map(marker));
         presenter.addMarkerToRealm(marker);
     }
 

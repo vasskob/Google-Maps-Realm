@@ -1,7 +1,8 @@
 package com.task.vasskob.googlemapsrealm.screens.marker_details.presenter;
 
 import com.task.vasskob.googlemapsrealm.listeners.db.OnMarkerChangeClickListener;
-import com.task.vasskob.googlemapsrealm.screens.common.model.MarkerIcon;
+import com.task.vasskob.googlemapsrealm.screens.common.model.entity.MarkerRealm;
+import com.task.vasskob.googlemapsrealm.screens.common.model.mapper.MarkerRealmToMarkerMapper;
 import com.task.vasskob.googlemapsrealm.screens.common.model.repository.MarkerByIdSpecification;
 import com.task.vasskob.googlemapsrealm.screens.common.model.repository.MarkerRealmRepository;
 import com.task.vasskob.googlemapsrealm.screens.common.presenter.BasePresenter;
@@ -16,11 +17,11 @@ public class MarkerInfoPresenterImpl extends BasePresenter implements MarkerInfo
 
     private final MarkerRealmRepository mRealmRepository;
     private MarkerInfoView mInfoView;
-    private OrderedRealmCollectionChangeListener<RealmResults<Marker>> callback = new OrderedRealmCollectionChangeListener<RealmResults<Marker>>() {
+    private OrderedRealmCollectionChangeListener<RealmResults<MarkerRealm>> callback = new OrderedRealmCollectionChangeListener<RealmResults<MarkerRealm>>() {
         @Override
-        public void onChange(RealmResults<Marker> collection, OrderedCollectionChangeSet changeSet) {
+        public void onChange(RealmResults<MarkerRealm> collection, OrderedCollectionChangeSet changeSet) {
             if (mInfoView != null && !collection.isEmpty()) {
-                mInfoView.showMarkerInfo(collection.get(0));
+                mInfoView.showMarkerInfo(new MarkerRealmToMarkerMapper().map(collection.get(0)));
             }
         }
     };
@@ -36,8 +37,8 @@ public class MarkerInfoPresenterImpl extends BasePresenter implements MarkerInfo
     }
 
     @Override
-    public void updateMarkerInDb(Marker marker, String title, MarkerIcon markerIcon) {
-        mRealmRepository.update(marker, title, markerIcon);
+    public void updateMarkerInDb(Marker marker) {
+        mRealmRepository.update(marker);
     }
 
     @Override

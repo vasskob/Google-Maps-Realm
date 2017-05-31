@@ -1,4 +1,4 @@
-package com.task.vasskob.googlemapsrealm.screens.common.model;
+package com.task.vasskob.googlemapsrealm.screens.common.model.entity;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.clustering.ClusterItem;
@@ -14,7 +14,7 @@ public class MarkerItem implements ClusterItem {
         mSnippet = snippet;
     }
 
-    MarkerItem(double lat, double lng) {
+    public MarkerItem(double lat, double lng) {
         mPosition = new LatLng(lat, lng);
     }
 

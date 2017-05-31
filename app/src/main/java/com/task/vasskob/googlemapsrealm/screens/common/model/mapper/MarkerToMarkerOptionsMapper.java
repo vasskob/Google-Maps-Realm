@@ -1,4 +1,4 @@
-package com.task.vasskob.googlemapsrealm.screens.common.model;
+package com.task.vasskob.googlemapsrealm.screens.common.model.mapper;
 
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;

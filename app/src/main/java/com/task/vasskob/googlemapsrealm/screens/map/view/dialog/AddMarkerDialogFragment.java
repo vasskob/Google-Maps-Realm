@@ -11,7 +11,7 @@ import android.view.View;
 import android.widget.EditText;
 
 import com.task.vasskob.googlemapsrealm.R;
-import com.task.vasskob.googlemapsrealm.screens.common.model.MarkerIcon;
+import com.task.vasskob.googlemapsrealm.screens.common.model.entity.MarkerIcon;
 import com.task.vasskob.googlemapsrealm.screens.common.view.adapter.MarkerIconAdapter;
 import com.task.vasskob.googlemapsrealm.screens.common.view.dialog.BaseDialogFragment;
 

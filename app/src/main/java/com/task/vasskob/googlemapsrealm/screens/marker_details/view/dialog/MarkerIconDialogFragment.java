@@ -10,7 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.task.vasskob.googlemapsrealm.R;
-import com.task.vasskob.googlemapsrealm.screens.common.model.MarkerIcon;
+import com.task.vasskob.googlemapsrealm.screens.common.model.entity.MarkerIcon;
 import com.task.vasskob.googlemapsrealm.screens.common.view.adapter.MarkerIconAdapter;
 import com.task.vasskob.googlemapsrealm.screens.common.view.dialog.BaseDialogFragment;
 
@@ -41,8 +41,6 @@ public class MarkerIconDialogFragment extends BaseDialogFragment<MarkerIconDialo
             }
         }
     };
-    ;
-
 
     public interface OnDialogClickListener {
         void onIconClick(MarkerIcon markerIcon);

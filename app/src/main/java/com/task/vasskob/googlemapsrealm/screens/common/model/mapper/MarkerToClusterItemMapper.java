@@ -1,5 +1,6 @@
-package com.task.vasskob.googlemapsrealm.screens.common.model;
+package com.task.vasskob.googlemapsrealm.screens.common.model.mapper;
 
+import com.task.vasskob.googlemapsrealm.screens.common.model.entity.MarkerItem;
 import com.task.vasskob.googlemapsrealm.screens.map.model.Marker;
 import com.task.vasskob.googlemapsrealm.utils.Mapper;
 

@@ -3,7 +3,7 @@ package com.task.vasskob.googlemapsrealm.app;
 import android.app.Application;
 
 import com.task.vasskob.googlemapsrealm.R;
-import com.task.vasskob.googlemapsrealm.screens.common.model.MarkerIcon;
+import com.task.vasskob.googlemapsrealm.screens.common.model.entity.MarkerIcon;
 
 import java.util.ArrayList;
 import java.util.List;

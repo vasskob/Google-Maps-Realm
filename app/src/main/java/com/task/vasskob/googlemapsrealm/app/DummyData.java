@@ -5,7 +5,7 @@ import android.location.Location;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.task.vasskob.googlemapsrealm.R;
-import com.task.vasskob.googlemapsrealm.screens.common.model.MarkerIcon;
+import com.task.vasskob.googlemapsrealm.screens.common.model.entity.MarkerIcon;
 import com.task.vasskob.googlemapsrealm.screens.map.model.Marker;
 import com.task.vasskob.googlemapsrealm.screens.map.presenter.MapsPresenterImpl;
 import com.task.vasskob.googlemapsrealm.utils.Prefs;

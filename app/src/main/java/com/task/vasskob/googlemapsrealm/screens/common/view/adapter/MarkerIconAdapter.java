@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 
 import com.task.vasskob.googlemapsrealm.R;
-import com.task.vasskob.googlemapsrealm.screens.common.model.MarkerIcon;
+import com.task.vasskob.googlemapsrealm.screens.common.model.entity.MarkerIcon;
 
 import java.util.List;
 

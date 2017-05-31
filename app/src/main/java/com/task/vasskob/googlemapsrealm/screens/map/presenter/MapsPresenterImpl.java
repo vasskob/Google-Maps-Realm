@@ -1,5 +1,6 @@
 package com.task.vasskob.googlemapsrealm.screens.map.presenter;
 
+import com.task.vasskob.googlemapsrealm.screens.common.model.entity.MarkerRealm;
 import com.task.vasskob.googlemapsrealm.screens.common.model.repository.AllMarkersSpecification;
 import com.task.vasskob.googlemapsrealm.screens.common.model.repository.MarkerRealmRepository;
 import com.task.vasskob.googlemapsrealm.screens.common.presenter.BasePresenter;
@@ -17,9 +18,9 @@ public class MapsPresenterImpl extends BasePresenter implements MapsPresenter<Ma
 
     private final MarkerRealmRepository mRealmRepository;
     private MapsView mMapsView;
-    private OrderedRealmCollectionChangeListener<RealmResults<Marker>> callback = new OrderedRealmCollectionChangeListener<RealmResults<Marker>>() {
+    private OrderedRealmCollectionChangeListener<RealmResults<MarkerRealm>> callback = new OrderedRealmCollectionChangeListener<RealmResults<MarkerRealm>>() {
         @Override
-        public void onChange(RealmResults<Marker> collection, OrderedCollectionChangeSet changeSet) {
+        public void onChange(RealmResults<MarkerRealm> collection, OrderedCollectionChangeSet changeSet) {
             mMapsView.showMarkersOnMap(collection);
         }
     };

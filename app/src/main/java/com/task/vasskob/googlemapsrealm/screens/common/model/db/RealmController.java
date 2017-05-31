@@ -3,7 +3,9 @@ package com.task.vasskob.googlemapsrealm.screens.common.model.db;
 import android.util.Log;
 
 import com.task.vasskob.googlemapsrealm.listeners.db.OnMarkerChangeClickListener;
-import com.task.vasskob.googlemapsrealm.screens.common.model.MarkerIcon;
+import com.task.vasskob.googlemapsrealm.screens.common.model.entity.MarkerIcon;
+import com.task.vasskob.googlemapsrealm.screens.common.model.entity.MarkerRealm;
+import com.task.vasskob.googlemapsrealm.screens.common.model.mapper.MarkerToMarkerRealmMaper;
 import com.task.vasskob.googlemapsrealm.screens.map.model.Marker;
 
 import java.util.List;
@@ -12,12 +14,12 @@ import io.realm.OrderedRealmCollectionChangeListener;
 import io.realm.Realm;
 import io.realm.RealmResults;
 
-public class RealmController implements DbController {
+class RealmController implements DbController {
 
     private static RealmController instance;
     private final Realm realm;
-    private RealmResults<Marker> resultsForAll;
-    private RealmResults<Marker> realmResults;
+    private RealmResults<MarkerRealm> resultsForAll;
+    private RealmResults<MarkerRealm> realmResults;
     private OnMarkerChangeClickListener listener;
 
     private RealmController() {
@@ -36,7 +38,7 @@ public class RealmController implements DbController {
         realm.executeTransactionAsync(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
-                realm.copyToRealm(marker);
+                realm.copyToRealm(new MarkerToMarkerRealmMaper().map(marker));
             }
         });
     }
@@ -47,7 +49,8 @@ public class RealmController implements DbController {
             @Override
             public void execute(Realm realm) {
                 for (int i = 0; i < list.size(); i++) {
-                    realm.copyToRealm(list.get(i));
+                    MarkerRealm markerRealm = new MarkerToMarkerRealmMaper().map(list.get(i));
+                    realm.copyToRealm(markerRealm);
                 }
             }
         });
@@ -59,7 +62,7 @@ public class RealmController implements DbController {
         realm.executeTransactionAsync(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
-                realm.where(Marker.class).equalTo("id", markerId).findFirst().deleteFromRealm();
+                realm.where(MarkerRealm.class).equalTo("id", markerId).findFirst().deleteFromRealm();
             }
         }, new Realm.Transaction.OnSuccess() {
             @Override
@@ -81,7 +84,7 @@ public class RealmController implements DbController {
         realm.executeTransactionAsync(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
-                Marker changedMarker = realm.where(Marker.class).equalTo("id", markerId).findFirst();
+                MarkerRealm changedMarker = realm.where(MarkerRealm.class).equalTo("id", markerId).findFirst();
                 changedMarker.setTitle(title);
                 if (markerIcon != null) {
                     MarkerIcon mIcon = realm.createObject(MarkerIcon.class);
@@ -104,13 +107,13 @@ public class RealmController implements DbController {
         });
     }
 
-    public void showAllMarkers(OrderedRealmCollectionChangeListener<RealmResults<Marker>> listener) {
-        resultsForAll = realm.where(Marker.class).findAllAsync();
+    public void showAllMarkers(OrderedRealmCollectionChangeListener<RealmResults<MarkerRealm>> listener) {
+        resultsForAll = realm.where(MarkerRealm.class).findAllAsync();
         resultsForAll.addChangeListener(listener);
     }
 
-    public void showMarker(String id, OrderedRealmCollectionChangeListener<RealmResults<Marker>> listener) {
-        realmResults = realm.where(Marker.class).equalTo("id", id).findAllAsync();
+    public void showMarker(String id, OrderedRealmCollectionChangeListener<RealmResults<MarkerRealm>> listener) {
+        realmResults = realm.where(MarkerRealm.class).equalTo("id", id).findAllAsync();
         realmResults.addChangeListener(listener);
     }
 

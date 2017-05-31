@@ -3,7 +3,9 @@ package com.task.vasskob.googlemapsrealm.screens.common.model.repository;
 import android.util.Log;
 
 import com.task.vasskob.googlemapsrealm.listeners.db.OnMarkerChangeClickListener;
-import com.task.vasskob.googlemapsrealm.screens.common.model.MarkerIcon;
+import com.task.vasskob.googlemapsrealm.screens.common.model.entity.MarkerIcon;
+import com.task.vasskob.googlemapsrealm.screens.common.model.entity.MarkerRealm;
+import com.task.vasskob.googlemapsrealm.screens.common.model.mapper.MarkerToMarkerRealmMaper;
 import com.task.vasskob.googlemapsrealm.screens.map.model.Marker;
 
 import java.util.List;
@@ -25,7 +27,7 @@ public class MarkerRealmRepository implements Repository<Marker> {
         realm.executeTransactionAsync(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
-                realm.copyToRealm(marker);
+                realm.copyToRealm(new MarkerToMarkerRealmMaper().map(marker));
             }
         });
     }
@@ -36,20 +38,23 @@ public class MarkerRealmRepository implements Repository<Marker> {
             @Override
             public void execute(Realm realm) {
                 for (int i = 0; i < list.size(); i++) {
-                    realm.copyToRealm(list.get(i));
+                    MarkerRealm markerRealm = new MarkerToMarkerRealmMaper().map(list.get(i));
+                    realm.copyToRealm(markerRealm);
                 }
             }
         });
     }
 
     @Override
-    public void update(Marker marker, final String title, final MarkerIcon markerIcon) {
+    public void update(Marker marker) {
         final String markerId = marker.getId();
+        final MarkerIcon markerIcon = marker.getMarkerIcon();
+        final String markerTitle = marker.getTitle();
         realm.executeTransactionAsync(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
-                Marker changedMarker = realm.where(Marker.class).equalTo("id", markerId).findFirst();
-                changedMarker.setTitle(title);
+                MarkerRealm changedMarker = realm.where(MarkerRealm.class).equalTo("id", markerId).findFirst();
+                changedMarker.setTitle(markerTitle);
                 if (markerIcon != null) {
                     MarkerIcon mIcon = realm.createObject(MarkerIcon.class);
                     mIcon.setId(markerIcon.getId());
@@ -78,7 +83,7 @@ public class MarkerRealmRepository implements Repository<Marker> {
         realm.executeTransactionAsync(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
-                realm.where(Marker.class).equalTo("id", markerId).findFirst().deleteFromRealm();
+                realm.where(MarkerRealm.class).equalTo("id", markerId).findFirst().deleteFromRealm();
             }
         }, new Realm.Transaction.OnSuccess() {
             @Override

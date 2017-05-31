@@ -1,11 +1,11 @@
-package com.task.vasskob.googlemapsrealm.screens.map.model;
+package com.task.vasskob.googlemapsrealm.screens.common.model.entity;
 
-import com.google.android.gms.maps.model.LatLng;
-import com.google.maps.android.clustering.ClusterItem;
-import com.task.vasskob.googlemapsrealm.screens.common.model.entity.MarkerIcon;
+import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
 
-public class Marker implements ClusterItem {
+public class MarkerRealm extends RealmObject {
 
+    @PrimaryKey
     private String id;
     private String title;
     private MarkerIcon markerIcon;
@@ -20,18 +20,8 @@ public class Marker implements ClusterItem {
         this.id = id;
     }
 
-    @Override
-    public LatLng getPosition() {
-        return new LatLng(latitude, longitude);
-    }
-
     public String getTitle() {
         return title;
-    }
-
-    @Override
-    public String getSnippet() {
-        return null;
     }
 
     public void setTitle(String title) {

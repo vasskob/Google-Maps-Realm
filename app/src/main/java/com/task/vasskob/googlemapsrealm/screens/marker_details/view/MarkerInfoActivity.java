@@ -11,7 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.task.vasskob.googlemapsrealm.R;
-import com.task.vasskob.googlemapsrealm.screens.common.model.MarkerIcon;
+import com.task.vasskob.googlemapsrealm.screens.common.model.entity.MarkerIcon;
 import com.task.vasskob.googlemapsrealm.screens.map.model.Marker;
 import com.task.vasskob.googlemapsrealm.screens.map.view.MapsActivity;
 import com.task.vasskob.googlemapsrealm.screens.marker_details.presenter.MarkerInfoPresenterImpl;
@@ -47,7 +47,9 @@ public class MarkerInfoActivity extends AppCompatActivity implements MarkerInfoV
     @OnClick(R.id.btn_save_marker)
     void onSaveClick() {
         String newTitle = mTitleEditText.getText().toString();
-        presenter.updateMarkerInDb(marker, newTitle, clickedMarkerIcon);
+        marker.setTitle(newTitle);
+        marker.setMarkerIcon(clickedMarkerIcon);
+        presenter.updateMarkerInDb(marker);
     }
 
     @OnClick(R.id.btm_delete_marker)
