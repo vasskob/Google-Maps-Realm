@@ -1,8 +1,8 @@
 package com.task.vasskob.googlemapsrealm.screens.map.presenter;
 
+import com.task.vasskob.googlemapsrealm.screens.common.model.repository.AllMarkersSpecification;
 import com.task.vasskob.googlemapsrealm.screens.common.presenter.BasePresenter;
 import com.task.vasskob.googlemapsrealm.screens.map.model.Marker;
-
 import com.task.vasskob.googlemapsrealm.screens.map.view.MapsView;
 
 import java.util.List;
@@ -24,22 +24,27 @@ public class MapsPresenterImpl extends BasePresenter implements MapsPresenter<Ma
 
     @Override
     public void showMarkersOnMap() {
-        realmController.showAllMarkers(callback);
+        // realmController.showAllMarkers(callback);
+        realmRepository.query(new AllMarkersSpecification(callback));
     }
 
-   @Override
+    @Override
     public void addMarkerToRealm(Marker marker) {
-        realmController.addMarkerToDb(marker);
+        //realmController.addMarkerToDb(marker);
+        realmRepository.add(marker);
     }
 
 
     public void addMarkerListToRealm(List<Marker> markers) {
-        realmController.addMarkerListToDb(markers);
+        //  realmController.addMarkerListToDb(markers);
+        realmRepository.add(markers);
     }
 
     @Override
     public void removeListener() {
-        realmController.removeListener();
+        //realmController.removeListener();
+        realmRepository.removeListener();
+
     }
 
     @Override
