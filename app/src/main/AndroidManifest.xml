@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.task.vasskob.googlemapsrealm">
+          package="com.task.vasskob.googlemaps">
 
     <!--
          The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
@@ -43,7 +43,7 @@
         </activity>
 
         <activity
-            android:name=".screens.marker_details.view.MarkerInfoActivity"
+            android:name=".screens.detail.view.MarkerInfoActivity"
             android:screenOrientation="portrait"
             android:theme="@style/InfoTheme"/>
     </application>
