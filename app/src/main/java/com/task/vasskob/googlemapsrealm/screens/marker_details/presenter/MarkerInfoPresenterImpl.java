@@ -3,6 +3,7 @@ package com.task.vasskob.googlemapsrealm.screens.marker_details.presenter;
 import com.task.vasskob.googlemapsrealm.listeners.db.OnMarkerChangeClickListener;
 import com.task.vasskob.googlemapsrealm.screens.common.model.entity.MarkerRealm;
 import com.task.vasskob.googlemapsrealm.screens.common.model.mapper.MarkerRealmToMarkerMapper;
+import com.task.vasskob.googlemapsrealm.screens.common.model.mapper.MarkerToMarkerRealmMaper;
 import com.task.vasskob.googlemapsrealm.screens.common.model.repository.MarkerByIdSpecification;
 import com.task.vasskob.googlemapsrealm.screens.common.model.repository.MarkerRealmRepository;
 import com.task.vasskob.googlemapsrealm.screens.common.presenter.BasePresenter;
@@ -38,12 +39,12 @@ public class MarkerInfoPresenterImpl extends BasePresenter implements MarkerInfo
 
     @Override
     public void updateMarkerInDb(Marker marker) {
-        mRealmRepository.update(marker);
+        mRealmRepository.update(new MarkerToMarkerRealmMaper().map(marker));
     }
 
     @Override
     public void deleteMarkerInDb(Marker marker) {
-        mRealmRepository.delete(marker);
+        mRealmRepository.delete(new MarkerToMarkerRealmMaper().map(marker));
     }
 
     @Override

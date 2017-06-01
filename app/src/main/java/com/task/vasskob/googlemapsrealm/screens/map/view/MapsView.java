@@ -1,10 +1,10 @@
 package com.task.vasskob.googlemapsrealm.screens.map.view;
 
-import com.task.vasskob.googlemapsrealm.screens.common.model.entity.MarkerRealm;
+import com.task.vasskob.googlemapsrealm.screens.map.model.Marker;
 
-import io.realm.RealmResults;
+import java.util.List;
 
 public interface MapsView {
 
-  void showMarkersOnMap(final RealmResults<MarkerRealm> markers);
+  void showMarkersOnMap(final List<Marker> markers);
 }
