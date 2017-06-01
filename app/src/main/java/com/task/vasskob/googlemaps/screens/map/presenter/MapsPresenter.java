@@ -7,7 +7,7 @@ interface MapsPresenter<T> {
 
     void clearView();
 
-    void addMarkerToRealm(Marker marker);
+    void addMarkerToDb(Marker marker);
 
     void showMarkersOnMap();
 

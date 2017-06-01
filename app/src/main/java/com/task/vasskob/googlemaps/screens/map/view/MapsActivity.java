@@ -164,7 +164,7 @@ public class MapsActivity extends AppCompatActivity implements MapsView, OnMapRe
         marker.setMarkerIcon(markerIcon);
 
         addMarkerOnMap(marker);
-        presenter.addMarkerToRealm(marker);
+        presenter.addMarkerToDb(marker);
     }
 
     @Override

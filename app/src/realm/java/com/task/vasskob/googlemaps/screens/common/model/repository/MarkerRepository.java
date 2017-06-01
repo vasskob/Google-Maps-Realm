@@ -5,45 +5,48 @@ import android.util.Log;
 import com.task.vasskob.googlemaps.listeners.db.OnMarkerChangeClickListener;
 import com.task.vasskob.googlemaps.screens.common.model.entity.MarkerIcon;
 import com.task.vasskob.googlemaps.screens.common.model.entity.MarkerRealm;
+import com.task.vasskob.googlemaps.screens.common.model.mapper.MarkerToMarkerRealmMaper;
+import com.task.vasskob.googlemaps.screens.map.model.Marker;
 
 import java.util.List;
 
 import io.realm.Realm;
 
-public class MarkerRealmRepository implements Repository<MarkerRealm> {
+public class MarkerRepository implements Repository<Marker> {
 
     private final Realm realm;
     private OnMarkerChangeClickListener listener;
     private RealmSpecification mSpecification;
 
-    public MarkerRealmRepository() {
+    public MarkerRepository() {
         realm = Realm.getDefaultInstance();
     }
 
     @Override
-    public void add(final MarkerRealm marker) {
+    public void add(Marker marker) {
+        final MarkerRealm markerRealm = new MarkerToMarkerRealmMaper().map(marker);
         realm.executeTransactionAsync(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
-                realm.copyToRealm(marker);
+                realm.copyToRealm(markerRealm);
             }
         });
     }
 
     @Override
-    public void add(final List<MarkerRealm> list) {
+    public void add(final List<Marker> list) {
         realm.executeTransactionAsync(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
                 for (int i = 0; i < list.size(); i++) {
-                    realm.copyToRealm(list.get(i));
+                    realm.copyToRealm(new MarkerToMarkerRealmMaper().map(list.get(i)));
                 }
             }
         });
     }
 
     @Override
-    public void update(MarkerRealm marker) {
+    public void update(Marker marker) {
         final String markerId = marker.getId();
         final MarkerIcon markerIcon = marker.getMarkerIcon();
         final String markerTitle = marker.getTitle();
@@ -75,7 +78,7 @@ public class MarkerRealmRepository implements Repository<MarkerRealm> {
     }
 
     @Override
-    public void delete(MarkerRealm marker) {
+    public void delete(Marker marker) {
         final String markerId = marker.getId();
         realm.executeTransactionAsync(new Realm.Transaction() {
             @Override
@@ -97,17 +100,19 @@ public class MarkerRealmRepository implements Repository<MarkerRealm> {
     }
 
     @Override
-    public List<MarkerRealm> query(Specification specification) {
+    public List<Marker> query(Specification specification) {
         mSpecification = (RealmSpecification) specification;
         mSpecification.toRealmResults(realm);
         // return data via callback in Specification
         return null;
     }
 
-    public void setListener(OnMarkerChangeClickListener listener) {
+    @Override
+    public void setResultListener(OnMarkerChangeClickListener listener) {
         this.listener = listener;
     }
 
+    @Override
     public void removeListener() {
         if (mSpecification != null) {
             mSpecification.removeListeners();

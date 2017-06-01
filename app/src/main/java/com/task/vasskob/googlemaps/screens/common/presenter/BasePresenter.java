@@ -1,13 +1,13 @@
 package com.task.vasskob.googlemaps.screens.common.presenter;
 
-import com.task.vasskob.googlemaps.screens.common.model.repository.MarkerRealmRepository;
+import com.task.vasskob.googlemaps.screens.common.model.repository.MarkerRepository;
 import com.task.vasskob.googlemaps.screens.common.model.repository.Repository;
 
 public class BasePresenter {
 
-    protected final Repository realmRepository;
+    protected final Repository repository;
 
     protected BasePresenter() {
-        realmRepository = new MarkerRealmRepository();
+        repository = new MarkerRepository();
     }
 }

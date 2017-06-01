@@ -72,7 +72,7 @@ public class DummyData {
         markers.add(marker);
 
         for (Marker m : markers) {
-            presenter.addMarkerToRealm(m);
+            presenter.addMarkerToDb(m);
         }
         Prefs.with(activity).setPreLoad(true);
         randomMarkerTitle = activity.getResources().getString(R.string.random_marker_label);
@@ -95,7 +95,7 @@ public class DummyData {
             marker.setMarkerIcon(getRandomMarkerIconFromList(icons));
             markers.add(marker);
         }
-        presenter.addMarkerListToRealm(markers);
+        presenter.addMarkerListToDb(markers);
     }
 
     private static MarkerIcon getRandomMarkerIconFromList(List<MarkerIcon> icons) {
