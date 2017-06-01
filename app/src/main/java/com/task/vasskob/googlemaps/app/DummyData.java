@@ -78,7 +78,7 @@ public class DummyData {
         randomMarkerTitle = activity.getResources().getString(R.string.random_marker_label);
     }
 
-    public static void setRandomMarkersToRealm() {
+    public static void setRandomMarkersToDb() {
         MapsPresenterImpl presenter = new MapsPresenterImpl();
         ArrayList<Marker> markers = new ArrayList<>();
         Marker marker;
