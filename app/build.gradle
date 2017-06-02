@@ -60,4 +60,9 @@ dependencies {
     annotationProcessor "com.github.Raizlabs.DBFlow:dbflow-processor:${dbflow_version}"
     compile "com.github.Raizlabs.DBFlow:dbflow-core:${dbflow_version}"
     compile "com.github.Raizlabs.DBFlow:dbflow:${dbflow_version}"
+
+    // DI Dagger2
+    annotationProcessor 'com.google.dagger:dagger-compiler:2.9'
+    compile 'com.google.dagger:dagger:2.9'
+    provided 'javax.annotation:jsr250-api:1.0'
 }
