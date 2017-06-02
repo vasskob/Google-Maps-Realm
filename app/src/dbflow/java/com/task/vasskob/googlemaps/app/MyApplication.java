@@ -1,7 +1,6 @@
 package com.task.vasskob.googlemaps.app;
 
 import android.app.Application;
-import android.content.Context;
 
 import com.raizlabs.android.dbflow.config.DatabaseConfig;
 import com.raizlabs.android.dbflow.config.FlowConfig;
@@ -16,22 +15,15 @@ import java.util.List;
 
 public class MyApplication extends Application {
     public static final int COUNT_OF_COLUMN = 4;
-    private static MyApplication sMyApplication;
 
     @Override
     public void onCreate() {
         super.onCreate();
 
-        sMyApplication = this;
-
         FlowManager.init(new FlowConfig.Builder(this)
                 .addDatabaseConfig(new DatabaseConfig.Builder(DbFlowDatabase.class)
                         .modelNotifier(DirectModelNotifier.get())
                         .build()).build());
-    }
-
-    public static Context getContext() {
-        return sMyApplication;
     }
 
     public static List<MarkerIcon> getMarkerIconsList() {

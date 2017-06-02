@@ -20,7 +20,7 @@ public class MarkerDbFlow extends BaseModel {
     @Column
     private double longitude;
     @Column
-    @ForeignKey
+    @ForeignKey(saveForeignKeyModel = true)
     private MarkerIcon markerIcon;
 
     public String getId() {

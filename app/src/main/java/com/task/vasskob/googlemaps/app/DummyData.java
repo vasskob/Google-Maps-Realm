@@ -71,9 +71,8 @@ public class DummyData {
         marker.setLongitude(151d);
         markers.add(marker);
 
-        for (Marker m : markers) {
-            presenter.addMarkerToDb(m);
-        }
+        presenter.addMarkerListToDb(markers);
+
         Prefs.with(activity).setPreLoad(true);
         randomMarkerTitle = activity.getResources().getString(R.string.random_marker_label);
     }

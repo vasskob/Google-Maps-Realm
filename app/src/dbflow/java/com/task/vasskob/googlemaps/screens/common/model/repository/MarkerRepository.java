@@ -3,7 +3,8 @@ package com.task.vasskob.googlemaps.screens.common.model.repository;
 import com.raizlabs.android.dbflow.config.FlowManager;
 import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper;
 import com.raizlabs.android.dbflow.structure.database.transaction.FastStoreModelTransaction;
-import com.raizlabs.android.dbflow.structure.database.transaction.ITransaction;
+import com.raizlabs.android.dbflow.structure.database.transaction.ProcessModelTransaction;
+import com.raizlabs.android.dbflow.structure.database.transaction.Transaction;
 import com.task.vasskob.googlemaps.listeners.db.OnMarkerChangeClickListener;
 import com.task.vasskob.googlemaps.screens.common.model.db.DbFlowDatabase;
 import com.task.vasskob.googlemaps.screens.common.model.entity.MarkerDbFlow;
@@ -31,7 +32,6 @@ public class MarkerRepository implements Repository<Marker> {
                 .add(new MarkerToMarkerDbFlowMapper().map(marker))
                 .build()
                 .execute(FlowManager.getWritableDatabase(DbFlowDatabase.class));
-        //  listener.onSuccess();
     }
 
     @Override
@@ -50,45 +50,54 @@ public class MarkerRepository implements Repository<Marker> {
 
     @Override
     public void update(Marker marker) {
-        add(marker);
+        MarkerDbFlow markerDbFlow = new MarkerToMarkerDbFlowMapper().map(marker);
+
+        FlowManager.getDatabase(DbFlowDatabase.class)
+                .beginTransactionAsync(new ProcessModelTransaction.Builder<>(
+                        new ProcessModelTransaction.ProcessModel<MarkerDbFlow>() {
+                            @Override
+                            public void processModel(MarkerDbFlow markerDbFlow, DatabaseWrapper wrapper) {
+                                markerDbFlow.save();
+                            }
+                        }).add(markerDbFlow).build())  // add elements (can also handle multiple)
+                .error(new Transaction.Error() {
+                    @Override
+                    public void onError(Transaction transaction, Throwable error) {
+                        listener.onError();
+                    }
+                })
+                .success(new Transaction.Success() {
+                    @Override
+                    public void onSuccess(Transaction transaction) {
+                        listener.onSuccess();
+                    }
+                }).build().execute();
     }
 
     @Override
     public void delete(final Marker marker) {
-//        getMarkerById(marker.getId(),
-//                new MarkerInfoRetrievedListener() {
-//                    @Override
-//                    public void onMarkerRetrieved(final MarkerDbFlow marker) {
-//                        FlowManager.getDatabase(DbFlowDatabase.class).executeTransaction(new ITransaction() {
-//                            @Override
-//                            public void execute(DatabaseWrapper databaseWrapper) {
-//                                marker.delete();
-//                            }
-//                        });
-//                    }
-//                                  }
-//        );
-        FlowManager.getDatabase(DbFlowDatabase.class).executeTransaction(new ITransaction() {
-            @Override
-            public void execute(DatabaseWrapper databaseWrapper) {
-                new MarkerToMarkerDbFlowMapper().map(marker).delete();
-            }
-        });
-        //listener.onSuccess();
+        MarkerDbFlow markerDbFlow = new MarkerToMarkerDbFlowMapper().map(marker);
+        FlowManager.getDatabase(DbFlowDatabase.class)
+                .beginTransactionAsync(new ProcessModelTransaction.Builder<>(
+                        new ProcessModelTransaction.ProcessModel<MarkerDbFlow>() {
+                            @Override
+                            public void processModel(MarkerDbFlow markerDbFlow, DatabaseWrapper wrapper) {
+                                markerDbFlow.delete();
+                            }
+                        }).add(markerDbFlow).build())
+                .error(new Transaction.Error() {
+                    @Override
+                    public void onError(Transaction transaction, Throwable error) {
+                        listener.onError();
+                    }
+                })
+                .success(new Transaction.Success() {
+                    @Override
+                    public void onSuccess(Transaction transaction) {
+                        listener.onSuccess();
+                    }
+                }).build().execute();
     }
-
-//    private void getMarkerById(String markerId, final MarkerInfoRetrievedListener listener) {
-//        SQLite.select()
-//                .from(MarkerDbFlow.class)
-//                .where(MarkerDbFlow_Table.id.is(markerId))
-//                .async()
-//                .queryResultCallback(new QueryTransaction.QueryResultCallback<MarkerDbFlow>() {
-//                    @Override
-//                    public void onQueryResult(QueryTransaction<MarkerDbFlow> transaction, @NonNull CursorResult<MarkerDbFlow> tResult) {
-//                        listener.onMarkerRetrieved(tResult.toModelClose());
-//                    }
-//                }).execute();
-//    }
 
     @Override
     public List<Marker> query(Specification specification) {
@@ -109,8 +118,4 @@ public class MarkerRepository implements Repository<Marker> {
             mSpecification.removeListeners();
         }
     }
-
-//    private interface MarkerInfoRetrievedListener {
-//        void onMarkerRetrieved(MarkerDbFlow marker);
-//    }
 }
