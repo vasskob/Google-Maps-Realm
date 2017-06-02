@@ -2,6 +2,7 @@ package com.task.vasskob.googlemaps.screens.map.presenter;
 
 import com.task.vasskob.googlemaps.listeners.db.OnDataLoadedListener;
 import com.task.vasskob.googlemaps.screens.common.model.repository.AllMarkersSpecification;
+import com.task.vasskob.googlemaps.screens.common.model.repository.MarkerRepository;
 import com.task.vasskob.googlemaps.screens.common.presenter.BasePresenter;
 import com.task.vasskob.googlemaps.screens.map.model.Marker;
 import com.task.vasskob.googlemaps.screens.map.view.MapsView;
@@ -11,6 +12,10 @@ import java.util.List;
 public class MapsPresenterImpl extends BasePresenter implements MapsPresenter<MapsView>, OnDataLoadedListener {
 
     private MapsView mMapsView;
+
+    public MapsPresenterImpl(MarkerRepository repository) {
+        super(repository);
+    }
 
     @Override
     public void showMarkersOnMap() {

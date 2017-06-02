@@ -3,6 +3,7 @@ package com.task.vasskob.googlemaps.screens.detail.presenter;
 import com.task.vasskob.googlemaps.listeners.db.OnDataLoadedListener;
 import com.task.vasskob.googlemaps.listeners.db.OnMarkerChangeClickListener;
 import com.task.vasskob.googlemaps.screens.common.model.repository.MarkerByIdSpecification;
+import com.task.vasskob.googlemaps.screens.common.model.repository.MarkerRepository;
 import com.task.vasskob.googlemaps.screens.common.presenter.BasePresenter;
 import com.task.vasskob.googlemaps.screens.detail.view.MarkerInfoView;
 import com.task.vasskob.googlemaps.screens.map.model.Marker;
@@ -13,7 +14,8 @@ public class MarkerInfoPresenterImpl extends BasePresenter implements MarkerInfo
 
     private MarkerInfoView mInfoView;
 
-    public MarkerInfoPresenterImpl() {
+    public MarkerInfoPresenterImpl(MarkerRepository repository) {
+        super(repository);
         repository.setResultListener(this);
     }
 

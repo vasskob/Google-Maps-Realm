@@ -10,6 +10,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.task.vasskob.googlemaps.Injection;
 import com.task.vasskob.googlemaps.R;
 import com.task.vasskob.googlemaps.screens.common.model.entity.MarkerIcon;
 import com.task.vasskob.googlemaps.screens.detail.presenter.MarkerInfoPresenterImpl;
@@ -68,7 +69,7 @@ public class MarkerInfoActivity extends AppCompatActivity implements MarkerInfoV
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_marker_info);
         ButterKnife.bind(this);
-        presenter = new MarkerInfoPresenterImpl();
+        presenter = new MarkerInfoPresenterImpl(Injection.provideMarkerRepository());
     }
 
     private void showMarkerIconDialog() {

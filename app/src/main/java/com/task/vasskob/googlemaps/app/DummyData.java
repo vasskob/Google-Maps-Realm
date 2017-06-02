@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.location.Location;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.task.vasskob.googlemaps.Injection;
 import com.task.vasskob.googlemaps.R;
 import com.task.vasskob.googlemaps.screens.common.model.entity.MarkerIcon;
 import com.task.vasskob.googlemaps.screens.map.model.Marker;
@@ -28,7 +29,7 @@ public class DummyData {
     public final static LatLng CENTER = new LatLng(49.0139d, 31.2858d);
 
     public static void setRealmDummyMarkers(Activity activity) {
-        MapsPresenterImpl presenter = new MapsPresenterImpl();
+        MapsPresenterImpl presenter = new MapsPresenterImpl(Injection.provideMarkerRepository());
         ArrayList<Marker> markers = new ArrayList<>();
 
         Marker marker = new Marker();
@@ -78,7 +79,7 @@ public class DummyData {
     }
 
     public static void setRandomMarkersToDb() {
-        MapsPresenterImpl presenter = new MapsPresenterImpl();
+        MapsPresenterImpl presenter = new MapsPresenterImpl(Injection.provideMarkerRepository());
         ArrayList<Marker> markers = new ArrayList<>();
         Marker marker;
         List<MarkerIcon> icons = getMarkerIconsList();

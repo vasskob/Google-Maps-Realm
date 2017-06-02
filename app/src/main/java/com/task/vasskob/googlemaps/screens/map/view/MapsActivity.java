@@ -21,6 +21,7 @@ import com.karumi.dexter.Dexter;
 import com.karumi.dexter.listener.multi.CompositeMultiplePermissionsListener;
 import com.karumi.dexter.listener.multi.DialogOnAnyDeniedMultiplePermissionsListener;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
+import com.task.vasskob.googlemaps.Injection;
 import com.task.vasskob.googlemaps.R;
 import com.task.vasskob.googlemaps.app.DummyData;
 import com.task.vasskob.googlemaps.listeners.permission.ErrorListener;
@@ -76,7 +77,7 @@ public class MapsActivity extends AppCompatActivity implements MapsView, OnMapRe
                 .findFragmentById(map);
         mapFragment.getMapAsync(this);
 
-        presenter = new MapsPresenterImpl();
+        presenter = new MapsPresenterImpl(Injection.provideMarkerRepository());
         presenter.setView(this);
     }
 
