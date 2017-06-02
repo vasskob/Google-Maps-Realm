@@ -38,6 +38,7 @@ public class MarkerInfoActivity extends AppCompatActivity implements MarkerInfoV
 
     private MarkerIcon clickedMarkerIcon;
     private MarkerInfoPresenterImpl presenter;
+    private String oldTitle;
 
     @OnClick(R.id.marker_icon)
     void onIconClick() {
@@ -47,9 +48,13 @@ public class MarkerInfoActivity extends AppCompatActivity implements MarkerInfoV
     @OnClick(R.id.btn_save_marker)
     void onSaveClick() {
         String newTitle = mTitleEditText.getText().toString();
-        marker.setTitle(newTitle);
-        marker.setMarkerIcon(clickedMarkerIcon);
-        presenter.updateMarkerInDb(marker);
+        if (oldTitle.equals(newTitle) && clickedMarkerIcon == null) {
+            closeActivity();
+        } else {
+            marker.setTitle(newTitle);
+            marker.setMarkerIcon(clickedMarkerIcon);
+            presenter.updateMarkerInDb(marker);
+        }
     }
 
     @OnClick(R.id.btm_delete_marker)
@@ -91,9 +96,11 @@ public class MarkerInfoActivity extends AppCompatActivity implements MarkerInfoV
     @Override
     public void showMarkerInfo(Marker marker) {
         this.marker = marker;
+        MarkerIcon mIcon = marker.getMarkerIcon();
+        oldTitle = marker.getTitle();
+
         mTitleEditText.setText(marker.getTitle());
         mCoordinatesTextView.setText(marker.getLatitude() + " , " + marker.getLongitude());
-        MarkerIcon mIcon = marker.getMarkerIcon();
         mIconImageButton.setImageResource(mIcon.getResId());
     }
 
