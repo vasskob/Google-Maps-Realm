@@ -50,6 +50,8 @@ public class MarkerRepository implements Repository<Marker> {
         final String markerId = marker.getId();
         final MarkerIcon markerIcon = marker.getMarkerIcon();
         final String markerTitle = marker.getTitle();
+        final int id = markerIcon.getId();
+        final int resId = markerIcon.getResId();
         realm.executeTransactionAsync(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
@@ -57,8 +59,8 @@ public class MarkerRepository implements Repository<Marker> {
                 changedMarker.setTitle(markerTitle);
                 if (markerIcon != null) {
                     MarkerIcon mIcon = realm.createObject(MarkerIcon.class);
-                    mIcon.setId(markerIcon.getId());
-                    mIcon.setResId(markerIcon.getResId());
+                    mIcon.setId(id);
+                    mIcon.setResId(resId);
                     changedMarker.setMarkerIcon(mIcon);
                 }
             }

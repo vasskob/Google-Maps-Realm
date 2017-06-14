@@ -17,6 +17,12 @@ import io.realm.RealmConfiguration;
 public class MyApplication extends Application {
     public static final int COUNT_OF_COLUMN = 4;
 
+    private static MyApplication instance;
+
+    public static MyApplication getInstance() {
+        return instance;
+    }
+
     private MyAppComponent myAppComponent;
 
     public MyAppComponent getMyAppComponent() {
@@ -28,6 +34,7 @@ public class MyApplication extends Application {
         super.onCreate();
 
         myAppComponent = initDagger(this);
+        instance = this;
 
         Realm.init(this);
         RealmConfiguration realmConfiguration = new RealmConfiguration.Builder()
