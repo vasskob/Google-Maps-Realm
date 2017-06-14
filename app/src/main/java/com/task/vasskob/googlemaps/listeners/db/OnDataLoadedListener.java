@@ -5,5 +5,5 @@ import com.task.vasskob.googlemaps.screens.map.model.Marker;
 import java.util.List;
 
 public interface OnDataLoadedListener {
-    void onDateReady(List<Marker> markerList);
+    void onDataReady(List<Marker> markerList);
 }

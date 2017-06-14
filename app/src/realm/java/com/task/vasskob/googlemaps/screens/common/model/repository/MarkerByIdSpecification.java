@@ -26,7 +26,7 @@ public class MarkerByIdSpecification implements RealmSpecification {
             for (MarkerRealm markerRealm : collection) {
                 markers.add(new MarkerRealmToMarkerMapper().map(markerRealm));
             }
-            listener.onDateReady(markers);
+            listener.onDataReady(markers);
         }
     };
 

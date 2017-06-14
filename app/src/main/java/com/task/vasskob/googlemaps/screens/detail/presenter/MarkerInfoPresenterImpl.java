@@ -23,7 +23,7 @@ public class MarkerInfoPresenterImpl extends BasePresenter implements MarkerInfo
     public void showMarkerInfoById(String id) {
         repository.query(new MarkerByIdSpecification(id, new OnDataLoadedListener() {
             @Override
-            public void onDateReady(List<Marker> markerList) {
+            public void onDataReady(List<Marker> markerList) {
                 if (mInfoView != null && !markerList.isEmpty())
                     mInfoView.showMarkerInfo(markerList.get(0));
             }

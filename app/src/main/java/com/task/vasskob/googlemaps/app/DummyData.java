@@ -1,10 +1,9 @@
 package com.task.vasskob.googlemaps.app;
 
-import android.app.Activity;
+import android.content.Context;
 import android.location.Location;
 
 import com.google.android.gms.maps.model.LatLng;
-import com.task.vasskob.googlemaps.Injection;
 import com.task.vasskob.googlemaps.R;
 import com.task.vasskob.googlemaps.screens.common.model.entity.MarkerIcon;
 import com.task.vasskob.googlemaps.screens.map.model.Marker;
@@ -28,8 +27,7 @@ public class DummyData {
     private static final int RADIUS = 1000000;
     public final static LatLng CENTER = new LatLng(49.0139d, 31.2858d);
 
-    public static void setRealmDummyMarkers(Activity activity) {
-        MapsPresenterImpl presenter = new MapsPresenterImpl(Injection.provideMarkerRepository());
+    public static void setRealmDummyMarkers(MapsPresenterImpl presenter, Context context) {
         ArrayList<Marker> markers = new ArrayList<>();
 
         Marker marker = new Marker();
@@ -74,12 +72,12 @@ public class DummyData {
 
         presenter.addMarkerListToDb(markers);
 
-        Prefs.with(activity).setPreLoad(true);
-        randomMarkerTitle = activity.getResources().getString(R.string.random_marker_label);
+        Prefs.with(context).setPreLoad(true);
+        randomMarkerTitle = context.getResources().getString(R.string.random_marker_label);
     }
 
-    public static void setRandomMarkersToDb() {
-        MapsPresenterImpl presenter = new MapsPresenterImpl(Injection.provideMarkerRepository());
+    public static void setRandomMarkersToDb(MapsPresenterImpl presenter) {
+
         ArrayList<Marker> markers = new ArrayList<>();
         Marker marker;
         List<MarkerIcon> icons = getMarkerIconsList();

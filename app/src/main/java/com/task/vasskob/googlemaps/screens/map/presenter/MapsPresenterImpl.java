@@ -47,7 +47,7 @@ public class MapsPresenterImpl extends BasePresenter implements MapsPresenter<Ma
     }
 
     @Override
-    public void onDateReady(List<Marker> markerList) {
+    public void onDataReady(List<Marker> markerList) {
         mMapsView.showMarkersOnMap(markerList);
     }
 }

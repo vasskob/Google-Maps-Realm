@@ -21,14 +21,15 @@ import com.karumi.dexter.Dexter;
 import com.karumi.dexter.listener.multi.CompositeMultiplePermissionsListener;
 import com.karumi.dexter.listener.multi.DialogOnAnyDeniedMultiplePermissionsListener;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
-import com.task.vasskob.googlemaps.Injection;
 import com.task.vasskob.googlemaps.R;
 import com.task.vasskob.googlemaps.app.DummyData;
+import com.task.vasskob.googlemaps.app.MyApplication;
 import com.task.vasskob.googlemaps.listeners.permission.ErrorListener;
 import com.task.vasskob.googlemaps.listeners.permission.MultiplePermissionListener;
 import com.task.vasskob.googlemaps.screens.common.model.entity.MarkerClusterItem;
 import com.task.vasskob.googlemaps.screens.common.model.entity.MarkerIcon;
 import com.task.vasskob.googlemaps.screens.common.model.mapper.MarkerToMarkerOptionsMapper;
+import com.task.vasskob.googlemaps.screens.common.model.repository.MarkerRepository;
 import com.task.vasskob.googlemaps.screens.detail.view.MarkerInfoActivity;
 import com.task.vasskob.googlemaps.screens.map.model.Marker;
 import com.task.vasskob.googlemaps.screens.map.presenter.MapsPresenterImpl;
@@ -37,6 +38,8 @@ import com.task.vasskob.googlemaps.utils.Prefs;
 
 import java.util.List;
 import java.util.UUID;
+
+import javax.inject.Inject;
 
 import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
@@ -59,26 +62,31 @@ public class MapsActivity extends AppCompatActivity implements MapsView, OnMapRe
     private LatLng mLatLng;
     private MapsPresenterImpl presenter;
 
+    @Inject
+    public MarkerRepository markerRepository;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
 
+        ((MyApplication) getApplication()).getMyAppComponent().inject(this);
+
         if (!checkPermissions()) {
             createPermissionListeners();
         }
 
+        presenter = new MapsPresenterImpl(markerRepository);
+        presenter.setView(this);
+
         if (!Prefs.with(this).getPreLoad()) {
-            setRealmDummyMarkers(this);  // Add dummy markers to db if app run for the first time
-            setRandomMarkersToDb();
+            setRealmDummyMarkers(presenter, this);  // Add dummy markers to db if app run for the first time
+            setRandomMarkersToDb(presenter);
         }
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(map);
         mapFragment.getMapAsync(this);
-
-        presenter = new MapsPresenterImpl(Injection.provideMarkerRepository());
-        presenter.setView(this);
     }
 
 
@@ -171,14 +179,20 @@ public class MapsActivity extends AppCompatActivity implements MapsView, OnMapRe
     @Override
     protected void onStop() {
         super.onStop();
-        presenter.clearView();
+        //  presenter.clearView();
         presenter.removeListener();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        presenter.clearView();
     }
 
     @Override
     protected void onRestart() {
         super.onRestart();
-        presenter.setView(this);
+        //    presenter.setView(this);
         mMap.clear();
         presenter.showMarkersOnMap();
     }

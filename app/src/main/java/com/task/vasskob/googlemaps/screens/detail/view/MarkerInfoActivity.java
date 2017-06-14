@@ -10,13 +10,16 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.task.vasskob.googlemaps.Injection;
 import com.task.vasskob.googlemaps.R;
+import com.task.vasskob.googlemaps.app.MyApplication;
 import com.task.vasskob.googlemaps.screens.common.model.entity.MarkerIcon;
+import com.task.vasskob.googlemaps.screens.common.model.repository.MarkerRepository;
 import com.task.vasskob.googlemaps.screens.detail.presenter.MarkerInfoPresenterImpl;
 import com.task.vasskob.googlemaps.screens.detail.view.dialog.MarkerIconDialogFragment;
 import com.task.vasskob.googlemaps.screens.map.model.Marker;
 import com.task.vasskob.googlemaps.screens.map.view.MapsActivity;
+
+import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -40,6 +43,9 @@ public class MarkerInfoActivity extends AppCompatActivity implements MarkerInfoV
     private MarkerIcon clickedMarkerIcon;
     private MarkerInfoPresenterImpl presenter;
     private String oldTitle;
+
+    @Inject
+    public MarkerRepository markerRepository;
 
     @OnClick(R.id.marker_icon)
     void onIconClick() {
@@ -69,7 +75,8 @@ public class MarkerInfoActivity extends AppCompatActivity implements MarkerInfoV
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_marker_info);
         ButterKnife.bind(this);
-        presenter = new MarkerInfoPresenterImpl(Injection.provideMarkerRepository());
+        ((MyApplication) getApplication()).getMyAppComponent().inject(this);
+        presenter = new MarkerInfoPresenterImpl(markerRepository);
     }
 
     private void showMarkerIconDialog() {

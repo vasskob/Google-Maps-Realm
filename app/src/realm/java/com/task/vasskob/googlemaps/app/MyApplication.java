@@ -3,6 +3,9 @@ package com.task.vasskob.googlemaps.app;
 import android.app.Application;
 
 import com.task.vasskob.googlemaps.R;
+import com.task.vasskob.googlemaps.app.di.DaggerMyAppComponent;
+import com.task.vasskob.googlemaps.app.di.MyAppComponent;
+import com.task.vasskob.googlemaps.app.di.MyAppModule;
 import com.task.vasskob.googlemaps.screens.common.model.entity.MarkerIcon;
 
 import java.util.ArrayList;
@@ -14,9 +17,17 @@ import io.realm.RealmConfiguration;
 public class MyApplication extends Application {
     public static final int COUNT_OF_COLUMN = 4;
 
+    private MyAppComponent myAppComponent;
+
+    public MyAppComponent getMyAppComponent() {
+        return myAppComponent;
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
+
+        myAppComponent = initDagger(this);
 
         Realm.init(this);
         RealmConfiguration realmConfiguration = new RealmConfiguration.Builder()
@@ -25,6 +36,13 @@ public class MyApplication extends Application {
                 .deleteRealmIfMigrationNeeded()
                 .build();
         Realm.setDefaultConfiguration(realmConfiguration);
+
+    }
+
+    private MyAppComponent initDagger(MyApplication myApplication) {
+        return DaggerMyAppComponent.builder()
+                .myAppModule(new MyAppModule(myApplication))
+                .build();
     }
 
     public static List<MarkerIcon> getMarkerIconsList() {
