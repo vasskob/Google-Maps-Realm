@@ -3,6 +3,8 @@ package com.task.vasskob.googlemaps.app.di;
 import android.app.Application;
 import android.content.Context;
 
+import com.task.vasskob.googlemaps.utils.Prefs;
+
 import javax.inject.Singleton;
 
 import dagger.Module;
@@ -20,6 +22,12 @@ public class MyAppModule {
     @Singleton
     Context provideContext() {
         return application;
+    }
+
+    @Provides
+    @Singleton
+    Prefs providePrefs(Context context) {
+        return Prefs.with(context);
     }
 }
 

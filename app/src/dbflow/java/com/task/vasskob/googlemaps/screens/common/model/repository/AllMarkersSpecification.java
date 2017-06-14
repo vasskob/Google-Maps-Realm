@@ -34,7 +34,7 @@ public class AllMarkersSpecification implements DbFlowSpecification {
                         for (MarkerDbFlow markerDbFlow : tResult.toListClose()) {
                             markers.add(new MarkerDbFlowToMarkerMapper().map(markerDbFlow));
                         }
-                        listener.onDateReady(markers);
+                        listener.onDataReady(markers);
                     }
                 }).execute();
     }

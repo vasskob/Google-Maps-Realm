@@ -1,6 +1,5 @@
 package com.task.vasskob.googlemaps.app;
 
-import android.content.Context;
 import android.location.Location;
 
 import com.google.android.gms.maps.model.LatLng;
@@ -16,6 +15,8 @@ import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
+import javax.inject.Inject;
+
 import static com.task.vasskob.googlemaps.app.MyApplication.getMarkerIconsList;
 
 public class DummyData {
@@ -23,11 +24,19 @@ public class DummyData {
     private static final int AMOUNT_OF_MARKERS = 100;
     private static final double MIN_LAT_LNG = -180d;
     private static final double MAX_LAT_LNG = 180d;
-    private static String randomMarkerTitle;
     private static final int RADIUS = 1000000;
     public final static LatLng CENTER = new LatLng(49.0139d, 31.2858d);
+    private final MapsPresenterImpl presenter;
 
-    public static void setRealmDummyMarkers(MapsPresenterImpl presenter, Context context) {
+    @Inject
+    public Prefs prefs;
+
+    public DummyData(MapsPresenterImpl presenter) {
+        this.presenter = presenter;
+        MyApplication.getInstance().getMyAppComponent().inject(this);
+    }
+
+    public void setRealmDummyMarkers() {
         ArrayList<Marker> markers = new ArrayList<>();
 
         Marker marker = new Marker();
@@ -71,12 +80,10 @@ public class DummyData {
         markers.add(marker);
 
         presenter.addMarkerListToDb(markers);
-
-        Prefs.with(context).setPreLoad(true);
-        randomMarkerTitle = context.getResources().getString(R.string.random_marker_label);
+        prefs.setPreLoad(true);
     }
 
-    public static void setRandomMarkersToDb(MapsPresenterImpl presenter) {
+    public void setRandomMarkersToDb(String randomTitle) {
 
         ArrayList<Marker> markers = new ArrayList<>();
         Marker marker;
@@ -85,7 +92,7 @@ public class DummyData {
 
             marker = new Marker();
             marker.setId(UUID.randomUUID().toString());
-            marker.setTitle(randomMarkerTitle + i);
+            marker.setTitle(randomTitle + i);
             //   LatLng latLng = getRandomLatLng();
             LatLng latLng = getRandomLatLng(CENTER, RADIUS);
             marker.setLatitude(latLng.latitude);

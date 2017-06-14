@@ -54,14 +54,20 @@ public class MarkerInfoActivity extends AppCompatActivity implements MarkerInfoV
 
     @OnClick(R.id.btn_save_marker)
     void onSaveClick() {
+        boolean isChanged = false;
         String newTitle = mTitleEditText.getText().toString();
-        if (oldTitle.equals(newTitle) && clickedMarkerIcon == null) {
-            closeActivity();
-        } else {
+        if (!oldTitle.equals(newTitle)) {
             marker.setTitle(newTitle);
-            marker.setMarkerIcon(clickedMarkerIcon);
-            presenter.updateMarkerInDb(marker);
+            isChanged = true;
         }
+        if (clickedMarkerIcon != null) {
+            marker.setMarkerIcon(clickedMarkerIcon);
+            isChanged = true;
+        }
+        Log.d(TAG, "onSaveClick: clickedIcon=" + clickedMarkerIcon);
+        if (isChanged) {
+            presenter.updateMarkerInDb(marker);
+        } else closeActivity();
     }
 
     @OnClick(R.id.btm_delete_marker)
