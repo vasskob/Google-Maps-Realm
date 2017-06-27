@@ -3,7 +3,6 @@
     <string name="title_activity_maps">Map</string>
 
     ////////////// Runtime Permission /////////////////////////
-
     <string name="permission_granted">Permission Granted</string>
     <string name="permission_denied">Permission Denied. App will work with limited functionality</string>
     <string name="permission_message">App will work with limited functionality. This permission need to get current user location.
@@ -24,7 +23,6 @@
     <string name="silver_style">Silver</string>
 
     ///////////////////// Dialogs ////////////////////////
-
     <string name="hint_title">Marker title</string>
     <string name="choose_marker_icon">Choose marker icon</string>
     <string name="new_marker_dialog_title">Add marker</string>
@@ -36,12 +34,9 @@
     <string name="random_marker_label">New Marker</string>
 
     /////////////////// InfoActivity /////////////////////
-
     <string name="save_marker">Save</string>
     <string name="delete_marker">Delete</string>
 
     <string name="marker_delete_error">Marker Updating error</string>
-
-
 
 </resources>

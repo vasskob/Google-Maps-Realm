@@ -10,6 +10,11 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
+import com.google.android.gms.location.places.ui.PlaceSelectionListener;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -71,6 +76,7 @@ public class MapsActivity extends AppCompatActivity implements MapsView, OnMapRe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
 
+
         ((MyApplication) getApplication()).getMyAppComponent().inject(this);
 
         if (!checkPermissions()) {
@@ -90,6 +96,28 @@ public class MapsActivity extends AppCompatActivity implements MapsView, OnMapRe
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(map);
         mapFragment.getMapAsync(this);
+
+        initSearch();
+    }
+
+    private void initSearch() {
+        PlaceAutocompleteFragment autocompleteFragment = (PlaceAutocompleteFragment)
+                getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
+
+        autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+            @Override
+            public void onPlaceSelected(Place place) {
+                LatLng searchedPlace = place.getLatLng();
+                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(searchedPlace, 12.0f);
+                mMap.animateCamera(cameraUpdate);
+                Log.i(TAG, "Place: " + place.getName());
+            }
+
+            @Override
+            public void onError(Status status) {
+                Log.i(TAG, "An error occurred: " + status);
+            }
+        });
     }
 
 
@@ -105,6 +133,7 @@ public class MapsActivity extends AppCompatActivity implements MapsView, OnMapRe
         googleMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
             @Override
             public void onMapLongClick(LatLng latLng) {
+                Log.d(TAG, "onMapLongClick: ");
                 showAddMarkerDialog();
                 mLatLng = latLng;
             }

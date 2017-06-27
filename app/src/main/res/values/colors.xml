@@ -5,5 +5,6 @@
     <color name="colorAccent">#512DA8</color>
 
     <color name="colorBtnBackground">#EEEEEE</color>
+    <color name="white_transparent">#99EEEEEE</color>
 
 </resources>
