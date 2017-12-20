@@ -2,11 +2,13 @@ package com.task.vasskob.googlemaps.app;
 
 import android.app.Application;
 
+import com.facebook.stetho.Stetho;
 import com.task.vasskob.googlemaps.R;
 import com.task.vasskob.googlemaps.app.di.DaggerMyAppComponent;
 import com.task.vasskob.googlemaps.app.di.MyAppComponent;
 import com.task.vasskob.googlemaps.app.di.MyAppModule;
 import com.task.vasskob.googlemaps.screens.common.model.entity.MarkerIcon;
+import com.uphyca.stetho_realm.RealmInspectorModulesProvider;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +45,15 @@ public class MyApplication extends Application {
                 .deleteRealmIfMigrationNeeded()
                 .build();
         Realm.setDefaultConfiguration(realmConfiguration);
+        initStetho();
+    }
 
+    private void initStetho() {
+        Stetho.initialize(
+                Stetho.newInitializerBuilder(this)
+                        .enableDumpapp(Stetho.defaultDumperPluginsProvider(this))
+                        .enableWebKitInspector(RealmInspectorModulesProvider.builder(this).build())
+                        .build());
     }
 
     private MyAppComponent initDagger(MyApplication myApplication) {
