@@ -16,7 +16,7 @@ import com.task.vasskob.googlemaps.screens.common.view.dialog.BaseDialogFragment
 
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static android.view.View.inflate;
@@ -27,7 +27,7 @@ public class MarkerIconDialogFragment extends BaseDialogFragment<MarkerIconDialo
 
     private static final String TITLE = "marker icon dialog title";
 
-    @Bind(R.id.rvIcons)
+    @BindView(R.id.rvIcons)
     RecyclerView rvMarkerIcons;
 
     private MarkerIcon clickedMarkerIcon;

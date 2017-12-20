@@ -21,7 +21,7 @@ import com.task.vasskob.googlemaps.screens.map.view.MapsActivity;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -31,13 +31,13 @@ public class MarkerInfoActivity extends AppCompatActivity implements MarkerInfoV
     private static final String DIALOG_FRAGMENT_TAG = "marker icon dialog";
     private Marker marker;
 
-    @Bind(R.id.marker_label)
+    @BindView(R.id.marker_label)
     EditText mTitleEditText;
 
-    @Bind(R.id.marker_coordinates)
+    @BindView(R.id.marker_coordinates)
     TextView mCoordinatesTextView;
 
-    @Bind(R.id.marker_icon)
+    @BindView(R.id.marker_icon)
     ImageButton mIconImageButton;
 
     private MarkerIcon clickedMarkerIcon;

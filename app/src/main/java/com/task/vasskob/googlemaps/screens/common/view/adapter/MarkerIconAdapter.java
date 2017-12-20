@@ -12,7 +12,7 @@ import com.task.vasskob.googlemaps.screens.common.model.entity.MarkerIcon;
 
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -94,7 +94,7 @@ public class MarkerIconAdapter extends RecyclerView.Adapter<MarkerIconAdapter.Ma
     class MarkerListHolder extends RecyclerView.ViewHolder {
         private final OnMarkerIconClickListener mListener;
 
-        @Bind(R.id.ib_icon_item)
+        @BindView(R.id.ib_icon_item)
         ImageButton imageButton;
 
         @OnClick(R.id.ib_icon_item)

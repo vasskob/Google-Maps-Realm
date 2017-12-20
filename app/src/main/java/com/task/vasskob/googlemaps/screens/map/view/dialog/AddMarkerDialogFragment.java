@@ -17,7 +17,7 @@ import com.task.vasskob.googlemaps.screens.common.view.dialog.BaseDialogFragment
 
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static android.view.View.inflate;
@@ -30,10 +30,10 @@ public class AddMarkerDialogFragment extends BaseDialogFragment<AddMarkerDialogF
 
     public static final String TITLE = "title";
 
-    @Bind(R.id.rvIcons)
+    @BindView(R.id.rvIcons)
     RecyclerView markerIconsRecyclerView;
 
-    @Bind(R.id.et_marker_title)
+    @BindView(R.id.et_marker_title)
     EditText markerTitleEditText;
 
     private List<MarkerIcon> mMarkerIconsList;
